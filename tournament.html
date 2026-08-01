@@ -116,7 +116,59 @@
     }
 
     .trophy {
-      font-size: 3rem;
+      position: relative;
+      width: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Bowl */
+    .trophy-bowl {
+      width: 54px;
+      height: 42px;
+      background: #c4b5fd;
+      border-radius: 4px 4px 28px 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Handles */
+    .trophy-bowl::before,
+    .trophy-bowl::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      width: 14px;
+      height: 18px;
+      border: 4px solid #c4b5fd;
+      border-radius: 50%;
+      background: transparent;
+    }
+
+    .trophy-bowl::before {
+      left: -14px;
+      border-right: none;
+    }
+
+    .trophy-bowl::after {
+      right: -14px;
+      border-left: none;
+    }
+
+    /* Stem */
+    .trophy-stem {
+      width: 8px;
+      height: 14px;
+      background: #c4b5fd;
+    }
+
+    /* Base */
+    .trophy-base {
+      width: 44px;
+      height: 7px;
+      background: #c4b5fd;
+      border-radius: 3px;
     }
 
     .winner-label {
@@ -152,6 +204,35 @@
       font-weight: bold;
     }
 
+    .selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .selector-btn {
+      background: #16213e;
+      border: 1px solid #2d2d5e;
+      color: #a78bfa;
+      font-size: 0.85rem;
+      font-weight: bold;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .selector-btn:hover {
+      border-color: #a78bfa;
+    }
+
+    .selector-btn.active {
+      background: #5a2ca0;
+      border-color: #5a2ca0;
+      color: #fff;
+    }
+
     #error {
       color: #f87171;
       margin-top: 20px;
@@ -165,20 +246,43 @@
   <a href="tournament.html">Tournament</a>
   <a href="decks.html">Decks</a>
   <a href="standings.html">Standings</a>
+  <a href="mvp.html">MVP</a>
   <a href="rules.html">Rules</a>
 </nav>
 
+<div id="selector" class="selector"></div>
 <div id="content">
   <p style="color:#888">Loading...</p>
 </div>
 <p id="error"></p>
 
 <script>
+  let allTournaments = [];
+
   async function load() {
     const res = await fetch('data/matches.json');
-    const tournaments = await res.json();
-    const t = tournaments[0]; // first tournament
+    allTournaments = await res.json();
 
+    // Build selector buttons
+    const selector = document.getElementById('selector');
+    selector.innerHTML = allTournaments.map((t, i) => `
+      <button class="selector-btn ${i === allTournaments.length - 1 ? 'active' : ''}"
+              onclick="showTournament(${i})"
+              id="btn-${i}">
+        ${t.name}
+      </button>
+    `).join('');
+
+    showTournament(allTournaments.length - 1);
+  }
+
+  function showTournament(index) {
+    // Update active button
+    allTournaments.forEach((_, i) => {
+      document.getElementById(`btn-${i}`).classList.toggle('active', i === index);
+    });
+
+    const t = allTournaments[index];
     const content = document.getElementById('content');
 
     let html = `
@@ -211,7 +315,11 @@
 
     html += `
         <div class="trophy-section">
-          <div class="trophy">🏆</div>
+          <div class="trophy">
+            <div class="trophy-bowl"></div>
+            <div class="trophy-stem"></div>
+            <div class="trophy-base"></div>
+          </div>
           <div class="winner-label">${t.winner}</div>
         </div>
       </div>

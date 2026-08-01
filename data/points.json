@@ -13,5 +13,20 @@
       { "deck": "GainLife","gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
       { "deck": "Dino",    "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
     ]
+  },
+  {
+    "tournamentId": 2,
+    "tournamentName": "II° Torneo Bobby Kelzor",
+    "date": "2024-05-04",
+    "scores": [
+      { "deck": "Goblin",  "gamePoints": 6, "bonusFinalist": 0, "bonusWinner": 5, "total": 11 },
+      { "deck": "Destroy", "gamePoints": 5, "bonusFinalist": 2, "bonusWinner": 0, "total": 7  },
+      { "deck": "Vampiri", "gamePoints": 3, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
+      { "deck": "Poison",  "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Dino",    "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "LoTR",    "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Token",   "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "GainLife","gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
+    ]
   }
 ]

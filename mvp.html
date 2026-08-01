@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MVP - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    nav a {
+      color: #a78bfa;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover { text-decoration: underline; }
+
+    h1 {
+      color: #c4b5fd;
+      font-size: 1.6rem;
+      margin-bottom: 28px;
+    }
+
+    .mvp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 600px;
+    }
+
+    .mvp-card {
+      background: #16213e;
+      border: 1px solid #5a2ca0;
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .mvp-card-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mvp-tournament {
+      color: #888;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mvp-card-name {
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: bold;
+    }
+
+    .mvp-date {
+      color: #555;
+      font-size: 0.8rem;
+    }
+
+    .mvp-badge {
+      background: #5a2ca0;
+      color: #c4b5fd;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    #error {
+      color: #f87171;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="tournament.html">Tournament</a>
+  <a href="decks.html">Decks</a>
+  <a href="standings.html">Standings</a>
+  <a href="mvp.html">MVP</a>
+  <a href="rules.html">Rules</a>
+</nav>
+
+<h1>MVP</h1>
+
+<div id="mvp-list" class="mvp-list">
+  <p style="color:#888">Loading...</p>
+</div>
+<p id="error"></p>
+
+<script>
+  async function load() {
+    const res = await fetch('data/mvp.json');
+    const mvps = await res.json();
+
+    const list = document.getElementById('mvp-list');
+    list.innerHTML = mvps.map(m => `
+      <div class="mvp-card">
+        <div class="mvp-card-left">
+          <div class="mvp-tournament">${m.tournamentName}</div>
+          <div class="mvp-card-name">${m.card}</div>
+          <div class="mvp-date">${formatDate(m.date)}</div>
+        </div>
+        <div class="mvp-badge">MVP</div>
+      </div>
+    `).join('');
+  }
+
+  function formatDate(str) {
+    const [y, m, d] = str.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  load().catch(e => {
+    document.getElementById('error').textContent = 'Error loading data: ' + e.message;
+  });
+</script>
+</body>
+</html>

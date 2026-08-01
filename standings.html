@@ -116,6 +116,33 @@
       font-size: 0.8rem;
     }
 
+    .selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .selector-btn {
+      background: #16213e;
+      border: 1px solid #2d2d5e;
+      color: #a78bfa;
+      font-size: 0.85rem;
+      font-weight: bold;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .selector-btn:hover { border-color: #a78bfa; }
+
+    .selector-btn.active {
+      background: #5a2ca0;
+      border-color: #5a2ca0;
+      color: #fff;
+    }
+
     #error {
       color: #f87171;
       margin-top: 20px;
@@ -129,10 +156,13 @@
   <a href="tournament.html">Tournament</a>
   <a href="decks.html">Decks</a>
   <a href="standings.html">Standings</a>
+  <a href="mvp.html">MVP</a>
   <a href="rules.html">Rules</a>
 </nav>
 
 <h1>Standings</h1>
+
+<div id="selector" class="selector"></div>
 
 <div class="chart-container">
   <div class="chart-title">Total Points by Deck</div>
@@ -158,35 +188,49 @@
 <p id="error"></p>
 
 <script>
+  let allTournaments = [];
+  let chartInstance = null;
+
   async function load() {
     const res = await fetch('data/points.json');
-    const tournaments = await res.json();
+    allTournaments = await res.json();
 
-    // Accumulate total points per deck across all tournaments
-    const totals = {};
-    const gameMap = {};
-    const bonusMap = {};
+    // Build selector: "After T1", "After T2", ..., "All Time"
+    const selector = document.getElementById('selector');
+    selector.innerHTML = allTournaments.map((t, i) => `
+      <button class="selector-btn ${i === allTournaments.length - 1 ? 'active' : ''}"
+              onclick="showStandings(${i})"
+              id="sbtn-${i}">
+        After ${t.tournamentName}
+      </button>
+    `).join('');
 
-    for (const t of tournaments) {
-      for (const s of t.scores) {
+    showStandings(allTournaments.length - 1);
+  }
+
+  function showStandings(upToIndex) {
+    // Update active button
+    allTournaments.forEach((_, i) => {
+      document.getElementById(`sbtn-${i}`).classList.toggle('active', i === upToIndex);
+    });
+
+    // Accumulate points up to selected tournament
+    const totals = {}, gameMap = {}, bonusMap = {};
+    for (let i = 0; i <= upToIndex; i++) {
+      for (const s of allTournaments[i].scores) {
         totals[s.deck]   = (totals[s.deck]   || 0) + s.total;
         gameMap[s.deck]  = (gameMap[s.deck]   || 0) + s.gamePoints;
         bonusMap[s.deck] = (bonusMap[s.deck]  || 0) + s.bonusFinalist + s.bonusWinner;
       }
     }
 
-    // Sort by total descending
     const sorted = Object.keys(totals)
       .map(deck => ({ deck, total: totals[deck], game: gameMap[deck], bonus: bonusMap[deck] }))
       .sort((a, b) => b.total - a.total);
 
-    // Chart
-    const COLORS = [
-      '#a78bfa','#60a5fa','#34d399','#f87171',
-      '#fbbf24','#f472b6','#38bdf8','#818cf8'
-    ];
-
-    new Chart(document.getElementById('chart'), {
+    // Chart — destroy and recreate to avoid animation glitch
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(document.getElementById('chart'), {
       type: 'bar',
       data: {
         labels: sorted.map(d => d.deck),
@@ -208,30 +252,16 @@
       options: {
         responsive: true,
         plugins: {
-          legend: {
-            labels: { color: '#e0e0e0', font: { size: 12 } }
-          },
+          legend: { labels: { color: '#e0e0e0', font: { size: 12 } } },
           tooltip: {
             callbacks: {
-              footer: (items) => {
-                const total = items.reduce((s, i) => s + i.raw, 0);
-                return 'Total: ' + total;
-              }
+              footer: (items) => 'Total: ' + items.reduce((s, i) => s + i.raw, 0)
             }
           }
         },
         scales: {
-          x: {
-            stacked: true,
-            ticks: { color: '#e0e0e0' },
-            grid: { color: '#2d2d5e' }
-          },
-          y: {
-            stacked: true,
-            ticks: { color: '#e0e0e0', stepSize: 1 },
-            grid: { color: '#2d2d5e' },
-            beginAtZero: true
-          }
+          x: { stacked: true, ticks: { color: '#e0e0e0' }, grid: { color: '#2d2d5e' } },
+          y: { stacked: true, ticks: { color: '#e0e0e0', stepSize: 1 }, grid: { color: '#2d2d5e' }, beginAtZero: true }
         }
       }
     });
