@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "name": "I° Torneo Bobby Kelzor",
+    "date": "2024-04-27",
+    "winner": "Token",
+    "mvp": "Leonin Warleader",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Quarterfinals",
+        "matches": [
+          { "player1": "Token",   "score1": 2, "player2": "Vampiri",  "score2": 0 },
+          { "player1": "Goblin",  "score1": 2, "player2": "GainLife", "score2": 0 },
+          { "player1": "Destroy", "score1": 2, "player2": "Dino",     "score2": 0 },
+          { "player1": "Poison",  "score1": 1, "player2": "LoTR",     "score2": 2 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Token",   "score1": 2, "player2": "Goblin",  "score2": 0 },
+          { "player1": "Destroy", "score1": 1, "player2": "LoTR",    "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Final",
+        "matches": [
+          { "player1": "Token", "score1": 2, "player2": "LoTR", "score2": 0 }
+        ]
+      }
+    ]
+  }
+]

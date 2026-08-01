@@ -1,0 +1,10 @@
+[
+  { "id": "token",   "name": "Token",   "colors": ["W", "G"] },
+  { "id": "vampiri", "name": "Vampiri", "colors": ["B"] },
+  { "id": "goblin",  "name": "Goblin",  "colors": ["R"] },
+  { "id": "gainlife","name": "GainLife","colors": ["W", "G"] },
+  { "id": "destroy", "name": "Destroy", "colors": ["B", "W"] },
+  { "id": "dino",    "name": "Dino",    "colors": ["R", "G", "W"] },
+  { "id": "poison",  "name": "Poison",  "colors": ["G", "B"] },
+  { "id": "lotr",    "name": "LoTR",    "colors": ["W", "U", "B", "R", "G"] }
+]
