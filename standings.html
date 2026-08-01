@@ -110,6 +110,16 @@
       text-align: left;
     }
 
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th.sortable:hover { background: #222; }
+
+    th.sort-asc::after  { content: ' ▲'; font-size: 0.65rem; }
+    th.sort-desc::after { content: ' ▼'; font-size: 0.65rem; }
+
     td {
       padding: 10px 16px;
       border-top: 1px solid #000;
@@ -156,12 +166,12 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Deck</th>
-        <th>Game Won</th>
-        <th>Bonus</th>
-        <th>Total</th>
-        <th>Games</th>
-        <th>PPG</th>
+        <th class="sortable" onclick="sortBy('deck')">Deck</th>
+        <th class="sortable" onclick="sortBy('games')">Games</th>
+        <th class="sortable" onclick="sortBy('game')">Game Won</th>
+        <th class="sortable" onclick="sortBy('bonus')">Bonus</th>
+        <th class="sortable" onclick="sortBy('total')">Total</th>
+        <th class="sortable" onclick="sortBy('ppg')">PPG</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -174,6 +184,9 @@
   let allTournaments = [];
   let allMatches = [];
   let chartInstance = null;
+  let currentSorted = [];
+  let sortKey = 'total';
+  let sortDir = -1; // -1 = desc, 1 = asc
 
   async function load() {
     const [pointsRes, matchesRes] = await Promise.all([
@@ -220,7 +233,7 @@
       }
     }
 
-    const sorted = Object.keys(totals)
+    currentSorted = Object.keys(totals)
       .map(deck => ({
         deck,
         total: totals[deck],
@@ -230,6 +243,12 @@
         ppg: gamesPlayedMap[deck] ? (totals[deck] / gamesPlayedMap[deck]) : 0
       }))
       .sort((a, b) => b.total - a.total);
+
+    sortKey = 'total';
+    sortDir = -1;
+    updateSortHeaders();
+
+    const sorted = currentSorted;
 
     if (chartInstance) chartInstance.destroy();
     chartInstance = new Chart(document.getElementById('chart'), {
@@ -268,21 +287,53 @@
       }
     });
 
+    renderTable(sorted);
+  }
+
+  function renderTable(data) {
     const tbody = document.getElementById('tbody');
-    tbody.innerHTML = sorted.map((d, i) => {
+    tbody.innerHTML = data.map((d, i) => {
       const rankClass = i < 3 ? `rank-${i+1}` : '';
       return `
         <tr>
           <td class="rank ${rankClass}">${i + 1}</td>
           <td>${d.deck}</td>
+          <td class="sub-pts">${d.games}</td>
           <td class="sub-pts">${d.game}</td>
           <td class="sub-pts">${d.bonus}</td>
           <td class="total-pts">${d.total}</td>
-          <td class="sub-pts">${d.games}</td>
           <td class="sub-pts">${d.ppg.toFixed(2)}</td>
         </tr>
       `;
     }).join('');
+  }
+
+  function sortBy(key) {
+    if (sortKey === key) {
+      sortDir *= -1;
+    } else {
+      sortKey = key;
+      sortDir = key === 'deck' ? 1 : -1;
+    }
+    currentSorted.sort((a, b) => {
+      const av = a[key], bv = b[key];
+      if (typeof av === 'string') return sortDir * av.localeCompare(bv);
+      return sortDir * (bv - av);
+    });
+    updateSortHeaders();
+    renderTable(currentSorted);
+  }
+
+  function updateSortHeaders() {
+    const keyToIndex = { deck: 1, games: 2, game: 3, bonus: 4, total: 5, ppg: 6 };
+    document.querySelectorAll('th.sortable').forEach(th => {
+      th.classList.remove('sort-asc', 'sort-desc');
+    });
+    const ths = document.querySelectorAll('th.sortable');
+    const idx = Object.keys(keyToIndex).indexOf(sortKey);
+    if (idx !== -1 && ths[idx]) {
+      ths[idx].classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    }
   }
 
   load().catch(e => {
