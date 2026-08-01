@@ -3,12 +3,14 @@
     "tournamentId": 1,
     "tournamentName": "I° Torneo Bobby Kelzor",
     "date": "2024-04-27",
-    "card": "Leonin Warleader"
+    "card": "Leonin Warleader",
+    "deck": "Token"
   },
   {
     "tournamentId": 2,
     "tournamentName": "II° Torneo Bobby Kelzor",
     "date": "2024-05-04",
-    "card": "Krenko, Mob Boss"
+    "card": "Krenko, Mob Boss",
+    "deck": "Goblin"
   }
 ]
