@@ -168,7 +168,7 @@
         <th>#</th>
         <th class="sortable" onclick="sortBy('deck')">Deck</th>
         <th class="sortable" onclick="sortBy('games')">Games</th>
-        <th class="sortable" onclick="sortBy('game')">Game Won</th>
+        <th class="sortable" onclick="sortBy('game')">Wins</th>
         <th class="sortable" onclick="sortBy('bonus')">Bonus</th>
         <th class="sortable" onclick="sortBy('total')">Total</th>
         <th class="sortable" onclick="sortBy('ppg')">PPG</th>
@@ -257,7 +257,7 @@
         labels: sorted.map(d => d.deck),
         datasets: [
           {
-            label: 'Game Won',
+            label: 'Wins',
             data: sorted.map(d => d.game),
             backgroundColor: '#555',
             borderRadius: 4,
