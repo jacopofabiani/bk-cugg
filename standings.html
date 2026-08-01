@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Standings - Bobby Kelzor</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    nav a {
+      color: #a78bfa;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover { text-decoration: underline; }
+
+    h1 {
+      color: #c4b5fd;
+      font-size: 1.6rem;
+      margin-bottom: 28px;
+    }
+
+    .chart-container {
+      background: #16213e;
+      border: 1px solid #2d2d5e;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 800px;
+      margin-bottom: 40px;
+    }
+
+    .chart-title {
+      color: #a78bfa;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+
+    /* Leaderboard table */
+    .leaderboard {
+      max-width: 800px;
+    }
+
+    .leaderboard-title {
+      color: #a78bfa;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #16213e;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2d2d5e;
+    }
+
+    th {
+      background: #0f3460;
+      color: #a78bfa;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 10px 16px;
+      text-align: left;
+    }
+
+    td {
+      padding: 10px 16px;
+      border-top: 1px solid #2d2d5e;
+      font-size: 0.95rem;
+    }
+
+    tr:first-child td { border-top: none; }
+
+    .rank {
+      color: #888;
+      font-size: 0.85rem;
+      width: 32px;
+    }
+
+    .rank-1 { color: #fbbf24; font-weight: bold; }
+    .rank-2 { color: #9ca3af; font-weight: bold; }
+    .rank-3 { color: #b45309; font-weight: bold; }
+
+    .total-pts {
+      font-weight: bold;
+      color: #c4b5fd;
+    }
+
+    .sub-pts {
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    #error {
+      color: #f87171;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="tournament.html">Tournament</a>
+  <a href="decks.html">Decks</a>
+  <a href="standings.html">Standings</a>
+</nav>
+
+<h1>Standings</h1>
+
+<div class="chart-container">
+  <div class="chart-title">Total Points by Deck</div>
+  <canvas id="chart" height="100"></canvas>
+</div>
+
+<div class="leaderboard">
+  <div class="leaderboard-title">Leaderboard</div>
+  <table id="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Deck</th>
+        <th>Game Pts</th>
+        <th>Bonus</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<p id="error"></p>
+
+<script>
+  async function load() {
+    const res = await fetch('data/points.json');
+    const tournaments = await res.json();
+
+    // Accumulate total points per deck across all tournaments
+    const totals = {};
+    const gameMap = {};
+    const bonusMap = {};
+
+    for (const t of tournaments) {
+      for (const s of t.scores) {
+        totals[s.deck]   = (totals[s.deck]   || 0) + s.total;
+        gameMap[s.deck]  = (gameMap[s.deck]   || 0) + s.gamePoints;
+        bonusMap[s.deck] = (bonusMap[s.deck]  || 0) + s.bonusFinalist + s.bonusWinner;
+      }
+    }
+
+    // Sort by total descending
+    const sorted = Object.keys(totals)
+      .map(deck => ({ deck, total: totals[deck], game: gameMap[deck], bonus: bonusMap[deck] }))
+      .sort((a, b) => b.total - a.total);
+
+    // Chart
+    const COLORS = [
+      '#a78bfa','#60a5fa','#34d399','#f87171',
+      '#fbbf24','#f472b6','#38bdf8','#818cf8'
+    ];
+
+    new Chart(document.getElementById('chart'), {
+      type: 'bar',
+      data: {
+        labels: sorted.map(d => d.deck),
+        datasets: [
+          {
+            label: 'Game Points',
+            data: sorted.map(d => d.game),
+            backgroundColor: '#3b82f6',
+            borderRadius: 4,
+          },
+          {
+            label: 'Bonus Points',
+            data: sorted.map(d => d.bonus),
+            backgroundColor: '#a78bfa',
+            borderRadius: 4,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: '#e0e0e0', font: { size: 12 } }
+          },
+          tooltip: {
+            callbacks: {
+              footer: (items) => {
+                const total = items.reduce((s, i) => s + i.raw, 0);
+                return 'Total: ' + total;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            ticks: { color: '#e0e0e0' },
+            grid: { color: '#2d2d5e' }
+          },
+          y: {
+            stacked: true,
+            ticks: { color: '#e0e0e0', stepSize: 1 },
+            grid: { color: '#2d2d5e' },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // Table
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = sorted.map((d, i) => {
+      const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
+      return `
+        <tr>
+          <td class="rank ${rankClass}">${i + 1}</td>
+          <td>${d.deck}</td>
+          <td class="sub-pts">${d.game}</td>
+          <td class="sub-pts">${d.bonus}</td>
+          <td class="total-pts">${d.total}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  load().catch(e => {
+    document.getElementById('error').textContent = 'Error loading data: ' + e.message;
+  });
+</script>
+</body>
+</html>
