@@ -160,6 +160,8 @@
         <th>Game Won</th>
         <th>Bonus</th>
         <th>Total</th>
+        <th>Games</th>
+        <th>PPG</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -170,11 +172,16 @@
 
 <script>
   let allTournaments = [];
+  let allMatches = [];
   let chartInstance = null;
 
   async function load() {
-    const res = await fetch('data/points.json');
-    allTournaments = await res.json();
+    const [pointsRes, matchesRes] = await Promise.all([
+      fetch('data/points.json'),
+      fetch('data/matches.json')
+    ]);
+    allTournaments = await pointsRes.json();
+    allMatches = await matchesRes.json();
 
     const selector = document.getElementById('selector');
     selector.innerHTML = allTournaments.map((t, i) => `
@@ -193,17 +200,35 @@
       document.getElementById(`sbtn-${i}`).classList.toggle('active', i === upToIndex);
     });
 
-    const totals = {}, gameMap = {}, bonusMap = {};
+    const totals = {}, gameMap = {}, bonusMap = {}, gamesPlayedMap = {};
     for (let i = 0; i <= upToIndex; i++) {
       for (const s of allTournaments[i].scores) {
         totals[s.deck]   = (totals[s.deck]   || 0) + s.total;
         gameMap[s.deck]  = (gameMap[s.deck]   || 0) + s.gamePoints;
         bonusMap[s.deck] = (bonusMap[s.deck]  || 0) + s.bonusFinalist + s.bonusWinner;
       }
+      const tournament = allTournaments[i];
+      const matchData = allMatches.find(m => m.id === tournament.tournamentId);
+      if (matchData) {
+        for (const round of matchData.rounds) {
+          for (const match of round.matches) {
+            const games = match.score1 + match.score2;
+            gamesPlayedMap[match.player1] = (gamesPlayedMap[match.player1] || 0) + games;
+            gamesPlayedMap[match.player2] = (gamesPlayedMap[match.player2] || 0) + games;
+          }
+        }
+      }
     }
 
     const sorted = Object.keys(totals)
-      .map(deck => ({ deck, total: totals[deck], game: gameMap[deck], bonus: bonusMap[deck] }))
+      .map(deck => ({
+        deck,
+        total: totals[deck],
+        game: gameMap[deck],
+        bonus: bonusMap[deck],
+        games: gamesPlayedMap[deck] || 0,
+        ppg: gamesPlayedMap[deck] ? (totals[deck] / gamesPlayedMap[deck]) : 0
+      }))
       .sort((a, b) => b.total - a.total);
 
     if (chartInstance) chartInstance.destroy();
@@ -253,6 +278,8 @@
           <td class="sub-pts">${d.game}</td>
           <td class="sub-pts">${d.bonus}</td>
           <td class="total-pts">${d.total}</td>
+          <td class="sub-pts">${d.games}</td>
+          <td class="sub-pts">${d.ppg.toFixed(2)}</td>
         </tr>
       `;
     }).join('');
