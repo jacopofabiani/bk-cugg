@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rules - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    nav a {
+      color: #a78bfa;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover { text-decoration: underline; }
+
+    h1 {
+      color: #c4b5fd;
+      font-size: 1.6rem;
+      margin-bottom: 28px;
+    }
+
+    .section {
+      background: #16213e;
+      border: 1px solid #2d2d5e;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 700px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      color: #a78bfa;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+
+    .rule-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .rule-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .rule-list li .bullet {
+      background: #0f3460;
+      color: #c4b5fd;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .points-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .points-table th {
+      background: #0f3460;
+      color: #a78bfa;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 10px 16px;
+      text-align: left;
+    }
+
+    .points-table td {
+      padding: 10px 16px;
+      border-top: 1px solid #2d2d5e;
+      font-size: 0.95rem;
+    }
+
+    .points-table tr:first-child td { border-top: none; }
+
+    .pts {
+      color: #c4b5fd;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="tournament.html">Tournament</a>
+  <a href="decks.html">Decks</a>
+  <a href="standings.html">Standings</a>
+  <a href="rules.html">Rules</a>
+</nav>
+
+<h1>Rules</h1>
+
+<div class="section">
+  <div class="section-title">Tournament Format</div>
+  <ul class="rule-list">
+    <li>
+      <span class="bullet">Format</span>
+      Single-elimination bracket tournament.
+    </li>
+    <li>
+      <span class="bullet">Matches</span>
+      Each match is a best-of-3 series. The first player to win 2 games advances.
+    </li>
+    <li>
+      <span class="bullet">MVP</span>
+      At the end of each tournament, one card is voted as MVP of the tournament.
+    </li>
+  </ul>
+</div>
+
+<div class="section">
+  <div class="section-title">Points System</div>
+  <table class="points-table">
+    <thead>
+      <tr>
+        <th>Achievement</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Each game won within a match</td>
+        <td class="pts">+1 per game</td>
+      </tr>
+      <tr>
+        <td>Reaching the Final (losing finalist)</td>
+        <td class="pts">+2</td>
+      </tr>
+      <tr>
+        <td>Winning the Final (tournament winner)</td>
+        <td class="pts">+5</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">Points Example</div>
+  <ul class="rule-list">
+    <li>
+      <span class="bullet">Example</span>
+      A deck wins 2-1 in the quarterfinals, 2-0 in the semifinals, and 2-0 in the final:
+      it earns 2 + 2 + 2 = 6 game points, plus 5 for winning = <strong style="color:#c4b5fd">11 total</strong>.
+    </li>
+    <li>
+      <span class="bullet">Example</span>
+      A deck loses 1-2 in the final: it earns 1 game point plus 2 for reaching the final = <strong style="color:#c4b5fd">3 total</strong>.
+    </li>
+    <li>
+      <span class="bullet">Note</span>
+      Points accumulate across all tournaments — the standings show the all-time total.
+    </li>
+  </ul>
+</div>
+
+</body>
+</html>

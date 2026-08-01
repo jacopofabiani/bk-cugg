@@ -4,7 +4,7 @@
     "tournamentName": "I° Torneo Bobby Kelzor",
     "date": "2024-04-27",
     "scores": [
-      { "deck": "Token",   "gamePoints": 6, "bonusFinalist": 2, "bonusWinner": 5, "total": 13 },
+      { "deck": "Token",   "gamePoints": 6, "bonusFinalist": 0, "bonusWinner": 5, "total": 11 },
       { "deck": "LoTR",    "gamePoints": 4, "bonusFinalist": 2, "bonusWinner": 0, "total": 6  },
       { "deck": "Destroy", "gamePoints": 3, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
       { "deck": "Goblin",  "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
