@@ -66,5 +66,39 @@
         ]
       }
     ]
+  },
+  {
+    "id": 3,
+    "name": "III° Torneo Bobby Kelzor",
+    "date": "2024-05-19",
+    "winner": "Destroy",
+    "mvp": "Etrata, Deadly Fugitive",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Quarterfinals",
+        "matches": [
+          { "player1": "LoTR",    "score1": 1, "player2": "Goblin",   "score2": 2 },
+          { "player1": "Poison",  "score1": 2, "player2": "Token",    "score2": 0 },
+          { "player1": "Destroy", "score1": 2, "player2": "GainLife", "score2": 0 },
+          { "player1": "Dino",    "score1": 1, "player2": "Vampiri",  "score2": 2 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Goblin",  "score1": 2, "player2": "Poison",  "score2": 0 },
+          { "player1": "Destroy", "score1": 2, "player2": "Vampiri", "score2": 1 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Final",
+        "matches": [
+          { "player1": "Goblin", "score1": 1, "player2": "Destroy", "score2": 2 }
+        ]
+      }
+    ]
   }
 ]
