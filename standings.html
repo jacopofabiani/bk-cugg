@@ -172,6 +172,7 @@
         <th class="sortable" onclick="sortBy('bonus')">Bonus</th>
         <th class="sortable" onclick="sortBy('total')">Total</th>
         <th class="sortable" onclick="sortBy('ppg')">PPG</th>
+        <th class="sortable" onclick="sortBy('ppt')">PPT</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -213,12 +214,13 @@
       document.getElementById(`sbtn-${i}`).classList.toggle('active', i === upToIndex);
     });
 
-    const totals = {}, gameMap = {}, bonusMap = {}, gamesPlayedMap = {};
+    const totals = {}, gameMap = {}, bonusMap = {}, gamesPlayedMap = {}, tournamentsMap = {};
     for (let i = 0; i <= upToIndex; i++) {
       for (const s of allTournaments[i].scores) {
-        totals[s.deck]   = (totals[s.deck]   || 0) + s.total;
-        gameMap[s.deck]  = (gameMap[s.deck]   || 0) + s.gamePoints;
-        bonusMap[s.deck] = (bonusMap[s.deck]  || 0) + s.bonusFinalist + s.bonusWinner;
+        totals[s.deck]        = (totals[s.deck]        || 0) + s.total;
+        gameMap[s.deck]       = (gameMap[s.deck]        || 0) + s.gamePoints;
+        bonusMap[s.deck]      = (bonusMap[s.deck]       || 0) + s.bonusFinalist + s.bonusWinner;
+        tournamentsMap[s.deck]= (tournamentsMap[s.deck] || 0) + 1;
       }
       const tournament = allTournaments[i];
       const matchData = allMatches.find(m => m.id === tournament.tournamentId);
@@ -240,7 +242,9 @@
         game: gameMap[deck],
         bonus: bonusMap[deck],
         games: gamesPlayedMap[deck] || 0,
-        ppg: gamesPlayedMap[deck] ? (totals[deck] / gamesPlayedMap[deck]) : 0
+        ppg: gamesPlayedMap[deck] ? (totals[deck] / gamesPlayedMap[deck]) : 0,
+        tournaments: tournamentsMap[deck] || 0,
+        ppt: tournamentsMap[deck] ? (totals[deck] / tournamentsMap[deck]) : 0
       }))
       .sort((a, b) => b.total - a.total);
 
@@ -303,6 +307,7 @@
           <td class="sub-pts">${d.bonus}</td>
           <td class="total-pts">${d.total}</td>
           <td class="sub-pts">${d.ppg.toFixed(2)}</td>
+          <td class="sub-pts">${d.ppt.toFixed(2)}</td>
         </tr>
       `;
     }).join('');
