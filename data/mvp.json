@@ -12,5 +12,19 @@
     "date": "2024-05-04",
     "card": "Krenko, Mob Boss",
     "deck": "Goblin"
+  },
+  {
+    "tournamentId": 3,
+    "tournamentName": "III° Torneo Bobby Kelzor",
+    "date": "2024-05-19",
+    "card": "Etrata, Deadly Fugitive",
+    "deck": "Destroy"
+  },
+  {
+    "tournamentId": 4,
+    "tournamentName": "IV° Torneo Bobby Kelzor",
+    "date": "2024-05-31",
+    "card": "Alcaroz, Deepest Betrayal",
+    "deck": "Flying"
   }
 ]
