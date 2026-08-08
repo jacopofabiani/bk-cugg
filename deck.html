@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deck - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    nav a {
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover { text-decoration: underline; }
+
+    h1 { font-size: 1.6rem; margin-bottom: 24px; }
+
+    .section {
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 500px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+      color: #555;
+    }
+
+    .colors {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .color-pip {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1px solid #000;
+    }
+
+    .color-W { background: #f9fafb; }
+    .color-U { background: #3b82f6; }
+    .color-B { background: #1f2937; }
+    .color-R { background: #ef4444; }
+    .color-G { background: #22c55e; }
+
+    .moxfield-link {
+      display: inline-block;
+      margin-top: 4px;
+      color: #000;
+      font-weight: bold;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border-bottom: 1.5px solid #000;
+      padding-bottom: 1px;
+    }
+
+    .moxfield-link:hover { opacity: 0.6; }
+
+    #error { color: red; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="tournament.html">Tournament</a>
+  <a href="decks.html">Decks</a>
+  <a href="standings.html">Standings</a>
+  <a href="mvp.html">MVP</a>
+  <a href="rules.html">Rules</a>
+</nav>
+
+<div id="content"><p style="color:#888">Loading...</p></div>
+<p id="error"></p>
+
+<script>
+  async function load() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if (!id) { window.location.href = 'decks.html'; return; }
+
+    const res = await fetch('data/decks.json');
+    const decks = await res.json();
+    const deck = decks.find(d => d.id === id);
+
+    if (!deck) { window.location.href = 'decks.html'; return; }
+
+    document.title = `${deck.name} - Bobby Kelzor`;
+
+    const colorPips = deck.colors.map(c => `<div class="color-pip color-${c}"></div>`).join('');
+    const oldColorPips = deck.oldColors
+      ? `<span style="color:#aaa;font-size:0.85rem;align-self:center">(</span>${deck.oldColors.map(c => `<div class="color-pip color-${c}"></div>`).join('')}<span style="color:#aaa;font-size:0.85rem;align-self:center">)</span>`
+      : '';
+
+    const moxfieldSection = deck.moxfield ? `
+      <div class="section">
+        <div class="section-title">Decklist</div>
+        <a class="moxfield-link" href="${deck.moxfield}" target="_blank" rel="noopener">View on Moxfield &rarr;</a>
+      </div>
+    ` : '';
+
+    document.getElementById('content').innerHTML = `
+      <h1>${deck.name}</h1>
+      <div class="section">
+        <div class="section-title">Colors</div>
+        <div class="colors">
+          ${colorPips}
+          ${oldColorPips}
+        </div>
+      </div>
+      ${moxfieldSection}
+    `;
+  }
+
+  load().catch(e => {
+    document.getElementById('error').textContent = 'Error loading data: ' + e.message;
+  });
+</script>
+</body>
+</html>

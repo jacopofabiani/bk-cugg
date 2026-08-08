@@ -306,10 +306,15 @@
 
 <script>
   let allTournaments = [];
+  let allMvps = [];
 
   async function load() {
-    const res = await fetch('data/matches.json');
-    allTournaments = await res.json();
+    const [matchRes, mvpRes] = await Promise.all([
+      fetch('data/matches.json'),
+      fetch('data/mvp.json')
+    ]);
+    allTournaments = await matchRes.json();
+    allMvps = await mvpRes.json();
 
     // Build selector buttons
     const selector = document.getElementById('selector');
@@ -331,6 +336,7 @@
     });
 
     const t = allTournaments[index];
+    const mvpData = allMvps.find(m => m.tournamentId === t.id);
     const content = document.getElementById('content');
 
     let html = `
@@ -378,6 +384,7 @@
       </div>
       <div class="mvp-section">
         <div class="mvp-label">MVP</div>
+        ${mvpData?.image ? `<img src="${mvpData.image}" alt="${t.mvp}" style="width:60px;border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
         <div class="mvp-name">${t.mvp}</div>
       </div>
     `;

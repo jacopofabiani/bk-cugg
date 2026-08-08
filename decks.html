@@ -103,13 +103,13 @@
 
     const grid = document.getElementById('deck-grid');
     grid.innerHTML = decks.map(deck => `
-      <div class="deck-card">
+      <a class="deck-card" href="deck.html?id=${deck.id}" style="text-decoration:none;color:inherit;cursor:pointer">
         <div class="deck-name">${deck.name}</div>
         <div class="colors">
           ${deck.colors.map(c => `<div class="color-pip color-${c}"></div>`).join('')}
           ${deck.oldColors ? `<span style="color:#aaa;font-size:0.85rem;align-self:center">(</span>${deck.oldColors.map(c => `<div class="color-pip color-${c}"></div>`).join('')}<span style="color:#aaa;font-size:0.85rem;align-self:center">)</span>` : ''}
         </div>
-      </div>
+      </a>
     `).join('');
   }
 

@@ -52,6 +52,20 @@
 
     .mvp-card-left {
       display: flex;
+      gap: 16px;
+      align-items: center;
+      flex: 1;
+    }
+
+    .mvp-card-img {
+      width: 54px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      border: 1px solid #000;
+    }
+
+    .mvp-card-info {
+      display: flex;
       flex-direction: column;
       gap: 6px;
     }
@@ -113,9 +127,12 @@
     list.innerHTML = mvps.map(m => `
       <div class="mvp-card">
         <div class="mvp-card-left">
-          <div class="mvp-tournament">${m.tournamentName}</div>
-          <div class="mvp-card-name">${m.card}</div>
-          <div class="mvp-date">${formatDate(m.date)} &middot; ${m.deck} deck</div>
+          ${m.image ? `<img class="mvp-card-img" src="${m.image}" alt="${m.card}">` : ''}
+          <div class="mvp-card-info">
+            <div class="mvp-tournament">${m.tournamentName}</div>
+            <div class="mvp-card-name">${m.card}</div>
+            <div class="mvp-date">${formatDate(m.date)} &middot; ${m.deck} deck</div>
+          </div>
         </div>
         <div class="mvp-badge">MVP</div>
       </div>

@@ -4,7 +4,8 @@
     "tournamentName": "I° Torneo Bobby Kelzor",
     "date": "2024-04-27",
     "card": "Leonin Warleader",
-    "deck": "Token"
+    "deck": "Token",
+    "image": "images/mvp/leonin-warleader.jpg"
   },
   {
     "tournamentId": 2,
@@ -24,7 +25,7 @@
     "tournamentId": 4,
     "tournamentName": "IV° Torneo Bobby Kelzor",
     "date": "2024-05-31",
-    "card": "Alcaroz, Deepest Betrayal",
+    "card": "Aclazotz, Deepest Betrayal // Temple of the Dead",
     "deck": "Flying"
   }
 ]

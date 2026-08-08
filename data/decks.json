@@ -3,7 +3,7 @@
   { "id": "vampiri", "name": "Vampiri", "colors": ["W", "B"] },
   { "id": "goblin",  "name": "Goblin",  "colors": ["R"] },
   { "id": "gainlife","name": "GainLife","colors": ["W", "G"] },
-  { "id": "destroy", "name": "Destroy", "colors": ["B", "U"] },
+  { "id": "destroy", "name": "Destroy", "colors": ["B", "U"], "moxfield": "https://moxfield.com/decks/FJftU860B0G1U2oABC5w9g" },
   { "id": "dino",    "name": "Dino",    "colors": ["R", "G"] },
   { "id": "poison",  "name": "Poison",  "colors": ["B", "G"] },
   { "id": "lotr",    "name": "LoTR",    "colors": ["B", "G"], "oldColors": ["U"] },
