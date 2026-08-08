@@ -6,7 +6,7 @@
   { "id": "destroy", "name": "Destroy", "colors": ["B", "U"] },
   { "id": "dino",    "name": "Dino",    "colors": ["R", "G"] },
   { "id": "poison",  "name": "Poison",  "colors": ["B", "G"] },
-  { "id": "lotr",    "name": "LoTR",    "colors": ["B", "G"] },
+  { "id": "lotr",    "name": "LoTR",    "colors": ["B", "G"], "oldColors": ["U"] },
   { "id": "flying",  "name": "Flying",  "colors": ["U", "R"], "oldColors": ["W", "B"] },
   { "id": "goading", "name": "Goading", "colors": ["U", "R"] },
   { "id": "mordor",  "name": "Mordor",  "colors": ["B", "R"] },

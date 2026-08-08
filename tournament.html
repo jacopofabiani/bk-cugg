@@ -340,7 +340,7 @@
     `;
 
     for (const round of t.rounds) {
-      if (round.stageBreak) html += `<div style="width:0;border-left:2px dashed #ccc;align-self:stretch;margin:0 4px"></div>`;
+      if (round.stageBreak) html += `</div><div class="bracket">`;
       html += `<div class="round">`;
       html += `<div class="round-title">${round.name}</div>`;
       for (const m of round.matches) {
