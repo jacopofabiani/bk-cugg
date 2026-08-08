@@ -10,9 +10,10 @@ class SiteNav extends HTMLElement {
       ['scandals.html',   'Scandals'],
     ];
 
+    const current = location.pathname.split('/').pop() || 'index.html';
     this.innerHTML = `
       <nav>
-        ${links.map(([href, label]) => `<a href="${href}">${label}</a>`).join('\n        ')}
+        ${links.map(([href, label]) => `<a href="${href}"${href === current ? ' style="text-decoration:underline"' : ''}>${label}</a>`).join('\n        ')}
       </nav>
     `;
   }
