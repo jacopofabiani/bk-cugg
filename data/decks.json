@@ -7,7 +7,7 @@
   { "id": "dino",    "name": "Dino",    "colors": ["R", "G"] },
   { "id": "poison",  "name": "Poison",  "colors": ["B", "G"] },
   { "id": "lotr",    "name": "LoTR",    "colors": ["B", "G"], "oldColors": ["U"] },
-  { "id": "flying",  "name": "Flying",  "colors": ["U", "R"], "oldColors": ["W", "B"] },
+  { "id": "flying",  "name": "Flying",  "colors": ["U", "R", "W", "B", "G"]},
   { "id": "goading", "name": "Goading", "colors": ["U", "R"] },
   { "id": "mordor",  "name": "Mordor",  "colors": ["B", "R"] },
   { "id": "elves",   "name": "Elves",   "colors": ["G"] }
