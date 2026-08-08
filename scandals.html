@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scandals - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    nav a {
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover { text-decoration: underline; }
+
+    h1 { font-size: 1.6rem; margin-bottom: 28px; }
+
+    .scandal-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 600px;
+    }
+
+    .scandal-card {
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .scandal-number {
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .scandal-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .scandal-body {
+      font-size: 0.95rem;
+      color: #555;
+      font-style: italic;
+    }
+  </style>
+  <script src="nav.js" defer></script>
+</head>
+<body>
+
+<site-nav></site-nav>
+
+<h1>Scandals</h1>
+
+<div class="scandal-list">
+  <div class="scandal-card">
+    <div class="scandal-number">Scandal #1</div>
+    <div class="scandal-title">Scandalo Flying/Ugin</div>
+    <div class="scandal-body">Details coming soon.</div>
+  </div>
+  <div class="scandal-card">
+    <div class="scandal-number">Scandal #2</div>
+    <div class="scandal-title">Caso Doping Lathiel</div>
+    <div class="scandal-body">Details coming soon.</div>
+  </div>
+</div>
+
+</body>
+</html>
