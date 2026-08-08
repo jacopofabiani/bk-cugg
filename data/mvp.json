@@ -27,5 +27,12 @@
     "date": "2024-05-31",
     "card": "Aclazotz, Deepest Betrayal // Temple of the Dead",
     "deck": "Flying"
+  },
+  {
+    "tournamentId": 5,
+    "tournamentName": "V° Torneo Bob Kelzor",
+    "date": "2024-06-15",
+    "card": "Jace, the Perfected Mind",
+    "deck": "Destroy"
   }
 ]
