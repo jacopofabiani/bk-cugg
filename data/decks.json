@@ -1,14 +1,14 @@
 [
-  { "id": "token",   "name": "Token",   "colors": ["W", "B"] },
+  { "id": "destroy", "name": "Destroy", "colors": ["B", "U"], "moxfield": "https://moxfield.com/decks/FJftU860B0G1U2oABC5w9g" },
   { "id": "vampiri", "name": "Vampiri", "colors": ["W", "B"] },
+  { "id": "token",   "name": "Token",   "colors": ["W", "B"] },
   { "id": "goblin",  "name": "Goblin",  "colors": ["R"] },
   { "id": "gainlife","name": "GainLife","colors": ["W", "G"] },
-  { "id": "destroy", "name": "Destroy", "colors": ["B", "U"], "moxfield": "https://moxfield.com/decks/FJftU860B0G1U2oABC5w9g" },
+  { "id": "goading", "name": "Goading", "colors": ["U", "R"] },
+  { "id": "lotr",    "name": "LoTR",    "colors": ["B", "G"], "oldColors": ["U"] },
   { "id": "dino",    "name": "Dino",    "colors": ["R", "G"] },
   { "id": "poison",  "name": "Poison",  "colors": ["B", "G"] },
-  { "id": "lotr",    "name": "LoTR",    "colors": ["B", "G"], "oldColors": ["U"] },
-  { "id": "flying",  "name": "Flying",  "colors": ["U", "R", "W", "B", "G"]},
-  { "id": "goading", "name": "Goading", "colors": ["U", "R"] },
   { "id": "mordor",  "name": "Mordor",  "colors": ["B", "R"] },
-  { "id": "elves",   "name": "Elves",   "colors": ["G"] }
+  { "id": "elves",   "name": "Elves",   "colors": ["G"] },
+  { "id": "flying",  "name": "Flying",  "colors": ["U", "R", "W", "B", "G"]},
 ]
