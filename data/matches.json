@@ -173,6 +173,7 @@
       },
       {
         "round": 8,
+        "stageBreak": true,
         "name": "Semifinals",
         "matches": [
           { "player1": "Flying",  "score1": 2, "player2": "Goading", "score2": 1 },

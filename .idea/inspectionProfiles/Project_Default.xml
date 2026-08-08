@@ -1,0 +1,46 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="charset-normalizer" />
+          <option value="contourpy" />
+          <option value="cycler" />
+          <option value="fonttools" />
+          <option value="idna" />
+          <option value="kiwisolver" />
+          <option value="llvmlite" />
+          <option value="matplotlib" />
+          <option value="numba" />
+          <option value="numpy" />
+          <option value="pandas" />
+          <option value="pandas-ta" />
+          <option value="pillow" />
+          <option value="pyparsing" />
+          <option value="python-dateutil" />
+          <option value="requests" />
+          <option value="six" />
+          <option value="tqdm" />
+          <option value="urllib3" />
+          <option value="astroid" />
+          <option value="black" />
+          <option value="click" />
+          <option value="coverage" />
+          <option value="dill" />
+          <option value="iniconfig" />
+          <option value="isort" />
+          <option value="mccabe" />
+          <option value="mypy-extensions" />
+          <option value="pathspec" />
+          <option value="pluggy" />
+          <option value="pygments" />
+          <option value="pylint" />
+          <option value="pytest" />
+          <option value="pytest-cov" />
+          <option value="tomlkit" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

@@ -107,6 +107,7 @@
         <div class="deck-name">${deck.name}</div>
         <div class="colors">
           ${deck.colors.map(c => `<div class="color-pip color-${c}"></div>`).join('')}
+          ${deck.oldColors ? `<span style="color:#aaa;font-size:0.85rem;align-self:center">(</span>${deck.oldColors.map(c => `<div class="color-pip color-${c}" style="opacity:0.45"></div>`).join('')}<span style="color:#aaa;font-size:0.85rem;align-self:center">)</span>` : ''}
         </div>
       </div>
     `).join('');
