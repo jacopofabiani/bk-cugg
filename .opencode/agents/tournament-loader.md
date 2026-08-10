@@ -119,15 +119,16 @@ Points come from two phases: **group stage** and **bracket**.
 
 ## Known decks (data/decks.json)
 
-Token, Goblin, GainLife, Goading, LoTR, Dino, Poison, Mordor, Elves, Flying, Vampiri, Destroy
+Token, Goblin, GainLife, Goading, LoTR, Dino, Poison, Mordor, Elves, Flying, Vampiri, Destroy, Assassins, Cycling
 
-If a new deck appears, add it to `decks.json` with `id` (lowercase), `name`, and `colors` (array of W/U/B/R/G).
+**IMPORTANT:** Before adding any tournament data, compare every deck name that appears in the new tournament's matches against the list above. If any deck is not in the list, it is a new deck — you MUST add it to `data/decks.json` before proceeding. Ask the user for its colors (W/U/B/R/G) if not provided. Never skip this step.
 
 ## Checklist when loading a new tournament
 
-1. Read the current tail of `data/matches.json` to find the last `id` — increment by 1.
-2. Add the new tournament object to `data/matches.json`.
-3. Add the MVP entry to `data/mvp.json`.
-4. Add the scores entry to `data/points.json` — include every participating deck, zeros for those eliminated in groups.
-5. Verify `stageBreak` placement matches the rules above.
-6. Verify `total = gamePoints + bonusFinalist + bonusWinner` for every score row.
+1. **Check for new decks**: list all unique deck names from the new tournament matches. For each one not in the Known decks list above, add it to `data/decks.json` (ask user for colors if unknown) and add it to the Known decks list.
+2. Read the current tail of `data/matches.json` to find the last `id` — increment by 1.
+3. Add the new tournament object to `data/matches.json`.
+4. Add the MVP entry to `data/mvp.json`.
+5. Add the scores entry to `data/points.json` — include every participating deck, zeros for those eliminated in groups.
+6. Verify `stageBreak` placement matches the rules above.
+7. Verify `total = gamePoints + bonusFinalist + bonusWinner` for every score row.

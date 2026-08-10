@@ -101,11 +101,20 @@
     const id = params.get('id');
     if (!id) { window.location.href = 'decks.html'; return; }
 
-    const res = await fetch('data/decks.json');
-    const decks = await res.json();
+    const [decksRes, matchesRes] = await Promise.all([
+      fetch('data/decks.json'),
+      fetch('data/matches.json')
+    ]);
+    const decks = await decksRes.json();
+    const tournaments = await matchesRes.json();
     const deck = decks.find(d => d.id === id);
 
     if (!deck) { window.location.href = 'decks.html'; return; }
+
+    // Find first tournament this deck appeared in
+    const firstTournament = tournaments.find(t =>
+      t.rounds.some(r => r.matches.some(m => m.player1 === deck.name || m.player2 === deck.name))
+    );
 
     document.title = `${deck.name} - Bobby Kelzor`;
 
@@ -121,6 +130,14 @@
       </div>
     ` : '';
 
+    const firstTournamentSection = firstTournament ? `
+      <div class="section">
+        <div class="section-title">First Tournament</div>
+        <div style="font-weight:bold;font-size:1rem">${firstTournament.name}</div>
+        <div style="color:#555;font-size:0.85rem;margin-top:4px">${formatDate(firstTournament.startDate)}</div>
+      </div>
+    ` : '';
+
     document.getElementById('content').innerHTML = `
       <h1>${deck.name}</h1>
       <div class="section">
@@ -130,8 +147,14 @@
           ${oldColorPips}
         </div>
       </div>
+      ${firstTournamentSection}
       ${moxfieldSection}
     `;
+  }
+
+  function formatDate(str) {
+    const [y, m, d] = str.split('-');
+    return `${d}/${m}/${y}`;
   }
 
   load().catch(e => {
