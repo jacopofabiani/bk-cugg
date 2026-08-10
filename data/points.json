@@ -81,5 +81,24 @@
       { "deck": "Flying",   "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
       { "deck": "Mordor",   "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
     ]
+  },
+  {
+    "tournamentId": 6,
+    "tournamentName": "VI° Torneo Bob Kelzor",
+    "date": "2024-06-23",
+    "scores": [
+      { "deck": "Destroy",  "gamePoints": 6, "bonusFinalist": 0, "bonusWinner": 5, "total": 11 },
+      { "deck": "Token",    "gamePoints": 5, "bonusFinalist": 2, "bonusWinner": 0, "total": 7  },
+      { "deck": "GainLife", "gamePoints": 4, "bonusFinalist": 0, "bonusWinner": 0, "total": 4  },
+      { "deck": "Dino",     "gamePoints": 3, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
+      { "deck": "Poison",   "gamePoints": 3, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
+      { "deck": "Goblin",   "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "LoTR",     "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Flying",   "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Mordor",   "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Elves",    "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Vampiri",  "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Goading",  "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
+    ]
   }
 ]

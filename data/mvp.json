@@ -34,5 +34,12 @@
     "date": "2024-06-15",
     "card": "Jace, the Perfected Mind",
     "deck": "Destroy"
+  },
+  {
+    "tournamentId": 6,
+    "tournamentName": "VI° Torneo Bob Kelzor",
+    "date": "2024-06-23",
+    "card": "Jace, the Perfected Mind",
+    "deck": "Destroy"
   }
 ]

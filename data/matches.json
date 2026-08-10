@@ -328,5 +328,51 @@
         ]
       }
     ]
+  },
+  {
+    "id": 6,
+    "name": "VI° Torneo Bob Kelzor",
+    "startDate": "2024-06-15",
+    "endDate": "2024-06-23",
+    "winner": "Destroy",
+    "mvp": "Jace, the Perfected Mind",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Round of 16",
+        "matches": [
+          { "player1": "Mordor",   "score1": 1, "player2": "LoTR",     "score2": 2 },
+          { "player1": "Goading",  "score1": 0, "player2": "Poison",   "score2": 2 },
+          { "player1": "Dino",     "score1": 2, "player2": "Vampiri",  "score2": 0 },
+          { "player1": "Elves",    "score1": 0, "player2": "GainLife", "score2": 2 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Token",   "score1": 2, "player2": "LoTR",     "score2": 0 },
+          { "player1": "Goblin",  "score1": 2, "player2": "Poison",   "score2": 1 },
+          { "player1": "Destroy", "score1": 2, "player2": "Dino",     "score2": 1 },
+          { "player1": "Flying",  "score1": 1, "player2": "GainLife", "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Token",   "score1": 2, "player2": "Goblin",   "score2": 0 },
+          { "player1": "Destroy", "score1": 2, "player2": "GainLife", "score2": 0 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Final",
+        "matches": [
+          { "player1": "Token", "score1": 1, "player2": "Destroy", "score2": 2 }
+        ]
+      }
+    ]
   }
 ]
