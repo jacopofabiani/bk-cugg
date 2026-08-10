@@ -335,7 +335,7 @@
 
     let html = `
       <h1>${t.name}</h1>
-      <div class="meta">${formatDate(t.date)}</div>
+      <div class="meta">${formatDateRange(t.startDate, t.endDate)}</div>
       <div class="bracket">
     `;
 
@@ -389,6 +389,10 @@
   function formatDate(str) {
     const [y, m, d] = str.split('-');
     return `${d}/${m}/${y}`;
+  }
+
+  function formatDateRange(start, end) {
+    return start === end ? formatDate(start) : `${formatDate(start)} – ${formatDate(end)}`;
   }
 
   load().catch(e => {
