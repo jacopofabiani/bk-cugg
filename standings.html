@@ -36,6 +36,16 @@
       gap: 8px;
       margin-bottom: 28px;
       flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .selector-label {
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      margin-right: 4px;
     }
 
     .selector-btn {
@@ -62,7 +72,7 @@
       border: 1.5px solid #000;
       border-radius: 12px;
       padding: 24px;
-      max-width: 800px;
+      max-width: 900px;
       margin-bottom: 40px;
     }
 
@@ -143,7 +153,8 @@
 <div id="selector" class="selector"></div>
 
 <div class="chart-container">
-  <canvas id="chart" height="100"></canvas>
+  <div class="chart-title">Points per tournament</div>
+  <canvas id="chart"></canvas>
 </div>
 
 <div class="leaderboard">
@@ -173,6 +184,14 @@
   let currentSorted = [];
   let sortKey = 'total';
   let sortDir = -1; // -1 = desc, 1 = asc
+  let selectedDecks = new Set();
+
+  // 10 distinct colors for deck lines
+  const DECK_COLORS = [
+    '#e6194b','#3cb44b','#4363d8','#f58231','#911eb4',
+    '#42d4f4','#f032e6','#bfef45','#fabed4','#469990'
+  ];
+  let deckColorMap = {};
 
   async function load() {
     const [pointsRes, matchesRes] = await Promise.all([
@@ -182,22 +201,139 @@
     allTournaments = await pointsRes.json();
     allMatches = await matchesRes.json();
 
-    const selector = document.getElementById('selector');
-    selector.innerHTML = allTournaments.map((t, i) => `
-      <button class="selector-btn ${i === allTournaments.length - 1 ? 'active' : ''}"
-              onclick="showStandings(${i})"
-              id="sbtn-${i}">
-        After ${t.tournamentName}
-      </button>
-    `).join('');
+    // Collect all decks across all tournaments
+    const deckSet = new Set();
+    for (const t of allTournaments) {
+      for (const s of t.scores) deckSet.add(s.deck);
+    }
+    const allDecks = [...deckSet].sort();
 
-    showStandings(allTournaments.length - 1);
+    // Assign colors
+    allDecks.forEach((deck, i) => {
+      deckColorMap[deck] = DECK_COLORS[i % DECK_COLORS.length];
+    });
+
+    // Default: select all decks
+    selectedDecks = new Set(allDecks);
+
+    // Build deck selector
+    const selector = document.getElementById('selector');
+    selector.innerHTML =
+      `<span class="selector-label">Decks:</span>` +
+      `<button class="selector-btn active" id="btn-all" onclick="toggleAll()">All</button>` +
+      allDecks.map(deck => `
+        <button class="selector-btn active"
+                id="dbtn-${deck}"
+                onclick="toggleDeck('${deck}')">
+          ${deck}
+        </button>
+      `).join('');
+
+    renderChart();
+    showStandings();
   }
 
-  function showStandings(upToIndex) {
-    allTournaments.forEach((_, i) => {
-      document.getElementById(`sbtn-${i}`).classList.toggle('active', i === upToIndex);
+  function toggleAll() {
+    const allDecks = Object.keys(deckColorMap);
+    const allSelected = allDecks.every(d => selectedDecks.has(d));
+    if (allSelected) {
+      // deselect all
+      selectedDecks.clear();
+    } else {
+      // select all
+      allDecks.forEach(d => selectedDecks.add(d));
+    }
+    allDecks.forEach(d => {
+      document.getElementById(`dbtn-${d}`).classList.toggle('active', selectedDecks.has(d));
     });
+    document.getElementById('btn-all').classList.toggle('active', !allSelected);
+    renderChart();
+  }
+
+  function toggleDeck(deck) {
+    if (selectedDecks.has(deck)) {
+      selectedDecks.delete(deck);
+    } else {
+      selectedDecks.add(deck);
+    }
+    document.getElementById(`dbtn-${deck}`).classList.toggle('active', selectedDecks.has(deck));
+    const allDecks = Object.keys(deckColorMap);
+    document.getElementById('btn-all').classList.toggle('active', allDecks.every(d => selectedDecks.has(d)));
+    renderChart();
+  }
+
+  function renderChart() {
+    // Build cumulative points per deck per tournament
+    const labels = allTournaments.map((_, i) => `T${i + 1}`);
+    const deckTotals = {}; // deck -> cumulative after each tournament
+
+    for (const deck of Object.keys(deckColorMap)) {
+      deckTotals[deck] = [];
+      let cumulative = 0;
+      for (const t of allTournaments) {
+        const score = t.scores.find(s => s.deck === deck);
+        cumulative += score ? score.total : 0;
+        deckTotals[deck].push(cumulative);
+      }
+    }
+
+    const datasets = Object.keys(deckColorMap)
+      .filter(deck => selectedDecks.has(deck))
+      .map(deck => ({
+        label: deck,
+        data: deckTotals[deck],
+        borderColor: deckColorMap[deck],
+        backgroundColor: deckColorMap[deck],
+        borderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        tension: 0.3,
+        fill: false,
+      }));
+
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(document.getElementById('chart'), {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: '#000', font: { size: 12 }, boxWidth: 16 }
+          },
+          tooltip: {
+            mode: 'nearest',
+            intersect: true,
+            callbacks: {
+              title: (items) => {
+                if (!items.length) return '';
+                const item = items[0];
+                const tIndex = item.dataIndex;
+                return allTournaments[tIndex].tournamentName;
+              },
+              label: (item) => `${item.dataset.label}: ${item.raw} pts`,
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#000' },
+            grid: { color: '#eee' },
+            title: { display: true, text: 'Tournament', color: '#555', font: { size: 11 } }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#000', stepSize: 1 },
+            grid: { color: '#eee' },
+            title: { display: true, text: 'Cumulative Points', color: '#555', font: { size: 11 } }
+          }
+        }
+      }
+    });
+  }
+
+  function showStandings() {
+    const upToIndex = allTournaments.length - 1;
 
     const totals = {}, gameMap = {}, bonusMap = {}, gamesPlayedMap = {}, tournamentsMap = {};
     for (let i = 0; i <= upToIndex; i++) {
@@ -236,47 +372,7 @@
     sortKey = 'total';
     sortDir = -1;
     updateSortHeaders();
-
-    const sorted = currentSorted;
-
-    if (chartInstance) chartInstance.destroy();
-    chartInstance = new Chart(document.getElementById('chart'), {
-      type: 'bar',
-      data: {
-        labels: sorted.map(d => d.deck),
-        datasets: [
-          {
-            label: 'Wins',
-            data: sorted.map(d => d.game),
-            backgroundColor: '#555',
-            borderRadius: 4,
-          },
-          {
-            label: 'Bonus',
-            data: sorted.map(d => d.bonus),
-            backgroundColor: '#000',
-            borderRadius: 4,
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { labels: { color: '#000', font: { size: 12 } } },
-          tooltip: {
-            callbacks: {
-              footer: (items) => 'Total: ' + items.reduce((s, i) => s + i.raw, 0)
-            }
-          }
-        },
-        scales: {
-          x: { stacked: true, ticks: { color: '#000' }, grid: { color: '#eee' } },
-          y: { stacked: true, ticks: { color: '#000', stepSize: 1 }, grid: { color: '#eee' }, beginAtZero: true }
-        }
-      }
-    });
-
-    renderTable(sorted);
+    renderTable(currentSorted);
   }
 
   function renderTable(data) {
