@@ -94,5 +94,25 @@
       { "deck": "Vampiri",  "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
       { "deck": "Goading",  "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
     ]
+  },
+  {
+    "tournamentId": 7,
+    "tournamentName": "VII° Torneo Bob Kelzor",
+    "scores": [
+      { "deck": "Token",    "gamePoints": 5, "bonusFinalist": 0, "bonusWinner": 5, "total": 10 },
+      { "deck": "Dino",     "gamePoints": 4, "bonusFinalist": 2, "bonusWinner": 0, "total": 6  },
+      { "deck": "Assassins","gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Elves",    "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Goading",  "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Flying",   "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Mordor",   "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Goblin",   "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Poison",   "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Cycling",  "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "GainLife", "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Vampiri",  "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Destroy",  "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "LoTR",     "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
+    ]
   }
 ]

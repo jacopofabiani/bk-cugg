@@ -35,5 +35,11 @@
     "tournamentName": "VI° Torneo Bob Kelzor",
     "card": "Jace, the Perfected Mind",
     "deck": "Destroy"
+  },
+  {
+    "tournamentId": 7,
+    "tournamentName": "VII° Torneo Bob Kelzor",
+    "card": "Deep-Cavern Bat",
+    "deck": "Token"
   }
 ]
