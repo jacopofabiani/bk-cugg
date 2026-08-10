@@ -2,7 +2,6 @@
   {
     "tournamentId": 1,
     "tournamentName": "I° Torneo Bobby Kelzor",
-    "date": "2024-04-27",
     "scores": [
       { "deck": "Token",   "gamePoints": 6, "bonusFinalist": 0, "bonusWinner": 5, "total": 11 },
       { "deck": "LoTR",    "gamePoints": 4, "bonusFinalist": 2, "bonusWinner": 0, "total": 6  },
@@ -17,7 +16,6 @@
   {
     "tournamentId": 2,
     "tournamentName": "II° Torneo Bobby Kelzor",
-    "date": "2024-05-04",
     "scores": [
       { "deck": "Goblin",  "gamePoints": 6, "bonusFinalist": 0, "bonusWinner": 5, "total": 11 },
       { "deck": "Destroy", "gamePoints": 5, "bonusFinalist": 2, "bonusWinner": 0, "total": 7  },
@@ -32,7 +30,6 @@
   {
     "tournamentId": 3,
     "tournamentName": "III° Torneo Bobby Kelzor",
-    "date": "2024-05-19",
     "scores": [
       { "deck": "Destroy", "gamePoints": 6, "bonusFinalist": 0, "bonusWinner": 5, "total": 11 },
       { "deck": "Goblin",  "gamePoints": 5, "bonusFinalist": 2, "bonusWinner": 0, "total": 7  },
@@ -47,7 +44,6 @@
   {
     "tournamentId": 4,
     "tournamentName": "IV° Torneo Bobby Kelzor",
-    "date": "2024-05-31",
     "scores": [
       { "deck": "Flying",   "gamePoints": 5, "bonusFinalist": 0, "bonusWinner": 5, "total": 10 },
       { "deck": "Poison",   "gamePoints": 4, "bonusFinalist": 2, "bonusWinner": 0, "total": 6  },
@@ -66,7 +62,6 @@
   {
     "tournamentId": 5,
     "tournamentName": "V° Torneo Bob Kelzor",
-    "date": "2024-06-15",
     "scores": [
       { "deck": "Destroy",  "gamePoints": 5, "bonusFinalist": 0, "bonusWinner": 5, "total": 10 },
       { "deck": "Token",    "gamePoints": 3, "bonusFinalist": 2, "bonusWinner": 0, "total": 5  },
@@ -85,7 +80,6 @@
   {
     "tournamentId": 6,
     "tournamentName": "VI° Torneo Bob Kelzor",
-    "date": "2024-06-23",
     "scores": [
       { "deck": "Destroy",  "gamePoints": 6, "bonusFinalist": 0, "bonusWinner": 5, "total": 11 },
       { "deck": "Token",    "gamePoints": 5, "bonusFinalist": 2, "bonusWinner": 0, "total": 7  },
