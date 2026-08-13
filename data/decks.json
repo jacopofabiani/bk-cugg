@@ -12,5 +12,7 @@
   { "id": "elves",   "name": "Elves",   "colors": ["G"] },
   { "id": "flying",    "name": "Flying",    "colors": ["U", "R", "W", "B", "G"]},
   { "id": "assassins", "name": "Assassins", "colors": ["B", "U"] },
-  { "id": "cycling",   "name": "Cycling",   "colors": ["R", "W"] }
+  { "id": "cycling",   "name": "Cycling",   "colors": ["R", "W"] },
+  { "id": "discard",   "name": "Discard",   "colors": ["B"] },
+  { "id": "artifact",  "name": "Artifact",  "colors": ["W", "U", "B"] }
 ]

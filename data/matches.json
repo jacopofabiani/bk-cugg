@@ -422,5 +422,141 @@
         ]
       }
     ]
+  },
+  {
+    "id": 8,
+    "name": "VIII° Torneo Bob Kelzor",
+    "startDate": "2024-08-09",
+    "endDate": "2024-08-09",
+    "winner": "Destroy",
+    "mvp": "Jace, the Perfected Mind",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Group A - Round 1",
+        "matches": [
+          { "player1": "Vampiri",  "score1": 1, "player2": "Goblin",    "score2": 0 },
+          { "player1": "Elves",    "score1": 1, "player2": "Assassins", "score2": 0 },
+          { "player1": "Goblin",   "score1": 0, "player2": "Assassins", "score2": 1 },
+          { "player1": "Vampiri",  "score1": 1, "player2": "Elves",     "score2": 0 },
+          { "player1": "Vampiri",  "score1": 0, "player2": "Assassins", "score2": 1 },
+          { "player1": "Goblin",   "score1": 0, "player2": "Elves",     "score2": 1 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Group A - Round 2",
+        "matches": [
+          { "player1": "Vampiri",  "score1": 0, "player2": "Goblin",    "score2": 1 },
+          { "player1": "Elves",    "score1": 0, "player2": "Assassins", "score2": 1 },
+          { "player1": "Goblin",   "score1": 1, "player2": "Assassins", "score2": 0 },
+          { "player1": "Vampiri",  "score1": 1, "player2": "Elves",     "score2": 0 },
+          { "player1": "Vampiri",  "score1": 0, "player2": "Assassins", "score2": 1 },
+          { "player1": "Goblin",   "score1": 0, "player2": "Elves",     "score2": 1 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Group B - Round 1",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Destroy", "score1": 1, "player2": "LoTR",    "score2": 0 },
+          { "player1": "Goading", "score1": 0, "player2": "Discard", "score2": 1 },
+          { "player1": "Goading", "score1": 0, "player2": "LoTR",    "score2": 1 },
+          { "player1": "Destroy", "score1": 1, "player2": "Discard", "score2": 0 },
+          { "player1": "Destroy", "score1": 0, "player2": "Goading", "score2": 1 },
+          { "player1": "LoTR",    "score1": 1, "player2": "Discard", "score2": 0 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Group B - Round 2",
+        "matches": [
+          { "player1": "Destroy", "score1": 0, "player2": "LoTR",    "score2": 1 },
+          { "player1": "Goading", "score1": 1, "player2": "Discard", "score2": 0 },
+          { "player1": "Goading", "score1": 1, "player2": "LoTR",    "score2": 0 },
+          { "player1": "Destroy", "score1": 1, "player2": "Discard", "score2": 0 },
+          { "player1": "Destroy", "score1": 1, "player2": "Goading", "score2": 0 },
+          { "player1": "LoTR",    "score1": 1, "player2": "Discard", "score2": 0 }
+        ]
+      },
+      {
+        "round": 5,
+        "name": "Group C - Round 1",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Poison",  "score1": 1, "player2": "Flying",  "score2": 0 },
+          { "player1": "Mordor",  "score1": 0, "player2": "Cycling", "score2": 1 },
+          { "player1": "Mordor",  "score1": 0, "player2": "Flying",  "score2": 1 },
+          { "player1": "Poison",  "score1": 0, "player2": "Cycling", "score2": 1 },
+          { "player1": "Poison",  "score1": 1, "player2": "Mordor",  "score2": 0 },
+          { "player1": "Flying",  "score1": 1, "player2": "Cycling", "score2": 0 }
+        ]
+      },
+      {
+        "round": 6,
+        "name": "Group C - Round 2",
+        "matches": [
+          { "player1": "Poison",  "score1": 1, "player2": "Flying",  "score2": 0 },
+          { "player1": "Mordor",  "score1": 0, "player2": "Cycling", "score2": 1 },
+          { "player1": "Mordor",  "score1": 0, "player2": "Flying",  "score2": 1 },
+          { "player1": "Poison",  "score1": 0, "player2": "Cycling", "score2": 1 },
+          { "player1": "Poison",  "score1": 1, "player2": "Mordor",  "score2": 0 },
+          { "player1": "Flying",  "score1": 1, "player2": "Cycling", "score2": 0 }
+        ]
+      },
+      {
+        "round": 7,
+        "name": "Group D - Round 1",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Token",    "score1": 1, "player2": "Dino",     "score2": 0 },
+          { "player1": "GainLife", "score1": 0, "player2": "Artifact", "score2": 1 },
+          { "player1": "GainLife", "score1": 0, "player2": "Dino",     "score2": 1 },
+          { "player1": "Token",    "score1": 1, "player2": "Artifact", "score2": 0 },
+          { "player1": "Token",    "score1": 1, "player2": "GainLife", "score2": 0 },
+          { "player1": "Dino",     "score1": 1, "player2": "Artifact", "score2": 0 }
+        ]
+      },
+      {
+        "round": 8,
+        "name": "Group D - Round 2",
+        "matches": [
+          { "player1": "Token",    "score1": 1, "player2": "Dino",     "score2": 0 },
+          { "player1": "GainLife", "score1": 1, "player2": "Artifact", "score2": 0 },
+          { "player1": "GainLife", "score1": 0, "player2": "Dino",     "score2": 1 },
+          { "player1": "Token",    "score1": 0, "player2": "Artifact", "score2": 1 },
+          { "player1": "Token",    "score1": 0, "player2": "GainLife", "score2": 1 },
+          { "player1": "Dino",     "score1": 1, "player2": "Artifact", "score2": 0 }
+        ]
+      },
+      {
+        "round": 9,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Assassins", "score1": 0, "player2": "Destroy", "score2": 2 },
+          { "player1": "Flying",    "score1": 2, "player2": "Dino",    "score2": 1 },
+          { "player1": "Elves",     "score1": 0, "player2": "LoTR",    "score2": 2 },
+          { "player1": "Poison",    "score1": 2, "player2": "Token",   "score2": 1 }
+        ]
+      },
+      {
+        "round": 10,
+        "name": "Semifinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Destroy", "score1": 2, "player2": "Flying", "score2": 0 },
+          { "player1": "LoTR",    "score1": 1, "player2": "Poison",  "score2": 2 }
+        ]
+      },
+      {
+        "round": 11,
+        "name": "Final",
+        "matches": [
+          { "player1": "Destroy", "score1": 2, "player2": "Poison", "score2": 1 }
+        ]
+      }
+    ]
   }
 ]
