@@ -14,5 +14,7 @@
   { "id": "assassins", "name": "Assassins", "colors": ["B", "U"] },
   { "id": "cycling",   "name": "Cycling",   "colors": ["R", "W"] },
   { "id": "discard",   "name": "Discard",   "colors": ["B"] },
-  { "id": "artifact",  "name": "Artifact",  "colors": ["W", "U", "B"] }
+  { "id": "artifact",      "name": "Artifact",      "colors": ["W", "U", "B"] },
+  { "id": "planeswalker", "name": "Planeswalker", "colors": ["W", "U", "R"] },
+  { "id": "reanimate",    "name": "Reanimate",    "colors": ["B", "R"] }
 ]

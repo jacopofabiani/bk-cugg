@@ -558,5 +558,55 @@
         ]
       }
     ]
+  },
+  {
+    "id": 9,
+    "name": "IX° Torneo Bob Kelzor",
+    "startDate": "2024-09-15",
+    "endDate": "2024-09-21",
+    "winner": "Token",
+    "mvp": "Kaya, Spirits' Justice",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Round of 16",
+        "matches": [
+          { "player1": "Dino",         "score1": 1, "player2": "GainLife",     "score2": 2 },
+          { "player1": "Cycling",      "score1": 2, "player2": "Artifact",     "score2": 0 },
+          { "player1": "Flying",       "score1": 2, "player2": "Planeswalker", "score2": 0 },
+          { "player1": "Vampiri",      "score1": 2, "player2": "Goblin",       "score2": 1 },
+          { "player1": "Goading",      "score1": 1, "player2": "LoTR",         "score2": 2 },
+          { "player1": "Assassins",    "score1": 1, "player2": "Token",        "score2": 2 },
+          { "player1": "Poison",       "score1": 2, "player2": "Elves",        "score2": 1 },
+          { "player1": "Reanimate",    "score1": 2, "player2": "Destroy",      "score2": 0 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "GainLife", "score1": 0, "player2": "Cycling",   "score2": 2 },
+          { "player1": "Flying",   "score1": 0, "player2": "Vampiri",   "score2": 2 },
+          { "player1": "LoTR",     "score1": 0, "player2": "Token",     "score2": 2 },
+          { "player1": "Poison",   "score1": 0, "player2": "Reanimate", "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Cycling",  "score1": 0, "player2": "Vampiri",   "score2": 2 },
+          { "player1": "Token",    "score1": 2, "player2": "Reanimate", "score2": 1 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Final",
+        "matches": [
+          { "player1": "Vampiri", "score1": 1, "player2": "Token", "score2": 2 }
+        ]
+      }
+    ]
   }
 ]

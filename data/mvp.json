@@ -47,5 +47,11 @@
     "tournamentName": "VIII° Torneo Bob Kelzor",
     "card": "Jace, the Perfected Mind",
     "deck": "Destroy"
+  },
+  {
+    "tournamentId": 9,
+    "tournamentName": "IX° Torneo Bob Kelzor",
+    "card": "Kaya, Spirits' Justice",
+    "deck": "Token"
   }
 ]

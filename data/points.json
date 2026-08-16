@@ -136,5 +136,27 @@
       { "deck": "Discard",   "gamePoints": 0,  "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
       { "deck": "Mordor",    "gamePoints": 0,  "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
     ]
+  },
+  {
+    "tournamentId": 9,
+    "tournamentName": "IX° Torneo Bob Kelzor",
+    "scores": [
+      { "deck": "Token",       "gamePoints": 8, "bonusFinalist": 0, "bonusWinner": 5, "total": 13 },
+      { "deck": "Vampiri",     "gamePoints": 7, "bonusFinalist": 2, "bonusWinner": 0, "total": 9  },
+      { "deck": "Reanimate",   "gamePoints": 5, "bonusFinalist": 0, "bonusWinner": 0, "total": 5  },
+      { "deck": "Cycling",     "gamePoints": 4, "bonusFinalist": 0, "bonusWinner": 0, "total": 4  },
+      { "deck": "GainLife",    "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Flying",      "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "LoTR",        "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Poison",      "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Dino",        "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Goblin",      "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Assassins",   "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Goading",     "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Artifact",    "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Planeswalker","gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Destroy",     "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Elves",       "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
+    ]
   }
 ]
