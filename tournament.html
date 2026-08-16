@@ -281,6 +281,66 @@
       color: #fff;
     }
 
+    .groups-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+
+    .group-table {
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      overflow: hidden;
+      min-width: 220px;
+    }
+
+    .group-table-title {
+      background: #000;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 6px 14px;
+    }
+
+    .group-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .group-table th {
+      text-align: left;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      border-bottom: 1.5px solid #000;
+    }
+
+    .group-table th.center,
+    .group-table td.center {
+      text-align: center;
+    }
+
+    .group-table td {
+      padding: 6px 14px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .group-table tr:last-child td { border-bottom: none; }
+
+    .group-table tr.qualified td { font-weight: bold; }
+
+    .group-table tr.qualified td:first-child::after {
+      content: ' ↑';
+      font-size: 0.7rem;
+      color: #555;
+    }
+
     #error {
       color: red;
       margin-top: 20px;
@@ -323,6 +383,77 @@
     showTournament(allTournaments.length - 1);
   }
 
+  function buildGroupsHtml(t) {
+    // Collect all group rounds, keyed by group letter
+    const groups = {};
+    for (const round of t.rounds) {
+      const match = round.name.match(/^Group ([A-Z])/);
+      if (!match) continue;
+      const letter = match[1];
+      if (!groups[letter]) groups[letter] = [];
+      groups[letter].push(...round.matches);
+    }
+
+    if (Object.keys(groups).length === 0) return '';
+
+    let html = '<div class="groups-section">';
+
+    for (const letter of Object.keys(groups).sort()) {
+      const matches = groups[letter];
+
+      // Build standings
+      const standings = {};
+      for (const m of matches) {
+        if (!standings[m.player1]) standings[m.player1] = { w: 0, l: 0, gf: 0, ga: 0 };
+        if (!standings[m.player2]) standings[m.player2] = { w: 0, l: 0, gf: 0, ga: 0 };
+        standings[m.player1].gf += m.score1;
+        standings[m.player1].ga += m.score2;
+        standings[m.player2].gf += m.score2;
+        standings[m.player2].ga += m.score1;
+        if (m.score1 > m.score2) {
+          standings[m.player1].w++;
+          standings[m.player2].l++;
+        } else if (m.score2 > m.score1) {
+          standings[m.player2].w++;
+          standings[m.player1].l++;
+        }
+      }
+
+      // Sort by wins desc, then goal diff desc
+      const rows = Object.entries(standings)
+        .map(([deck, s]) => ({ deck, ...s, pts: s.w }))
+        .sort((a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga));
+
+      // Top 1 qualifies (first place advances)
+      html += `
+        <div class="group-table">
+          <div class="group-table-title">Group ${letter}</div>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Deck</th>
+                <th class="center">Pts</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((r, i) => `
+                <tr class="${i === 0 ? 'qualified' : ''}">
+                  <td>${i + 1}</td>
+                  <td>${r.deck}</td>
+                  <td class="center">${r.pts}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    html += '</div>';
+    return html;
+  }
+
   function showTournament(index) {
     // Update active button
     allTournaments.forEach((_, i) => {
@@ -336,6 +467,7 @@
     let html = `
       <h1>${t.name}</h1>
       <div class="meta">${formatDateRange(t.startDate, t.endDate)}${t.type ? ` · ${t.type}` : ''}</div>
+      ${t.type === 'groups' ? buildGroupsHtml(t) : ''}
       <div class="bracket">
     `;
 

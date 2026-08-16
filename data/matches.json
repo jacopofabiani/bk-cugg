@@ -261,7 +261,7 @@
         "matches": [
           { "player1": "Goblin", "score1": 1, "player2": "Poison", "score2": 0 },
           { "player1": "Goblin", "score1": 1, "player2": "Dino",   "score2": 0 },
-          { "player1": "Dino",   "score1": 1, "player2": "Poison", "score2": 0 }
+          { "player1": "Dino",   "score1": 0, "player2": "Poison", "score2": 0 }
         ]
       },
       {
