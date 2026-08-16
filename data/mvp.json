@@ -28,13 +28,15 @@
     "tournamentId": 5,
     "tournamentName": "V° Torneo Bob Kelzor",
     "card": "Jace, the Perfected Mind",
-    "deck": "Destroy"
+    "deck": "Destroy",
+    "image": "images/mvp/jace.png"
   },
   {
     "tournamentId": 6,
     "tournamentName": "VI° Torneo Bob Kelzor",
     "card": "Jace, the Perfected Mind",
-    "deck": "Destroy"
+    "deck": "Destroy",
+    "image": "images/mvp/jace.png"
   },
   {
     "tournamentId": 7,
@@ -46,12 +48,19 @@
     "tournamentId": 8,
     "tournamentName": "VIII° Torneo Bob Kelzor",
     "card": "Jace, the Perfected Mind",
-    "deck": "Destroy"
+    "deck": "Destroy",
+    "image": "images/mvp/jace.png"
   },
   {
     "tournamentId": 9,
     "tournamentName": "IX° Torneo Bob Kelzor",
     "card": "Kaya, Spirits' Justice",
     "deck": "Token"
+  },
+  {
+    "tournamentId": 10,
+    "tournamentName": "X° Torneo Bob Kelzor",
+    "card": "Master of Ethereum",
+    "deck": "Artifact"
   }
 ]
