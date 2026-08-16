@@ -163,6 +163,7 @@
       <tr>
         <th>#</th>
         <th class="sortable" onclick="sortBy('deck')">Deck</th>
+        <th class="sortable" onclick="sortBy('tournaments')">#T</th>
         <th class="sortable" onclick="sortBy('games')">Games</th>
         <th class="sortable" onclick="sortBy('game')">Wins</th>
         <th class="sortable" onclick="sortBy('bonus')">Bonus</th>
@@ -383,6 +384,7 @@
         <tr>
           <td class="rank ${rankClass}">${i + 1}</td>
           <td>${d.deck}</td>
+          <td class="sub-pts">${d.tournaments}</td>
           <td class="sub-pts">${d.games}</td>
           <td class="sub-pts">${d.game}</td>
           <td class="sub-pts">${d.bonus}</td>
@@ -411,7 +413,7 @@
   }
 
   function updateSortHeaders() {
-    const keyToIndex = { deck: 1, games: 2, game: 3, bonus: 4, total: 5, ppg: 6 };
+    const keyToIndex = { deck: 1, tournaments: 2, games: 3, game: 4, bonus: 5, total: 6, ppg: 7, ppt: 8 };
     document.querySelectorAll('th.sortable').forEach(th => {
       th.classList.remove('sort-asc', 'sort-desc');
     });
