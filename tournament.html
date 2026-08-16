@@ -56,6 +56,22 @@
       min-width: 160px;
     }
 
+    .round--r16 {
+      flex-direction: row;
+      flex-wrap: wrap;
+      min-width: unset;
+      max-width: 100%;
+    }
+
+    .round--r16 .round-title {
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .round--r16 .match {
+      width: 200px;
+    }
+
     .round-title {
       font-size: 0.8rem;
       font-weight: bold;
@@ -561,7 +577,8 @@
     for (const round of t.rounds) {
       if (round.stageBreak) html += `</div><div class="bracket">`;
       if (round.name.includes('Group')) continue;
-      html += `<div class="round">`;
+      const isR16 = round.name === 'Round of 16';
+      html += `<div class="round${isR16 ? ' round--r16' : ''}">`;
       html += `<div class="round-title">${round.name}</div>`;
       for (const m of round.matches) {
         const w1 = m.score1 > m.score2;
