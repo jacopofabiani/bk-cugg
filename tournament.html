@@ -335,12 +335,13 @@
 
     let html = `
       <h1>${t.name}</h1>
-      <div class="meta">${formatDateRange(t.startDate, t.endDate)}</div>
+      <div class="meta">${formatDateRange(t.startDate, t.endDate)}${t.type ? ` · ${t.type}` : ''}</div>
       <div class="bracket">
     `;
 
     for (const round of t.rounds) {
       if (round.stageBreak) html += `</div><div class="bracket">`;
+      if (round.name.includes('Group')) continue;
       html += `<div class="round">`;
       html += `<div class="round-title">${round.name}</div>`;
       for (const m of round.matches) {
