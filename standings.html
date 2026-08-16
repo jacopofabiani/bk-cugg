@@ -271,10 +271,14 @@
     for (const deck of Object.keys(deckColorMap)) {
       deckTotals[deck] = [];
       let cumulative = 0;
+      let started = false;
       for (const t of allTournaments) {
         const score = t.scores.find(s => s.deck === deck);
-        cumulative += score ? score.total : 0;
-        deckTotals[deck].push(cumulative);
+        if (score) {
+          started = true;
+          cumulative += score.total;
+        }
+        deckTotals[deck].push(started ? cumulative : null);
       }
     }
 
