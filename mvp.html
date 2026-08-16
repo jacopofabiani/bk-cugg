@@ -32,67 +32,51 @@
 
     .mvp-list {
       display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 500px;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: flex-start;
     }
 
     .mvp-card {
       background: #fff;
       border: 1.5px solid #000;
       border-radius: 12px;
-      padding: 20px 24px;
+      padding: 16px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 10px;
+      width: 180px;
     }
 
-    .mvp-card-left {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      flex: 1;
+    .mvp-tournament {
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-align: center;
     }
 
     .mvp-card-img {
-      width: 120px;
+      width: 140px;
       border-radius: 4px;
-      flex-shrink: 0;
       border: 1px solid #000;
     }
 
     .mvp-card-info {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
-
-    .mvp-tournament {
-      color: #555;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
     }
 
     .mvp-card-name {
-      color: #000;
-      font-size: 1.15rem;
+      font-size: 0.9rem;
       font-weight: bold;
     }
 
-    .mvp-date { color: #555; font-size: 0.8rem; }
-
-    .mvp-badge {
-      background: #000;
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 4px 10px;
-      border-radius: 20px;
-      white-space: nowrap;
+    .mvp-deck {
+      font-size: 0.8rem;
+      color: #555;
     }
 
     #error { color: red; margin-top: 20px; }
@@ -109,6 +93,16 @@
 <p id="error"></p>
 
 <script>
+  function toRoman(n) {
+    const vals = [10,9,5,4,1];
+    const syms = ['X','IX','V','IV','I'];
+    let result = '';
+    for (let i = 0; i < vals.length; i++) {
+      while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
+    }
+    return result + '°';
+  }
+
   async function load() {
     const res = await fetch('data/mvp.json');
     const mvps = await res.json();
@@ -116,15 +110,12 @@
     const list = document.getElementById('mvp-list');
     list.innerHTML = mvps.map(m => `
       <div class="mvp-card">
-        <div class="mvp-card-left">
-          ${m.image ? `<img class="mvp-card-img" src="${m.image}" alt="${m.card}">` : ''}
-          <div class="mvp-card-info">
-            <div class="mvp-tournament">${m.tournamentName}</div>
-            <div class="mvp-card-name">${m.card}</div>
-            <div class="mvp-date">${m.deck}</div>
-          </div>
+        <div class="mvp-tournament">${toRoman(m.tournamentId)}</div>
+        ${m.image ? `<img class="mvp-card-img" src="${m.image}" alt="${m.card}">` : ''}
+        <div class="mvp-card-info">
+          <div class="mvp-card-name">${m.card}</div>
+          <div class="mvp-deck">${m.deck}</div>
         </div>
-
       </div>
     `).join('');
   }

@@ -10,7 +10,8 @@
     "tournamentId": 2,
     "tournamentName": "II° Torneo Bobby Kelzor",
     "card": "Krenko, Mob Boss",
-    "deck": "Goblin"
+    "deck": "Goblin",
+    "image": "images/mvp/krenko.png"
   },
   {
     "tournamentId": 3,
