@@ -424,7 +424,8 @@
         .map(([deck, s]) => ({ deck, ...s, pts: s.w }))
         .sort((a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga));
 
-      // Top 1 qualifies (first place advances)
+      // Top 1 qualifies for 3-team groups, top 2 for 4-team groups
+      const qualifyCount = rows.length >= 4 ? 2 : 1;
       html += `
         <div class="group-table">
           <div class="group-table-title">Group ${letter}</div>
@@ -438,7 +439,7 @@
             </thead>
             <tbody>
               ${rows.map((r, i) => `
-                <tr class="${i === 0 ? 'qualified' : ''}">
+                <tr class="${i < qualifyCount ? 'qualified' : ''}">
                   <td>${i + 1}</td>
                   <td>${r.deck}</td>
                   <td class="center">${r.pts}</td>
