@@ -345,6 +345,49 @@
       color: red;
       margin-top: 20px;
     }
+
+    .points-section {
+      margin-top: 36px;
+      display: inline-block;
+    }
+
+    .points-title {
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .points-table {
+      border-collapse: collapse;
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 0.85rem;
+      min-width: 280px;
+    }
+
+    .points-table th {
+      text-align: left;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      border-bottom: 1.5px solid #000;
+      background: #fff;
+    }
+
+    .points-table td {
+      padding: 6px 14px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .points-table tr:last-child td { border-bottom: none; }
+
+    .points-table .center { text-align: center; }
   </style>
   <script src="nav.js" defer></script>
 </head>
@@ -361,14 +404,17 @@
 <script>
   let allTournaments = [];
   let allMvps = [];
+  let allPoints = [];
 
   async function load() {
-    const [matchRes, mvpRes] = await Promise.all([
+    const [matchRes, mvpRes, pointsRes] = await Promise.all([
       fetch('data/matches.json'),
-      fetch('data/mvp.json')
+      fetch('data/mvp.json'),
+      fetch('data/points.json')
     ]);
     allTournaments = await matchRes.json();
     allMvps = await mvpRes.json();
+    allPoints = await pointsRes.json();
 
     // Build selector buttons
     const selector = document.getElementById('selector');
@@ -455,6 +501,40 @@
     return html;
   }
 
+  function buildPointsHtml(tournamentId) {
+    const entry = allPoints.find(p => p.tournamentId === tournamentId);
+    if (!entry) return '';
+    const rows = entry.scores.filter(s => s.total > 0).sort((a, b) => b.total - a.total);
+    if (rows.length === 0) return '';
+    return `
+      <div class="points-section">
+        <div class="points-title">Points</div>
+        <table class="points-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Deck</th>
+              <th class="center">Game</th>
+              <th class="center">Bonus</th>
+              <th class="center">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map((s, i) => `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${s.deck}</td>
+                <td class="center">${s.gamePoints}</td>
+                <td class="center">${s.bonusFinalist + s.bonusWinner}</td>
+                <td class="center"><strong>${s.total}</strong></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
   function showTournament(index) {
     // Update active button
     allTournaments.forEach((_, i) => {
@@ -515,6 +595,7 @@
         ${mvpData?.image ? `<img src="${mvpData.image}" alt="${t.mvp}" style="width:120px;border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
         <div class="mvp-name">${t.mvp}</div>
       </div>
+      ${buildPointsHtml(t.id)}
     `;
 
     content.innerHTML = html;
