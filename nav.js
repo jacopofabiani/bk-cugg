@@ -3,7 +3,7 @@ class SiteNav extends HTMLElement {
     const links = [
       ['index.html',      'Home'],
       ['tournament.html', 'Tournament'],
-      ['albo.html',       "Albo d'Oro"],
+      ['albo.html',       'Albo'],
       ['decks.html',      'Decks'],
       ['standings.html',  'Standings'],
       ['stats.html',      'Stats'],
