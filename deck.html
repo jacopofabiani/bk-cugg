@@ -101,20 +101,22 @@
     const id = params.get('id');
     if (!id) { window.location.href = 'decks.html'; return; }
 
-    const [decksRes, matchesRes] = await Promise.all([
+    const [decksRes, matchesRes, pointsRes] = await Promise.all([
       fetch('data/decks.json'),
-      fetch('data/matches.json')
+      fetch('data/matches.json'),
+      fetch('data/points.json')
     ]);
     const decks = await decksRes.json();
     const tournaments = await matchesRes.json();
+    const points = await pointsRes.json();
     const deck = decks.find(d => d.id === id);
 
     if (!deck) { window.location.href = 'decks.html'; return; }
 
-    // Find first tournament this deck appeared in
-    const firstTournament = tournaments.find(t =>
-      t.rounds.some(r => r.matches.some(m => m.player1 === deck.name || m.player2 === deck.name))
-    );
+    // Find first tournament this deck appeared in. Use points.json: it lists every
+    // entrant, including decks knocked out in a group stage (whose matches aren't kept).
+    const firstEntry = points.find(p => p.scores.some(s => s.deck === deck.name));
+    const firstTournament = firstEntry && tournaments.find(t => t.id === firstEntry.tournamentId);
 
     document.title = `${deck.name} - Bobby Kelzor`;
 

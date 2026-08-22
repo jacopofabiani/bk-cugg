@@ -450,65 +450,26 @@
   }
 
   function buildGroupsHtml(t) {
-    // Collect all group rounds, keyed by group letter
-    const groups = {};
-    for (const round of t.rounds) {
-      const match = round.name.match(/^Group ([A-Z])/);
-      if (!match) continue;
-      const letter = match[1];
-      if (!groups[letter]) groups[letter] = [];
-      groups[letter].push(...round.matches);
-    }
-
-    if (Object.keys(groups).length === 0) return '';
+    if (!t.groups || t.groups.length === 0) return '';
 
     let html = '<div class="groups-section">';
 
-    for (const letter of Object.keys(groups).sort()) {
-      const matches = groups[letter];
-
-      // Build standings
-      const standings = {};
-      for (const m of matches) {
-        if (!standings[m.player1]) standings[m.player1] = { w: 0, l: 0, gf: 0, ga: 0 };
-        if (!standings[m.player2]) standings[m.player2] = { w: 0, l: 0, gf: 0, ga: 0 };
-        standings[m.player1].gf += m.score1;
-        standings[m.player1].ga += m.score2;
-        standings[m.player2].gf += m.score2;
-        standings[m.player2].ga += m.score1;
-        if (m.score1 > m.score2) {
-          standings[m.player1].w++;
-          standings[m.player2].l++;
-        } else if (m.score2 > m.score1) {
-          standings[m.player2].w++;
-          standings[m.player1].l++;
-        }
-      }
-
-      // Sort by wins desc, then goal diff desc
-      const rows = Object.entries(standings)
-        .map(([deck, s]) => ({ deck, ...s, pts: s.w }))
-        .sort((a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga));
-
-      // Top 1 qualifies for 3-team groups, top 2 for 4-team groups
-      const qualifyCount = rows.length >= 4 ? 2 : 1;
+    for (const g of t.groups) {
       html += `
         <div class="group-table">
-          <div class="group-table-title">Group ${letter}</div>
+          <div class="group-table-title">Group ${g.name}</div>
           <table>
             <thead>
               <tr>
                 <th>#</th>
                 <th>Deck</th>
-                <th class="center">Pts</th>
               </tr>
             </thead>
             <tbody>
-              ${rows.map((r, i) => `
-                <tr class="${i < qualifyCount ? 'qualified' : ''}">
+              ${g.standings.map((deck, i) => `
+                <tr class="${i < g.qualified ? 'qualified' : ''}">
                   <td>${i + 1}</td>
-                  <td>${r.deck}</td>
-                  <td class="center">${r.pts}</td>
+                  <td>${deck}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -576,7 +537,6 @@
 
     for (const round of t.rounds) {
       if (round.stageBreak) html += `</div><div class="bracket">`;
-      if (round.name.includes('Group')) continue;
       const isR16 = round.name === 'Round of 16';
       html += `<div class="round${isR16 ? ' round--r16' : ''}">`;
       html += `<div class="round-title">${round.name}</div>`;
