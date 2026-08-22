@@ -345,7 +345,7 @@
       for (const s of allTournaments[i].scores) {
         totals[s.deck]        = (totals[s.deck]        || 0) + s.total;
         gameMap[s.deck]       = (gameMap[s.deck]        || 0) + s.gamePoints;
-        bonusMap[s.deck]      = (bonusMap[s.deck]       || 0) + s.bonusFinalist + s.bonusWinner;
+        bonusMap[s.deck]      = (bonusMap[s.deck]       || 0) + s.bonusGroup + s.bonusFinalist + s.bonusWinner;
         tournamentsMap[s.deck]= (tournamentsMap[s.deck] || 0) + 1;
       }
       const tournament = allTournaments[i];
