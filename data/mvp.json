@@ -17,7 +17,8 @@
     "tournamentId": 3,
     "tournamentName": "III° Torneo Bobby Kelzor",
     "card": "Etrata, Deadly Fugitive",
-    "deck": "Destroy"
+    "deck": "Destroy",
+    "image": "images/mvp/etrata.png"
   },
   {
     "tournamentId": 4,

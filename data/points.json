@@ -194,7 +194,7 @@
       { "deck": "LoTR",         "gamePoints": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
       { "deck": "Cycling",      "gamePoints": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
       { "deck": "Reanimate",    "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
-      { "deck": "Bloomburrow",  "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Burrow",       "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
       { "deck": "Goblin",       "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
       { "deck": "Dino",         "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
       { "deck": "Planeswalker", "gamePoints": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },

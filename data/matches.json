@@ -421,7 +421,7 @@
     "winner": "Destroy",
     "mvp": "Jace, the Perfected Mind",
     "groups": [
-      { "name": "A", "qualified": 2, "standings": ["Artifact", "Elves", "Reanimate", "Bloomburrow", "Goblin"] },
+      { "name": "A", "qualified": 2, "standings": ["Artifact", "Elves", "Reanimate", "Burrow", "Goblin"] },
       { "name": "B", "qualified": 2, "standings": ["Token", "Vampiri", "Dino", "Planeswalker", "Goading"] },
       { "name": "C", "qualified": 2, "standings": ["LoTR", "Cycling", "Skarty", "Poison", "GainLife"] },
       { "name": "D", "qualified": 2, "standings": ["Discard", "Destroy", "Flying", "Assassins", "Mordor"] }

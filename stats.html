@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistics - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    nav a {
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover { text-decoration: underline; }
+
+    h1 { font-size: 1.6rem; margin-bottom: 6px; }
+
+    .subtitle {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      margin: 38px 0 4px;
+    }
+
+    .section-note {
+      color: #555;
+      font-size: 0.8rem;
+      margin-bottom: 14px;
+    }
+
+    .wrap { max-width: 980px; }
+
+    /* --- KPI row --- */
+    /* grid, not flex: `flex:1` sizes from a zero basis, so min-width overflows
+       the row on narrow screens instead of wrapping */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .kpi {
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      padding: 14px 18px;
+    }
+
+    .kpi-value {
+      font-size: 1.9rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .kpi-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #555;
+      margin-top: 6px;
+    }
+
+    /* --- record cards --- */
+    .records {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 12px;
+    }
+
+    .record {
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .record-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #555;
+    }
+
+    .record-value { font-size: 1.15rem; font-weight: bold; }
+    .record-detail { font-size: 0.8rem; color: #555; }
+
+    /* --- tables --- */
+    .table-wrap {
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .scroll-x { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      border-bottom: 1.5px solid #000;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 7px 12px;
+      border-bottom: 1px solid #eee;
+      white-space: nowrap;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #fafafa; }
+
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .deck-cell { font-weight: bold; }
+    .muted { color: #888; }
+
+    /* --- inline magnitude bar: single hue, 2px gap, rounded data end --- */
+    .bar-cell { width: 190px; }
+
+    .bar-track {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar-rail {
+      flex: 1;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 60px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: #000;
+      border-radius: 4px;
+    }
+
+    .bar-value {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.8rem;
+      width: 38px;
+      text-align: right;
+    }
+
+    /* --- head-to-head matrix --- */
+    .matrix { width: auto; border-collapse: separate; border-spacing: 2px; font-size: 0.75rem; }
+
+    .matrix th {
+      border-bottom: none;
+      padding: 2px 6px;
+      font-size: 0.68rem;
+    }
+
+    .matrix th.row-head {
+      text-align: right;
+      color: #000;
+      font-weight: bold;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.78rem;
+    }
+
+    .matrix th.col-head {
+      text-align: left;
+      height: 78px;
+      vertical-align: bottom;
+      padding-bottom: 6px;
+    }
+
+    .matrix th.col-head span {
+      display: inline-block;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      color: #000;
+      font-weight: bold;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.78rem;
+    }
+
+    .matrix td {
+      border-bottom: none;
+      padding: 0;
+      width: 42px;
+      height: 30px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      border-radius: 3px;
+      cursor: default;
+    }
+
+    .matrix td.empty { background: #fafafa; color: #ccc; }
+    .matrix td.self  { background: repeating-linear-gradient(45deg, #eee, #eee 3px, #fff 3px, #fff 6px); }
+    .matrix td:hover { outline: 2px solid #000; outline-offset: -2px; }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    .legend-scale {
+      display: flex;
+      gap: 2px;
+    }
+
+    .legend-swatch {
+      width: 26px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    /* --- colors --- */
+    .color-pip {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid #000;
+      display: inline-block;
+      vertical-align: -3px;
+      margin-right: 8px;
+    }
+
+    .color-W { background: #f9fafb; }
+    .color-U { background: #3b82f6; }
+    .color-B { background: #1f2937; }
+    .color-R { background: #ef4444; }
+    .color-G { background: #22c55e; }
+
+    /* --- finals list --- */
+    .finals {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+    }
+
+    .final-row {
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    .final-num {
+      font-weight: bold;
+      min-width: 34px;
+      color: #555;
+      font-size: 0.8rem;
+    }
+
+    .final-body { display: flex; flex-direction: column; gap: 2px; }
+    .final-win { font-weight: bold; }
+    .final-lose { color: #555; font-size: 0.8rem; }
+
+    #error { color: red; margin-top: 20px; }
+
+    @media (max-width: 600px) {
+      .bar-cell { width: 120px; }
+    }
+  </style>
+  <script src="nav.js" defer></script>
+</head>
+<body>
+
+<site-nav></site-nav>
+
+<div class="wrap">
+  <h1>Statistics</h1>
+  <div class="subtitle">Every edition of the Torneo Bob Kelzor, crunched.</div>
+
+  <div id="content">
+    <p style="color:#888">Loading...</p>
+  </div>
+  <p id="error"></p>
+</div>
+
+<script>
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const pct = (n, d) => d ? Math.round(100 * n / d) : 0;
+
+  function toRoman(n) {
+    const vals = [10, 9, 5, 4, 1];
+    const syms = ['X', 'IX', 'V', 'IV', 'I'];
+    let out = '';
+    for (let i = 0; i < vals.length; i++) {
+      while (n >= vals[i]) { out += syms[i]; n -= vals[i]; }
+    }
+    return out + '°';
+  }
+
+  // Sequential single-hue ramp on a white surface. Ink flips to white past the
+  // point where black text drops below 4.5:1 contrast.
+  function shade(ratio) {
+    const a = 0.06 + 0.74 * ratio;
+    return { bg: `rgba(0,0,0,${a.toFixed(3)})`, fg: a >= 0.55 ? '#fff' : '#000' };
+  }
+
+  function bar(value, max, label) {
+    const w = (max && value) ? Math.max(2, Math.round(100 * value / max)) : 0;
+    return `
+      <div class="bar-track">
+        <div class="bar-rail"><div class="bar-fill" style="width:${w}%"></div></div>
+        <span class="bar-value">${label}</span>
+      </div>
+    `;
+  }
+
+  function kpis(stats) {
+    const items = [
+      [stats.editions, 'Editions'],
+      [stats.decks, 'Decks'],
+      [stats.matches, 'Knockout matches'],
+      [stats.games, 'Games played'],
+      [stats.champions, 'Different champions'],
+      [stats.perfect, 'Perfect title runs']
+    ];
+    return `<div class="kpis">${items.map(([v, l]) => `
+      <div class="kpi">
+        <div class="kpi-value">${v}</div>
+        <div class="kpi-label">${l}</div>
+      </div>
+    `).join('')}</div>`;
+  }
+
+  function recordCards(cards) {
+    return `<div class="records">${cards.map(c => `
+      <div class="record">
+        <div class="record-label">${esc(c.label)}</div>
+        <div class="record-value">${esc(c.value)}</div>
+        <div class="record-detail">${esc(c.detail)}</div>
+      </div>
+    `).join('')}</div>`;
+  }
+
+  function deckTable(rows) {
+    const maxWin = Math.max(...rows.map(r => r.winPct));
+    return `
+      <div class="table-wrap scroll-x">
+        <table>
+          <thead>
+            <tr>
+              <th>Deck</th>
+              <th class="num">Editions</th>
+              <th class="num">Titles</th>
+              <th class="num">Finals</th>
+              <th class="num">W–L</th>
+              <th>Match win rate</th>
+              <th class="num">Games</th>
+              <th class="num">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td class="deck-cell">${r.colors.map(c => `<span class="color-pip color-${c}"></span>`).join('')}${esc(r.deck)}</td>
+                <td class="num">${r.editions}</td>
+                <td class="num">${r.titles || '<span class="muted">–</span>'}</td>
+                <td class="num">${r.finals || '<span class="muted">–</span>'}</td>
+                <td class="num">${r.w}–${r.l}</td>
+                <td class="bar-cell">${bar(r.winPct, maxWin, r.played ? r.winPct + '%' : '–')}</td>
+                <td class="num">${r.gf}–${r.ga}</td>
+                <td class="num">${r.points}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function matrix(decks, h2h) {
+    const head = decks.map(d => `<th class="col-head"><span>${esc(d)}</span></th>`).join('');
+    const body = decks.map(row => `
+      <tr>
+        <th class="row-head">${esc(row)}</th>
+        ${decks.map(col => {
+          if (row === col) return `<td class="self"></td>`;
+          const r = h2h[row]?.[col];
+          if (!r) return `<td class="empty" title="${esc(row)} and ${esc(col)} never met">·</td>`;
+          const s = shade(r.w / (r.w + r.l));
+          return `<td style="background:${s.bg};color:${s.fg}"
+                      title="${esc(row)} ${r.w}–${r.l} ${esc(col)} in the knockout stage">${r.w}–${r.l}</td>`;
+        }).join('')}
+      </tr>
+    `).join('');
+
+    const swatches = [0, 0.25, 0.5, 0.75, 1]
+      .map(v => `<div class="legend-swatch" style="background:${shade(v).bg}"></div>`).join('');
+
+    return `
+      <div class="scroll-x">
+        <table class="matrix">
+          <thead><tr><th></th>${head}</tr></thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>
+      <div class="legend"><span>Row deck loses</span><div class="legend-scale">${swatches}</div><span>Row deck wins</span></div>
+    `;
+  }
+
+  // align: per-column 'left' | 'num', defaulting to left for the first column
+  function simpleTable(headers, rows, align) {
+    const cls = i => (align ? align[i] : (i ? 'num' : 'left')) === 'num' ? 'num' : '';
+    return `
+      <div class="table-wrap scroll-x">
+        <table>
+          <thead><tr>${headers.map((h, i) => `<th class="${cls(i)}">${esc(h)}</th>`).join('')}</tr></thead>
+          <tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td class="${cls(i)}">${c}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  async function load() {
+    const [matchRes, pointsRes, deckRes, mvpRes] = await Promise.all([
+      fetch('data/matches.json'),
+      fetch('data/points.json'),
+      fetch('data/decks.json'),
+      fetch('data/mvp.json')
+    ]);
+    const tournaments = await matchRes.json();
+    const points = await pointsRes.json();
+    const decks = await deckRes.json();
+    const mvps = await mvpRes.json();
+
+    const colorsOf = Object.fromEntries(decks.map(d => [d.name, d.colors]));
+
+    // ---- flatten the knockout stage (group matches aren't recorded) ----
+    const ko = [];
+    for (const t of tournaments) {
+      for (const r of t.rounds) {
+        for (const m of r.matches) ko.push({ tournament: t, round: r.name, ...m });
+      }
+    }
+
+    // ---- per-deck knockout record ----
+    const rec = {};
+    const touch = d => rec[d] ||= { w: 0, l: 0, gf: 0, ga: 0 };
+    for (const m of ko) {
+      for (const [deck, gf, ga] of [[m.player1, m.score1, m.score2], [m.player2, m.score2, m.score1]]) {
+        const r = touch(deck);
+        r.gf += gf; r.ga += ga;
+        gf > ga ? r.w++ : r.l++;
+      }
+    }
+
+    // ---- titles, finals, editions, points ----
+    const titles = {}, finals = {}, editions = {}, totalPoints = {};
+    for (const t of tournaments) {
+      titles[t.winner] = (titles[t.winner] || 0) + 1;
+      const f = t.rounds[t.rounds.length - 1].matches[0];
+      for (const d of [f.player1, f.player2]) finals[d] = (finals[d] || 0) + 1;
+    }
+    for (const p of points) {
+      for (const s of p.scores) {
+        editions[s.deck] = (editions[s.deck] || 0) + 1;
+        totalPoints[s.deck] = (totalPoints[s.deck] || 0) + s.total;
+      }
+    }
+
+    // ---- head-to-head ----
+    const h2h = {}, pairs = {};
+    for (const m of ko) {
+      const [a, b] = [m.player1, m.player2];
+      const aWon = m.score1 > m.score2;
+      ((h2h[a] ||= {})[b] ||= { w: 0, l: 0 })[aWon ? 'w' : 'l']++;
+      ((h2h[b] ||= {})[a] ||= { w: 0, l: 0 })[aWon ? 'l' : 'w']++;
+      const key = [a, b].sort().join('|');
+      const p = pairs[key] ||= { a: [a, b].sort()[0], b: [a, b].sort()[1], n: 0, wins: {} };
+      p.n++;
+      const winner = aWon ? a : b;
+      p.wins[winner] = (p.wins[winner] || 0) + 1;
+    }
+
+    // ---- streaks, in chronological knockout order ----
+    const cur = {}, best = {};
+    for (const m of ko) {
+      const winner = m.score1 > m.score2 ? m.player1 : m.player2;
+      const loser = m.score1 > m.score2 ? m.player2 : m.player1;
+      cur[winner] = (cur[winner] || 0) + 1;
+      best[winner] = Math.max(best[winner] || 0, cur[winner]);
+      cur[loser] = 0;
+    }
+
+    // ---- champion runs ----
+    const runs = tournaments.map(t => {
+      let won = 0, lost = 0;
+      for (const r of t.rounds) {
+        for (const m of r.matches) {
+          if (m.player1 === t.winner) { won += m.score1; lost += m.score2; }
+          if (m.player2 === t.winner) { won += m.score2; lost += m.score1; }
+        }
+      }
+      return { t, won, lost, perfect: lost === 0 };
+    });
+
+    // ================= render =================
+    const deckRows = Object.keys(rec).map(deck => {
+      const r = rec[deck];
+      const played = r.w + r.l;
+      return {
+        deck, colors: colorsOf[deck] || [],
+        editions: editions[deck] || 0,
+        titles: titles[deck] || 0,
+        finals: finals[deck] || 0,
+        w: r.w, l: r.l, gf: r.gf, ga: r.ga, played,
+        winPct: pct(r.w, played),
+        points: totalPoints[deck] || 0
+      };
+    }).sort((a, b) => b.titles - a.titles || b.winPct - a.winPct || b.points - a.points);
+
+    // decks with enough knockout meetings for the matrix to be meaningful
+    const core = Object.entries(rec).filter(([, r]) => r.w + r.l >= 8)
+      .sort((a, b) => (b[1].w + b[1].l) - (a[1].w + a[1].l)).map(([d]) => d);
+
+    const topStreak = Object.entries(best).sort((a, b) => b[1] - a[1])[0];
+    const bestRate = deckRows.filter(r => r.played >= 8).sort((a, b) => b.winPct - a.winPct)[0];
+    const perfectRuns = runs.filter(r => r.perfect);
+    const mvpCards = {};
+    for (const v of mvps) mvpCards[v.card] = (mvpCards[v.card] || 0) + 1;
+    const topMvp = Object.entries(mvpCards).sort((a, b) => b[1] - a[1])[0];
+    const topPair = Object.values(pairs).sort((a, b) => b.n - a.n)[0];
+    const champ = deckRows.filter(r => r.titles).sort((a, b) => b.titles - a.titles)[0];
+    const nearly = deckRows.filter(r => !r.titles).sort((a, b) => b.finals - a.finals || b.points - a.points)[0];
+    const sweeps = ko.filter(m => Math.min(m.score1, m.score2) === 0 && Math.max(m.score1, m.score2) === 2).length;
+    const bo3 = ko.filter(m => m.score1 + m.score2 > 1).length;
+
+    document.getElementById('content').innerHTML = `
+      ${kpis({
+        editions: tournaments.length,
+        decks: decks.length,
+        matches: ko.length,
+        games: ko.reduce((a, m) => a + m.score1 + m.score2, 0),
+        champions: Object.keys(titles).length,
+        perfect: perfectRuns.length
+      })}
+
+      <h2>Hall of records</h2>
+      <div class="section-note">Superlatives across all ${tournaments.length} editions.</div>
+      ${recordCards([
+        { label: 'Most titles', value: `${champ.deck} · ${champ.titles}`, detail: `${champ.finals} finals reached` },
+        { label: 'Longest win streak', value: `${topStreak[0]} · ${topStreak[1]}`, detail: 'consecutive knockout matches won' },
+        { label: 'Best match win rate', value: `${bestRate.deck} · ${bestRate.winPct}%`, detail: `${bestRate.w}–${bestRate.l} in the knockout stage` },
+        { label: 'Perfect title run', value: perfectRuns.length ? `${perfectRuns.length}×` : '–',
+          detail: perfectRuns.map(r => `${r.t.winner} (${toRoman(r.t.id)})`).join(', ') || 'never done' },
+        { label: 'Fiercest rivalry', value: `${topPair.a} v ${topPair.b}`,
+          detail: `${topPair.n} meetings · ${Object.entries(topPair.wins).map(([d, n]) => `${d} ${n}`).join(', ')}` },
+        { label: 'Most MVP awards', value: `${topMvp[1]}×`, detail: topMvp[0] },
+        { label: 'Best without a title', value: nearly ? nearly.deck : '–',
+          detail: nearly ? `${nearly.finals} final${nearly.finals === 1 ? '' : 's'} lost · ${nearly.points} points` : '' },
+        { label: 'Clean sweeps', value: `${pct(sweeps, bo3)}%`, detail: `${sweeps} of ${bo3} best-of-three matches ended 2–0` }
+      ])}
+
+      <h2>Deck performance</h2>
+      <div class="section-note">Match records cover the knockout stage only — group-stage results aren't recorded. Sorted by titles, then win rate.</div>
+      ${deckTable(deckRows)}
+
+      <h2>Head to head</h2>
+      <div class="section-note">Knockout meetings between the ${core.length} most active decks, read as <strong>row v column</strong>. Darker means the row deck won more.</div>
+      ${matrix(core, h2h)}
+
+      <h2>Rivalries</h2>
+      <div class="section-note">Pairings that have met most often in the knockout stage.</div>
+      ${simpleTable(['Matchup', 'Meetings', 'Record'],
+        Object.values(pairs).sort((a, b) => b.n - a.n || a.a.localeCompare(b.a)).slice(0, 8).map(p => [
+          `<span class="deck-cell">${esc(p.a)}</span> v <span class="deck-cell">${esc(p.b)}</span>`,
+          p.n,
+          Object.entries(p.wins).sort((x, y) => y[1] - x[1]).map(([d, n]) => `${esc(d)} ${n}`).join(' · ')
+        ]))}
+
+      <h2>Colors</h2>
+      <div class="section-note">Every knockout match counts towards each colour in the deck's identity, so multicolour decks appear more than once.</div>
+      ${(() => {
+        const col = {};
+        for (const m of ko) {
+          for (const [deck, gf, ga] of [[m.player1, m.score1, m.score2], [m.player2, m.score2, m.score1]]) {
+            for (const c of (colorsOf[deck] || [])) {
+              const x = col[c] ||= { w: 0, l: 0, titles: 0 };
+              gf > ga ? x.w++ : x.l++;
+            }
+          }
+        }
+        for (const t of tournaments) for (const c of (colorsOf[t.winner] || [])) (col[c] ||= { w: 0, l: 0, titles: 0 }).titles++;
+        const names = { W: 'White', U: 'Blue', B: 'Black', R: 'Red', G: 'Green' };
+        const rows = 'WUBRG'.split('').filter(c => col[c]);
+        const maxRate = Math.max(...rows.map(c => pct(col[c].w, col[c].w + col[c].l)));
+        return simpleTable(['Colour', 'W–L', 'Match win rate', 'Titles'], rows.map(c => [
+          `<span class="color-pip color-${c}"></span><span class="deck-cell">${names[c]}</span>`,
+          `${col[c].w}–${col[c].l}`,
+          `<div class="bar-cell">${bar(pct(col[c].w, col[c].w + col[c].l), maxRate, pct(col[c].w, col[c].w + col[c].l) + '%')}</div>`,
+          col[c].titles
+        ]), ['left', 'num', 'left', 'num']);
+      })()}
+
+      <h2>Every final</h2>
+      <div class="section-note">The last match of each edition.</div>
+      <div class="finals">
+        ${tournaments.map(t => {
+          const f = t.rounds[t.rounds.length - 1].matches[0];
+          const winner = f.score1 > f.score2 ? f.player1 : f.player2;
+          const loser = f.score1 > f.score2 ? f.player2 : f.player1;
+          const score = `${Math.max(f.score1, f.score2)}–${Math.min(f.score1, f.score2)}`;
+          return `
+            <div class="final-row">
+              <div class="final-num">${toRoman(t.id)}</div>
+              <div class="final-body">
+                <div class="final-win">${esc(winner)} <span class="muted">${score}</span></div>
+                <div class="final-lose">beat ${esc(loser)}</div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <h2>MVP awards</h2>
+      <div class="section-note">Cards named most valuable player, and the decks that produced them.</div>
+      ${(() => {
+        const byDeck = {};
+        for (const v of mvps) byDeck[v.deck] = (byDeck[v.deck] || 0) + 1;
+        const cards = Object.entries(mvpCards).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+        const maxCard = cards[0][1];
+        return simpleTable(['Card', 'Awards', 'Deck'], cards.map(([card, n]) => {
+          const from = mvps.find(v => v.card === card);
+          return [
+            `<span class="deck-cell">${esc(card)}</span>`,
+            `<div class="bar-cell">${bar(n, maxCard, String(n))}</div>`,
+            `${esc(from.deck)} <span class="muted">(${byDeck[from.deck]} total)</span>`
+          ];
+        }), ['left', 'left', 'left']);
+      })()}
+    `;
+  }
+
+  load().catch(e => {
+    document.getElementById('error').textContent = 'Error loading data: ' + e.message;
+  });
+</script>
+</body>
+</html>

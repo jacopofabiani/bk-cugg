@@ -10,13 +10,13 @@
   { "id": "poison",       "name": "Poison",       "colors": ["B", "G"], "anzianita": 9 },
   { "id": "mordor",       "name": "Mordor",       "colors": ["B", "R"], "anzianita": 10 },
   { "id": "elves",        "name": "Elves",        "colors": ["G"], "anzianita": 11 },
-  { "id": "flying",       "name": "Flying",       "colors": ["U", "R", "W", "B", "G"], "anzianita": 12 },
+  { "id": "flying",       "name": "Flying",       "colors": ["U", "R", "W", "B"], "anzianita": 12 },
   { "id": "cycling",      "name": "Cycling",      "colors": ["R", "W"], "anzianita": 13 },
   { "id": "assassins",    "name": "Assassins",    "colors": ["B", "U"], "anzianita": 14 },
   { "id": "artifact",     "name": "Artifact",     "colors": ["W", "U", "B"], "anzianita": 15 },
   { "id": "discard",      "name": "Discard",      "colors": ["B"], "anzianita": 16 },
   { "id": "planeswalker", "name": "Planeswalker", "colors": ["W", "U", "R"], "anzianita": 17 },
   { "id": "reanimate",    "name": "Reanimate",    "colors": ["B", "R"], "anzianita": 18 },
-  { "id": "bloomburrow",  "name": "Bloomburrow",  "colors": ["W", "G"], "anzianita": 19 },
-  { "id": "skarty",       "name": "Skarty",       "colors": ["U", "G"], "anzianita": 20 }
+  { "id": "skarty",       "name": "Skarty",       "colors": ["U", "G"], "anzianita": 19 },
+  { "id": "burrow",       "name": "Burrow",       "colors": ["W", "G"], "anzianita": 20 }
 ]

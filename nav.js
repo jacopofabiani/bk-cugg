@@ -6,6 +6,7 @@ class SiteNav extends HTMLElement {
       ['albo.html',       "Albo d'Oro"],
       ['decks.html',      'Decks'],
       ['standings.html',  'Standings'],
+      ['stats.html',      'Stats'],
       ['mvp.html',        'MVP'],
       ['rules.html',      'Rules'],
       ['scandals.html',   'Scandals'],
