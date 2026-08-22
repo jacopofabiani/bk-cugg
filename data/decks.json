@@ -16,5 +16,7 @@
   { "id": "artifact",     "name": "Artifact",     "colors": ["W", "U", "B"], "anzianita": 15 },
   { "id": "discard",      "name": "Discard",      "colors": ["B"], "anzianita": 16 },
   { "id": "planeswalker", "name": "Planeswalker", "colors": ["W", "U", "R"], "anzianita": 17 },
-  { "id": "reanimate",    "name": "Reanimate",    "colors": ["B", "R"], "anzianita": 18 }
+  { "id": "reanimate",    "name": "Reanimate",    "colors": ["B", "R"], "anzianita": 18 },
+  { "id": "bloomburrow",  "name": "Bloomburrow",  "colors": ["W", "G"], "anzianita": 19 },
+  { "id": "skarty",       "name": "Skarty",       "colors": ["U", "G"], "anzianita": 20 }
 ]

@@ -63,5 +63,12 @@
     "tournamentName": "X° Torneo Bob Kelzor",
     "card": "Master of Ethereum",
     "deck": "Artifact"
+  },
+  {
+    "tournamentId": 11,
+    "tournamentName": "XI° Torneo Bob Kelzor",
+    "card": "Jace, the Perfected Mind",
+    "deck": "Destroy",
+    "image": "images/mvp/jace.png"
   }
 ]

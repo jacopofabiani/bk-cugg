@@ -411,5 +411,48 @@
         ]
       }
     ]
+  },
+  {
+    "id": 11,
+    "name": "XI° Torneo Bob Kelzor",
+    "type": "groups",
+    "startDate": "2024-11-02",
+    "endDate": "2024-11-08",
+    "winner": "Destroy",
+    "mvp": "Jace, the Perfected Mind",
+    "groups": [
+      { "name": "A", "qualified": 2, "standings": ["Artifact", "Elves", "Reanimate", "Bloomburrow", "Goblin"] },
+      { "name": "B", "qualified": 2, "standings": ["Token", "Vampiri", "Dino", "Planeswalker", "Goading"] },
+      { "name": "C", "qualified": 2, "standings": ["LoTR", "Cycling", "Skarty", "Poison", "GainLife"] },
+      { "name": "D", "qualified": 2, "standings": ["Discard", "Destroy", "Flying", "Assassins", "Mordor"] }
+    ],
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Quarterfinals",
+        "matches": [
+          { "player1": "Artifact", "score1": 1, "player2": "Vampiri", "score2": 2 },
+          { "player1": "LoTR",     "score1": 0, "player2": "Destroy", "score2": 2 },
+          { "player1": "Elves",    "score1": 2, "player2": "Token",   "score2": 0 },
+          { "player1": "Cycling",  "score1": 0, "player2": "Discard", "score2": 2 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Semifinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Vampiri", "score1": 0, "player2": "Destroy", "score2": 2 },
+          { "player1": "Elves",   "score1": 1, "player2": "Discard", "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Final",
+        "matches": [
+          { "player1": "Destroy", "score1": 2, "player2": "Discard", "score2": 0 }
+        ]
+      }
+    ]
   }
 ]
