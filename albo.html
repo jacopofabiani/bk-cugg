@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Albo d'Oro - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    nav a {
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover { text-decoration: underline; }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      margin: 32px 0 14px;
+    }
+
+    /* --- Titles summary --- */
+    .titles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      max-width: 900px;
+    }
+
+    .title-card {
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 150px;
+    }
+
+    .title-count {
+      font-size: 1.5rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .title-deck {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .title-name { font-weight: bold; font-size: 0.95rem; }
+    .title-stars { font-size: 0.8rem; color: #555; letter-spacing: 1px; }
+
+    /* --- Editions --- */
+    .editions {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 900px;
+    }
+
+    .edition {
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .edition-num {
+      font-size: 1.6rem;
+      font-weight: bold;
+      text-align: center;
+      border-right: 1px solid #eee;
+      padding-right: 12px;
+    }
+
+    .edition-body { display: flex; flex-direction: column; gap: 10px; }
+
+    .edition-title { font-size: 1.05rem; font-weight: bold; }
+
+    .edition-meta {
+      color: #555;
+      font-size: 0.82rem;
+    }
+
+    .podium {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 22px;
+    }
+
+    .placing {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.92rem;
+    }
+
+    .placing .medal { font-size: 1.1rem; }
+    .placing.first { font-weight: bold; }
+    .placing .label { color: #555; font-size: 0.82rem; }
+
+    .colors {
+      display: inline-flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .color-pip {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1px solid #000;
+    }
+
+    .color-W { background: #f9fafb; }
+    .color-U { background: #3b82f6; }
+    .color-B { background: #1f2937; }
+    .color-R { background: #ef4444; }
+    .color-G { background: #22c55e; }
+
+    .edition-mvp {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #555;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+
+    .edition-mvp .mvp-card-name { color: #000; font-weight: bold; }
+
+    .edition-mvp img {
+      width: 44px;
+      border-radius: 3px;
+      border: 1px solid #000;
+    }
+
+    #error { color: red; margin-top: 20px; }
+
+    @media (max-width: 600px) {
+      .edition { grid-template-columns: 1fr; }
+      .edition-num { text-align: left; border-right: none; border-bottom: 1px solid #eee; padding: 0 0 8px; }
+    }
+  </style>
+  <script src="nav.js" defer></script>
+</head>
+<body>
+
+<site-nav></site-nav>
+
+<h1>Albo d'Oro</h1>
+<div class="subtitle">Winners of every edition of the Torneo Bob Kelzor</div>
+
+<div id="content">
+  <p style="color:#888">Loading...</p>
+</div>
+<p id="error"></p>
+
+<script>
+  function toRoman(n) {
+    const vals = [10, 9, 5, 4, 1];
+    const syms = ['X', 'IX', 'V', 'IV', 'I'];
+    let result = '';
+    for (let i = 0; i < vals.length; i++) {
+      while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
+    }
+    return result + '°';
+  }
+
+  function formatDate(str) {
+    const [y, m, d] = str.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  function formatDateRange(start, end) {
+    return start === end ? formatDate(start) : `${formatDate(start)} – ${formatDate(end)}`;
+  }
+
+  function findRound(t, name) {
+    return t.rounds.find(r => r.name === name);
+  }
+
+  // The finalist that isn't the winner
+  function runnerUp(t) {
+    const final = findRound(t, 'Final');
+    if (!final || !final.matches.length) return null;
+    const m = final.matches[0];
+    return m.score1 > m.score2 ? m.player2 : m.player1;
+  }
+
+  function colorsHtml(deckName, decksByName) {
+    const deck = decksByName[deckName];
+    if (!deck) return '';
+    return `<span class="colors">${deck.colors.map(c => `<span class="color-pip color-${c}"></span>`).join('')}</span>`;
+  }
+
+  function placingHtml(deckName, decksByName, medal, label, cls) {
+    return `
+      <div class="placing ${cls}">
+        <span class="medal">${medal}</span>
+        <span>${deckName}</span>
+        ${colorsHtml(deckName, decksByName)}
+        <span class="label">${label}</span>
+      </div>
+    `;
+  }
+
+  function titlesHtml(tournaments, decksByName) {
+    const counts = {};
+    for (const t of tournaments) counts[t.winner] = (counts[t.winner] || 0) + 1;
+
+    const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+    return `
+      <div class="titles">
+        ${ranked.map(([deck, count]) => `
+          <div class="title-card">
+            <div class="title-count">${count}</div>
+            <div class="title-deck">
+              <div class="title-name">${deck} ${colorsHtml(deck, decksByName)}</div>
+              <div class="title-stars">${'🏆'.repeat(count)}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function editionsHtml(tournaments, decksByName, mvpById) {
+    return `
+      <div class="editions">
+        ${tournaments.map(t => {
+          const second = runnerUp(t);
+          const mvp = mvpById[t.id];
+          const mvpCard = mvp?.card ?? t.mvp;
+
+          return `
+            <div class="edition">
+              <div class="edition-num">${toRoman(t.id)}</div>
+              <div class="edition-body">
+                <div>
+                  <div class="edition-title">${t.name}</div>
+                  <div class="edition-meta">${formatDateRange(t.startDate, t.endDate)}${t.type ? ` · ${t.type}` : ''}</div>
+                </div>
+                <div class="podium">
+                  ${placingHtml(t.winner, decksByName, '🥇', 'winner', 'first')}
+                  ${second ? placingHtml(second, decksByName, '🥈', 'finalist', '') : ''}
+                </div>
+                ${mvpCard ? `
+                  <div class="edition-mvp">
+                    ${mvp?.image ? `<img src="${mvp.image}" alt="${mvpCard}">` : ''}
+                    <span>MVP: <span class="mvp-card-name">${mvpCard}</span>${mvp?.deck ? ` (${mvp.deck})` : ''}</span>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  async function load() {
+    const [matchRes, mvpRes, deckRes] = await Promise.all([
+      fetch('data/matches.json'),
+      fetch('data/mvp.json'),
+      fetch('data/decks.json')
+    ]);
+    const tournaments = await matchRes.json();
+    const mvps = await mvpRes.json();
+    const decks = await deckRes.json();
+
+    const decksByName = Object.fromEntries(decks.map(d => [d.name, d]));
+    const mvpById = Object.fromEntries(mvps.map(m => [m.tournamentId, m]));
+
+    // Most recent edition first
+    const sorted = [...tournaments].sort((a, b) => b.id - a.id);
+
+    document.getElementById('content').innerHTML = `
+      <h2>Titles</h2>
+      ${titlesHtml(tournaments, decksByName)}
+      <h2>Editions</h2>
+      ${editionsHtml(sorted, decksByName, mvpById)}
+    `;
+  }
+
+  load().catch(e => {
+    document.getElementById('error').textContent = 'Error loading data: ' + e.message;
+  });
+</script>
+</body>
+</html>
