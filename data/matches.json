@@ -621,5 +621,48 @@
         ]
       }
     ]
+  },
+  {
+    "id": 15,
+    "name": "XV° Torneo Bob Kelzor",
+    "type": "groups",
+    "startDate": "2024-11-25",
+    "endDate": "2024-11-25",
+    "winner": "Burrow",
+    "mvp": "Light-Paws, Emperor's Voice",
+    "groups": [
+      { "name": "A", "qualified": 2, "standings": ["Elves", "Planeswalker", "Token", "GainLife", "LoTR"] },
+      { "name": "B", "qualified": 2, "standings": ["Reanimate", "Discard", "Artifact", "Cycling", "Goading"] },
+      { "name": "C", "qualified": 2, "standings": ["Assassins", "Poison", "Destroy", "Mordor", "Vampiri"] },
+      { "name": "D", "qualified": 2, "standings": ["Burrow", "Flying", "Dino", "Skarty", "Goblin"] }
+    ],
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Quarterfinals",
+        "matches": [
+          { "player1": "Elves",        "score1": 1, "player2": "Discard",   "score2": 2 },
+          { "player1": "Assassins",    "score1": 1, "player2": "Flying",    "score2": 2 },
+          { "player1": "Planeswalker", "score1": 1, "player2": "Reanimate", "score2": 2 },
+          { "player1": "Poison",       "score1": 1, "player2": "Burrow",    "score2": 2 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Semifinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Discard",   "score1": 2, "player2": "Flying", "score2": 0 },
+          { "player1": "Reanimate", "score1": 0, "player2": "Burrow", "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Final",
+        "matches": [
+          { "player1": "Discard", "score1": 1, "player2": "Burrow", "score2": 2 }
+        ]
+      }
+    ]
   }
 ]

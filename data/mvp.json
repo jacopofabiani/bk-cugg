@@ -89,5 +89,11 @@
     "tournamentName": "XIV° Torneo Bob Kelzor",
     "card": "Illuminator Virtuoso",
     "deck": "Burrow"
+  },
+  {
+    "tournamentId": 15,
+    "tournamentName": "XV° Torneo Bob Kelzor",
+    "card": "Light-Paws, Emperor's Voice",
+    "deck": "Burrow"
   }
 ]
