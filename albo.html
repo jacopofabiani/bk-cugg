@@ -46,7 +46,7 @@
       margin: 32px 0 14px;
     }
 
-    /* --- Titles summary --- */
+    /* --- Titles / runner-ups summary --- */
     .titles {
       display: flex;
       flex-wrap: wrap;
@@ -80,59 +80,6 @@
     .title-name { font-weight: bold; font-size: 0.95rem; }
     .title-stars { font-size: 0.8rem; color: #555; letter-spacing: 1px; }
 
-    /* --- Editions --- */
-    .editions {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      max-width: 900px;
-    }
-
-    .edition {
-      background: #fff;
-      border: 1.5px solid #000;
-      border-radius: 12px;
-      padding: 18px 20px;
-      display: grid;
-      grid-template-columns: 70px 1fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .edition-num {
-      font-size: 1.6rem;
-      font-weight: bold;
-      text-align: center;
-      border-right: 1px solid #eee;
-      padding-right: 12px;
-    }
-
-    .edition-body { display: flex; flex-direction: column; gap: 10px; }
-
-    .edition-title { font-size: 1.05rem; font-weight: bold; }
-
-    .edition-meta {
-      color: #555;
-      font-size: 0.82rem;
-    }
-
-    .podium {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 22px;
-    }
-
-    .placing {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 0.92rem;
-    }
-
-    .placing .medal { font-size: 1.1rem; }
-    .placing.first { font-weight: bold; }
-    .placing .label { color: #555; font-size: 0.82rem; }
-
     .colors {
       display: inline-flex;
       gap: 3px;
@@ -153,30 +100,7 @@
     .color-R { background: #ef4444; }
     .color-G { background: #22c55e; }
 
-    .edition-mvp {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      color: #555;
-      border-top: 1px solid #eee;
-      padding-top: 10px;
-    }
-
-    .edition-mvp .mvp-card-name { color: #000; font-weight: bold; }
-
-    .edition-mvp img {
-      width: 44px;
-      border-radius: 3px;
-      border: 1px solid #000;
-    }
-
     #error { color: red; margin-top: 20px; }
-
-    @media (max-width: 600px) {
-      .edition { grid-template-columns: 1fr; }
-      .edition-num { text-align: left; border-right: none; border-bottom: 1px solid #eee; padding: 0 0 8px; }
-    }
   </style>
   <script src="nav.js" defer></script>
 </head>
@@ -190,25 +114,6 @@
 <p id="error"></p>
 
 <script>
-  function toRoman(n) {
-    const vals = [10, 9, 5, 4, 1];
-    const syms = ['X', 'IX', 'V', 'IV', 'I'];
-    let result = '';
-    for (let i = 0; i < vals.length; i++) {
-      while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
-    }
-    return result + '°';
-  }
-
-  function formatDate(str) {
-    const [y, m, d] = str.split('-');
-    return `${d}/${m}/${y}`;
-  }
-
-  function formatDateRange(start, end) {
-    return start === end ? formatDate(start) : `${formatDate(start)} – ${formatDate(end)}`;
-  }
-
   function findRound(t, name) {
     return t.rounds.find(r => r.name === name);
   }
@@ -227,21 +132,7 @@
     return `<span class="colors">${deck.colors.map(c => `<span class="color-pip color-${c}"></span>`).join('')}</span>`;
   }
 
-  function placingHtml(deckName, decksByName, medal, label, cls) {
-    return `
-      <div class="placing ${cls}">
-        <span class="medal">${medal}</span>
-        <span>${deckName}</span>
-        ${colorsHtml(deckName, decksByName)}
-        <span class="label">${label}</span>
-      </div>
-    `;
-  }
-
-  function titlesHtml(tournaments, decksByName) {
-    const counts = {};
-    for (const t of tournaments) counts[t.winner] = (counts[t.winner] || 0) + 1;
-
+  function countCardsHtml(counts, decksByName, medal) {
     const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
     return `
@@ -251,7 +142,7 @@
             <div class="title-count">${count}</div>
             <div class="title-deck">
               <div class="title-name">${deck} ${colorsHtml(deck, decksByName)}</div>
-              <div class="title-stars">${'🏆'.repeat(count)}</div>
+              <div class="title-stars">${medal.repeat(count)}</div>
             </div>
           </div>
         `).join('')}
@@ -259,61 +150,36 @@
     `;
   }
 
-  function editionsHtml(tournaments, decksByName, mvpById) {
-    return `
-      <div class="editions">
-        ${tournaments.map(t => {
-          const second = runnerUp(t);
-          const mvp = mvpById[t.id];
-          const mvpCard = mvp?.card ?? t.mvp;
+  function titlesHtml(tournaments, decksByName) {
+    const counts = {};
+    for (const t of tournaments) counts[t.winner] = (counts[t.winner] || 0) + 1;
+    return countCardsHtml(counts, decksByName, '🏆');
+  }
 
-          return `
-            <div class="edition">
-              <div class="edition-num">${toRoman(t.id)}</div>
-              <div class="edition-body">
-                <div>
-                  <div class="edition-title">${t.name}</div>
-                  <div class="edition-meta">${formatDateRange(t.startDate, t.endDate)}${t.type ? ` · ${t.type}` : ''}</div>
-                </div>
-                <div class="podium">
-                  ${placingHtml(t.winner, decksByName, '🥇', 'winner', 'first')}
-                  ${second ? placingHtml(second, decksByName, '🥈', 'finalist', '') : ''}
-                </div>
-                ${mvpCard ? `
-                  <div class="edition-mvp">
-                    ${mvp?.image ? `<img src="${mvp.image}" alt="${mvpCard}">` : ''}
-                    <span>MVP: <span class="mvp-card-name">${mvpCard}</span>${mvp?.deck ? ` (${mvp.deck})` : ''}</span>
-                  </div>
-                ` : ''}
-              </div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
+  function runnerUpsHtml(tournaments, decksByName) {
+    const counts = {};
+    for (const t of tournaments) {
+      const second = runnerUp(t);
+      if (second) counts[second] = (counts[second] || 0) + 1;
+    }
+    return countCardsHtml(counts, decksByName, '🥈');
   }
 
   async function load() {
-    const [matchRes, mvpRes, deckRes] = await Promise.all([
+    const [matchRes, deckRes] = await Promise.all([
       fetch('data/matches.json'),
-      fetch('data/mvp.json'),
       fetch('data/decks.json')
     ]);
     const tournaments = await matchRes.json();
-    const mvps = await mvpRes.json();
     const decks = await deckRes.json();
 
     const decksByName = Object.fromEntries(decks.map(d => [d.name, d]));
-    const mvpById = Object.fromEntries(mvps.map(m => [m.tournamentId, m]));
-
-    // Most recent edition first
-    const sorted = [...tournaments].sort((a, b) => b.id - a.id);
 
     document.getElementById('content').innerHTML = `
       <h2>Titles</h2>
       ${titlesHtml(tournaments, decksByName)}
-      <h2>Editions</h2>
-      ${editionsHtml(sorted, decksByName, mvpById)}
+      <h2>Runner-ups</h2>
+      ${runnerUpsHtml(tournaments, decksByName)}
     `;
   }
 
