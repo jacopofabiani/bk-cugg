@@ -454,5 +454,48 @@
         ]
       }
     ]
+  },
+  {
+    "id": 12,
+    "name": "XII° Torneo Bob Kelzor",
+    "type": "groups",
+    "startDate": "2024-11-08",
+    "endDate": "2024-11-16",
+    "winner": "Artifact",
+    "mvp": "Tezzeret, Master of the Bridge",
+    "groups": [
+      { "name": "A", "qualified": 2, "standings": ["Assassins", "Discard", "Vampiri", "Mordor", "LoTR"] },
+      { "name": "B", "qualified": 2, "standings": ["Token", "GainLife", "Cycling", "Elves", "Planeswalker"] },
+      { "name": "C", "qualified": 2, "standings": ["Artifact", "Destroy", "Dino", "Burrow", "Goading"] },
+      { "name": "D", "qualified": 2, "standings": ["Flying", "Skarty", "Reanimate", "Poison", "Goblin"] }
+    ],
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Quarterfinals",
+        "matches": [
+          { "player1": "Assassins", "score1": 2, "player2": "GainLife", "score2": 0 },
+          { "player1": "Artifact",  "score1": 2, "player2": "Skarty",   "score2": 0 },
+          { "player1": "Discard",   "score1": 2, "player2": "Token",    "score2": 0 },
+          { "player1": "Flying",    "score1": 2, "player2": "Destroy",  "score2": 1 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Semifinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Assassins", "score1": 0, "player2": "Artifact", "score2": 2 },
+          { "player1": "Discard",   "score1": 0, "player2": "Flying",   "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Final",
+        "matches": [
+          { "player1": "Artifact", "score1": 2, "player2": "Flying", "score2": 0 }
+        ]
+      }
+    ]
   }
 ]

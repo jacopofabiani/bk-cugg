@@ -71,5 +71,11 @@
     "card": "Jace, the Perfected Mind",
     "deck": "Destroy",
     "image": "images/mvp/jace.png"
+  },
+  {
+    "tournamentId": 12,
+    "tournamentName": "XII° Torneo Bob Kelzor",
+    "card": "Tezzeret, Master of the Bridge",
+    "deck": "Artifact"
   }
 ]
