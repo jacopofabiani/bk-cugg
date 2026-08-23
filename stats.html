@@ -142,6 +142,20 @@
     tbody tr:hover td { background: #fafafa; }
 
     .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .fmt-title {
+      font-size: 0.95rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 24px 0 4px;
+    }
+
+    .fmt-meta {
+      color: #555;
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+
     .deck-cell { font-weight: bold; }
     .muted { color: #888; }
 
@@ -624,6 +638,70 @@
           `<div class="bar-cell">${bar(pct(col[c].w, col[c].w + col[c].l), maxRate, pct(col[c].w, col[c].w + col[c].l) + '%')}</div>`,
           col[c].titles
         ]), ['left', 'num', 'left', 'num']);
+      })()}
+
+      <h2>Formats</h2>
+      <div class="section-note">Every edition runs under one of three formats. Match records below cover the knockout stage of that format only.</div>
+      ${(() => {
+        const typeOf = Object.fromEntries(tournaments.map(t => [t.id, t.type]));
+        const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+        const agg = {};
+        for (const t of tournaments) {
+          const a = agg[t.type] ||= { eds: [], matches: 0, games: 0, titles: {}, rec: {}, pts: {} };
+          a.eds.push(t.id);
+          a.titles[t.winner] = (a.titles[t.winner] || 0) + 1;
+          for (const r of t.rounds) for (const m of r.matches) {
+            a.matches++; a.games += m.score1 + m.score2;
+            for (const [d, gf, ga] of [[m.player1, m.score1, m.score2], [m.player2, m.score2, m.score1]]) {
+              const x = a.rec[d] ||= { w: 0, l: 0 };
+              gf > ga ? x.w++ : x.l++;
+            }
+          }
+        }
+        for (const p of points) {
+          const a = agg[typeOf[p.tournamentId]];
+          if (!a) continue;
+          for (const sc of p.scores) a.pts[sc.deck] = (a.pts[sc.deck] || 0) + sc.total;
+        }
+        const fmts = Object.keys(agg).sort((a, b) => agg[b].eds.length - agg[a].eds.length);
+
+        const summary = simpleTable(
+          ['Format', 'Editions', 'Matches', 'Games / match', 'Champions'],
+          fmts.map(f => {
+            const a = agg[f];
+            return [
+              `<span class="deck-cell">${esc(cap(f))}</span>`,
+              `${a.eds.length} <span class="muted">${a.eds.map(toRoman).join(', ')}</span>`,
+              a.matches,
+              (a.games / a.matches).toFixed(2),
+              Object.entries(a.titles).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))
+                .map(([d, n]) => `${esc(d)} ${n}`).join(' · ')
+            ];
+          }), ['left', 'left', 'num', 'num', 'left']);
+
+        const blocks = fmts.map(f => {
+          const a = agg[f];
+          const rows = Object.keys(a.rec).map(d => {
+            const r = a.rec[d], played = r.w + r.l;
+            return { d, w: r.w, l: r.l, played, rate: pct(r.w, played),
+                     titles: a.titles[d] || 0, pts: a.pts[d] || 0 };
+          }).sort((x, y) => y.pts - x.pts || y.titles - x.titles || y.rate - x.rate).slice(0, 6);
+          const maxPts = Math.max(...rows.map(r => r.pts), 1);
+          return `
+            <div class="fmt-title">${esc(cap(f))}</div>
+            <div class="fmt-meta">${a.eds.length} edition${a.eds.length === 1 ? '' : 's'} ·
+              ${a.matches} knockout matches · leaders by points earned in this format.</div>
+            ${simpleTable(['Deck', 'Titles', 'W–L', 'Win rate', 'Points'], rows.map(r => [
+              `<span class="deck-cell">${esc(r.d)}</span>`,
+              r.titles || '<span class="muted">–</span>',
+              `${r.w}–${r.l}`,
+              r.rate + '%',
+              `<div class="bar-cell">${bar(r.pts, maxPts, String(r.pts))}</div>`
+            ]), ['left', 'num', 'num', 'num', 'left'])}
+          `;
+        }).join('');
+
+        return summary + blocks;
       })()}
 
       <h2>Every final</h2>

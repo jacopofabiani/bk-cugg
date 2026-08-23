@@ -497,5 +497,67 @@
         ]
       }
     ]
+  },
+  {
+    "id": 13,
+    "name": "XIII° Torneo Bob Kelzor",
+    "type": "special edition",
+    "startDate": "2024-11-20",
+    "endDate": "2024-11-20",
+    "winner": "Cycling",
+    "mvp": "Drannith Stinger",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Play-in",
+        "matches": [
+          { "player1": "Flying",  "score1": 1, "player2": "Destroy", "score2": 0 },
+          { "player1": "Elves",   "score1": 1, "player2": "Skarty",  "score2": 0 },
+          { "player1": "LoTR",    "score1": 1, "player2": "Token",   "score2": 0 },
+          { "player1": "Goading", "score1": 0, "player2": "Burrow",  "score2": 1 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Round of 16",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Flying",    "score1": 1, "player2": "Assassins",    "score2": 0 },
+          { "player1": "Vampiri",   "score1": 0, "player2": "GainLife",     "score2": 1 },
+          { "player1": "Reanimate", "score1": 0, "player2": "Discard",      "score2": 1 },
+          { "player1": "Mordor",    "score1": 0, "player2": "Elves",        "score2": 1 },
+          { "player1": "LoTR",      "score1": 0, "player2": "Cycling",      "score2": 1 },
+          { "player1": "Poison",    "score1": 1, "player2": "Goblin",       "score2": 0 },
+          { "player1": "Artifact",  "score1": 1, "player2": "Planeswalker", "score2": 0 },
+          { "player1": "Dino",      "score1": 1, "player2": "Burrow",       "score2": 0 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Flying",   "score1": 1, "player2": "GainLife", "score2": 0 },
+          { "player1": "Discard",  "score1": 0, "player2": "Elves",    "score2": 1 },
+          { "player1": "Cycling",  "score1": 1, "player2": "Poison",   "score2": 0 },
+          { "player1": "Artifact", "score1": 1, "player2": "Dino",     "score2": 0 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Flying",  "score1": 0, "player2": "Elves",    "score2": 1 },
+          { "player1": "Cycling", "score1": 1, "player2": "Artifact", "score2": 0 }
+        ]
+      },
+      {
+        "round": 5,
+        "name": "Final",
+        "matches": [
+          { "player1": "Cycling", "score1": 1, "player2": "Elves", "score2": 0 }
+        ]
+      }
+    ]
   }
 ]

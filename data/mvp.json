@@ -77,5 +77,11 @@
     "tournamentName": "XII° Torneo Bob Kelzor",
     "card": "Tezzeret, Master of the Bridge",
     "deck": "Artifact"
+  },
+  {
+    "tournamentId": 13,
+    "tournamentName": "XIII° Torneo Bob Kelzor",
+    "card": "Drannith Stinger",
+    "deck": "Cycling"
   }
 ]
