@@ -114,7 +114,7 @@
     "startDate": "2024-05-31",
     "endDate": "2024-05-31",
     "winner": "Flying",
-    "mvp": "Aclazotz, Deepest Betrayal // Temple of the Dead",
+    "mvp": "Aclazotz, Deepest Betrayal",
     "groups": [
       { "name": "A", "qualified": 1, "standings": ["Flying", "Token", "Dino"] },
       { "name": "B", "qualified": 1, "standings": ["Goading", "GainLife", "LoTR"] },

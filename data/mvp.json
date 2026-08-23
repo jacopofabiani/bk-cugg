@@ -23,8 +23,9 @@
   {
     "tournamentId": 4,
     "tournamentName": "IV° Torneo Bobby Kelzor",
-    "card": "Aclazotz, Deepest Betrayal // Temple of the Dead",
-    "deck": "Flying"
+    "card": "Aclazotz, Deepest Betrayal",
+    "deck": "Flying",
+    "image": "images/mvp/aclazotz.png"
   },
   {
     "tournamentId": 5,
