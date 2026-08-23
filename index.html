@@ -7,6 +7,13 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      /* how long each MVP stays on screen - the progress bar uses the same value */
+      --mvp-interval: 5s;
+      /* 0.25 = 75% faded. Raise for a bolder background, lower for a subtler one. */
+      --mvp-opacity: 0.25;
+    }
+
     body {
       font-family: Arial, sans-serif;
       background: #fff;
@@ -19,8 +26,61 @@
       padding: 40px 20px;
     }
 
+    .mvp-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .mvp-bg-layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.9s ease-in-out;
+    }
+
+    .mvp-bg-layer.is-visible { opacity: var(--mvp-opacity); }
+
+    .mvp-progress {
+      position: relative;
+      z-index: 1;
+      width: 120px;
+      height: 2px;
+      margin-top: 36px;
+      border-radius: 2px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .mvp-progress-bar {
+      height: 100%;
+      background: #000;
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .mvp-progress-bar.is-running {
+      animation: mvp-progress var(--mvp-interval) linear infinite;
+    }
+
+    @keyframes mvp-progress {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* the background is decorative - stand it down when motion is unwelcome */
+    @media (prefers-reduced-motion: reduce) {
+      .mvp-bg-layer { transition: none; }
+      .mvp-progress { display: none; }
+    }
+
     nav {
       position: fixed;
+      z-index: 5;
       top: 0;
       left: 0;
       right: 0;
@@ -41,6 +101,8 @@
     nav a:hover { text-decoration: underline; }
 
     .logo {
+      position: relative;
+      z-index: 1;
       display: block;
       margin: 0 auto 8px;
       max-width: 320px;
@@ -54,6 +116,8 @@
     }
 
     .nav-cards {
+      position: relative;
+      z-index: 1;
       display: flex;
       gap: 24px;
       flex-wrap: wrap;
@@ -85,6 +149,10 @@
 </head>
 <body>
 
+<div class="mvp-bg" aria-hidden="true">
+  <div class="mvp-bg-layer"></div>
+  <div class="mvp-bg-layer"></div>
+</div>
 <site-nav></site-nav>
 
   <img src="images/logo.png" alt="Bobby Kelzor" class="logo">
@@ -123,6 +191,61 @@
       <div class="label">Scandals</div>
     </a>
   </div>
+
+  <div class="mvp-progress" aria-hidden="true"><div class="mvp-progress-bar"></div></div>
+
+<script>
+  (async () => {
+    const layers = [...document.querySelectorAll('.mvp-bg-layer')];
+    const bar = document.querySelector('.mvp-progress-bar');
+
+    let mvps;
+    try {
+      const all = (await (await fetch('data/mvp.json')).json()).filter(m => m.image);
+      // several editions share a card (Jace won four), so rotate distinct images
+      mvps = [...new Map(all.map(m => [m.image, m])).values()];
+    } catch {
+      return;  // no background is better than a broken page
+    }
+    if (!mvps.length) return;
+
+    mvps.forEach(m => { new Image().src = m.image; });
+
+    // Draw from a shuffled queue so every MVP appears once before any repeats.
+    let queue = [];
+    function nextMvp() {
+      if (!queue.length) {
+        queue = mvps.slice();
+        for (let i = queue.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [queue[i], queue[j]] = [queue[j], queue[i]];
+        }
+        // don't let a reshuffle repeat the image already on screen
+        if (queue.length > 1 && queue[0].image === shown) [queue[0], queue[1]] = [queue[1], queue[0]];
+      }
+      return queue.shift();
+    }
+
+    let visible = -1, shown = null;
+    function show(mvp) {
+      const next = visible === 0 ? 1 : 0;
+      layers[next].style.backgroundImage = `url("${mvp.image}")`;
+      layers[next].classList.add('is-visible');
+      if (visible >= 0) layers[visible].classList.remove('is-visible');
+      visible = next;
+      shown = mvp.image;
+    }
+
+    show(nextMvp());
+
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // The bar owns the clock: each time it completes a lap, the image changes,
+    // so the two can never drift apart.
+    bar.classList.add('is-running');
+    bar.addEventListener('animationiteration', () => show(nextMvp()));
+  })();
+</script>
 
 </body>
 </html>

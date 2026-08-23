@@ -45,7 +45,8 @@
     "tournamentId": 7,
     "tournamentName": "VII° Torneo Bob Kelzor",
     "card": "Deep-Cavern Bat",
-    "deck": "Token"
+    "deck": "Token",
+    "image": "images/mvp/deep-cavern-bat.png"
   },
   {
     "tournamentId": 8,
@@ -58,13 +59,15 @@
     "tournamentId": 9,
     "tournamentName": "IX° Torneo Bob Kelzor",
     "card": "Kaya, Spirits' Justice",
-    "deck": "Token"
+    "deck": "Token",
+    "image": "images/mvp/kaya.png"
   },
   {
     "tournamentId": 10,
     "tournamentName": "X° Torneo Bob Kelzor",
-    "card": "Master of Ethereum",
-    "deck": "Artifact"
+    "card": "Master of Etherium",
+    "deck": "Artifact",
+    "image": "images/mvp/master-of-etherium.png"
   },
   {
     "tournamentId": 11,
@@ -77,24 +80,28 @@
     "tournamentId": 12,
     "tournamentName": "XII° Torneo Bob Kelzor",
     "card": "Tezzeret, Master of the Bridge",
-    "deck": "Artifact"
+    "deck": "Artifact",
+    "image": "images/mvp/tezzeret.png"
   },
   {
     "tournamentId": 13,
     "tournamentName": "XIII° Torneo Bob Kelzor",
     "card": "Drannith Stinger",
-    "deck": "Cycling"
+    "deck": "Cycling",
+    "image": "images/mvp/drannith-stinger.png"
   },
   {
     "tournamentId": 14,
     "tournamentName": "XIV° Torneo Bob Kelzor",
     "card": "Illuminator Virtuoso",
-    "deck": "Burrow"
+    "deck": "Burrow",
+    "image": "images/mvp/illuminator-virtuoso.png"
   },
   {
     "tournamentId": 15,
     "tournamentName": "XV° Torneo Bob Kelzor",
     "card": "Light-Paws, Emperor's Voice",
-    "deck": "Burrow"
+    "deck": "Burrow",
+    "image": "images/mvp/light-paws.png"
   }
 ]
