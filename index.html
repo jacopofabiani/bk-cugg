@@ -10,20 +10,18 @@
     :root {
       /* how long each MVP stays on screen - the progress bar uses the same value */
       --mvp-interval: 5s;
-      /* 0.25 = 75% faded. Raise for a bolder background, lower for a subtler one. */
-      --mvp-opacity: 0.25;
+      /* 0.20 = 80% faded. Raise for a bolder background, lower for a subtler one. */
+      --mvp-opacity: 0.20;
     }
 
     body {
       font-family: Arial, sans-serif;
       background: #fff;
       color: #000;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
+      padding: 20px 16px;
     }
 
     .mvp-bg {
@@ -78,34 +76,12 @@
       .mvp-progress { display: none; }
     }
 
-    nav {
-      position: fixed;
-      z-index: 5;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      gap: 16px;
-      padding: 16px 20px;
-      background: #fff;
-      border-bottom: 1px solid #eee;
-    }
-
-    nav a {
-      color: #000;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 0.95rem;
-    }
-
-    nav a:hover { text-decoration: underline; }
-
     .logo {
       position: relative;
       z-index: 1;
       display: block;
       margin: 0 auto 8px;
-      max-width: 320px;
+      max-width: 240px;
       width: 100%;
     }
 
@@ -147,7 +123,7 @@
 
     /* Phones: shrink the cards so they tile a few per row instead of stacking. */
     @media (max-width: 600px) {
-      body { padding: 32px 16px; }
+      body { padding: 16px 12px; }
 
       .nav-cards {
         display: grid;
@@ -166,7 +142,6 @@
       .nav-card .label { font-size: 0.8rem; }
     }
   </style>
-  <script src="nav.js" defer></script>
 </head>
 <body>
 
@@ -174,8 +149,6 @@
   <div class="mvp-bg-layer"></div>
   <div class="mvp-bg-layer"></div>
 </div>
-<site-nav></site-nav>
-
   <img src="images/logo.png" alt="Bobby Kelzor" class="logo">
 
   <div class="nav-cards">
