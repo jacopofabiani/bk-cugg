@@ -365,8 +365,7 @@
       [stats.decks, 'Decks'],
       [stats.matches, 'Knockout matches'],
       [stats.games, 'Games played'],
-      [stats.champions, 'Different champions'],
-      [stats.perfect, 'Perfect title runs']
+      [stats.champions, 'Different champions']
     ];
     return `<div class="kpis">${items.map(([v, l]) => `
       <div class="kpi">
@@ -534,18 +533,6 @@
       cur[loser] = 0;
     }
 
-    // ---- champion runs ----
-    const runs = tournaments.map(t => {
-      let won = 0, lost = 0;
-      for (const r of t.rounds) {
-        for (const m of r.matches) {
-          if (m.player1 === t.winner) { won += m.score1; lost += m.score2; }
-          if (m.player2 === t.winner) { won += m.score2; lost += m.score1; }
-        }
-      }
-      return { t, won, lost, perfect: lost === 0 };
-    });
-
     // ================= render =================
     const deckRows = Object.keys(rec).map(deck => {
       const r = rec[deck];
@@ -567,7 +554,6 @@
 
     const topStreak = Object.entries(best).sort((a, b) => b[1] - a[1])[0];
     const bestRate = deckRows.filter(r => r.played >= 8).sort((a, b) => b.winPct - a.winPct)[0];
-    const perfectRuns = runs.filter(r => r.perfect);
     const topPair = Object.values(pairs).sort((a, b) => b.n - a.n)[0];
     const champ = deckRows.filter(r => r.titles).sort((a, b) => b.titles - a.titles)[0];
     const nearly = deckRows.filter(r => !r.titles).sort((a, b) => b.finals - a.finals || b.points - a.points)[0];
@@ -580,8 +566,7 @@
         decks: decks.length,
         matches: ko.length,
         games: ko.reduce((a, m) => a + m.score1 + m.score2, 0),
-        champions: Object.keys(titles).length,
-        perfect: perfectRuns.length
+        champions: Object.keys(titles).length
       })}
 
       <h2>Hall of records</h2>
@@ -590,8 +575,6 @@
         { label: 'Most titles', value: `${champ.deck} · ${champ.titles}`, detail: `${champ.finals} finals reached` },
         { label: 'Longest win streak', value: `${topStreak[0]} · ${topStreak[1]}`, detail: 'consecutive knockout matches won' },
         { label: 'Best match win rate', value: `${bestRate.deck} · ${bestRate.winPct}%`, detail: `${bestRate.w}–${bestRate.l} in the knockout stage` },
-        { label: 'Perfect title run', value: perfectRuns.length ? `${perfectRuns.length}×` : '–',
-          detail: perfectRuns.map(r => `${r.t.winner} (${toRoman(r.t.id)})`).join(', ') || 'never done' },
         { label: 'Fiercest rivalry', value: `${topPair.a} v ${topPair.b}`,
           detail: `${topPair.n} meetings · ${Object.entries(topPair.wins).map(([d, n]) => `${d} ${n}`).join(', ')}` },
         { label: 'Best without a title', value: nearly ? nearly.deck : '–',

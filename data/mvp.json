@@ -83,5 +83,11 @@
     "tournamentName": "XIII° Torneo Bob Kelzor",
     "card": "Drannith Stinger",
     "deck": "Cycling"
+  },
+  {
+    "tournamentId": 14,
+    "tournamentName": "XIV° Torneo Bob Kelzor",
+    "card": "Illuminator Virtuoso",
+    "deck": "Burrow"
   }
 ]
