@@ -791,4 +791,66 @@
       }
     ]
   }
+,
+  {
+    "id": 18,
+    "name": "XVIII° Torneo Bob Kelzor",
+    "type": "classic",
+    "startDate": "2025-01-19",
+    "endDate": "2025-01-19",
+    "winner": "Burrow",
+    "mvp": "Illuminator Virtuoso",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Round of 24",
+        "matches": [
+          { "player1": "Burrow",     "score1": 2, "player2": "Elves",        "score2": 1 },
+          { "player1": "Destroy",    "score1": 1, "player2": "Reanimate",    "score2": 2 },
+          { "player1": "Skarty",     "score1": 0, "player2": "Planeswalker", "score2": 2 },
+          { "player1": "Mono White", "score1": 2, "player2": "Goblin",       "score2": 0 },
+          { "player1": "Token",      "score1": 2, "player2": "Flash",        "score2": 1 },
+          { "player1": "Flying",     "score1": 2, "player2": "Poison",       "score2": 0 },
+          { "player1": "Mordor",     "score1": 1, "player2": "Cycling",      "score2": 2 },
+          { "player1": "Rampage",    "score1": 1, "player2": "Dino",         "score2": 2 },
+          { "player1": "Equimen",    "score1": 0, "player2": "Vampiri",      "score2": 2 },
+          { "player1": "Assassins",  "score1": 2, "player2": "Goading",      "score2": 0 },
+          { "player1": "Artifact",   "score1": 0, "player2": "Discard",      "score2": 2 },
+          { "player1": "LoTR",       "score1": 1, "player2": "GainLife",     "score2": 2 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Round of 12",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Burrow",       "score1": 2, "player2": "Reanimate",  "score2": 0 },
+          { "player1": "Planeswalker", "score1": 0, "player2": "Mono White", "score2": 2 },
+          { "player1": "Token",        "score1": 2, "player2": "Flying",     "score2": 0 },
+          { "player1": "Cycling",      "score1": 0, "player2": "Dino",       "score2": 2 },
+          { "player1": "Vampiri",      "score1": 2, "player2": "Assassins",  "score2": 0 },
+          { "player1": "Discard",      "score1": 2, "player2": "GainLife",   "score2": 1 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Semifinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Burrow",     "score1": 2, "player2": "Dino",    "score2": 0 },
+          { "player1": "Mono White", "score1": 2, "player2": "Vampiri", "score2": 0 },
+          { "player1": "Token",      "score1": 2, "player2": "Discard", "score2": 0 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Final group",
+        "matches": [
+          { "player1": "Burrow", "score1": 1, "player2": "Token",      "score2": 0 },
+          { "player1": "Burrow", "score1": 1, "player2": "Mono White", "score2": 0 },
+          { "player1": "Token",  "score1": 1, "player2": "Mono White", "score2": 0 }
+        ]
+      }
+    ]
+  }
 ]

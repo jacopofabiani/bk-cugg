@@ -18,5 +18,9 @@
   { "id": "planeswalker", "name": "Planeswalker", "colors": ["W", "U", "R"], "anzianita": 17 },
   { "id": "reanimate",    "name": "Reanimate",    "colors": ["B", "R"], "anzianita": 18 },
   { "id": "skarty",       "name": "Skarty",       "colors": ["U", "G"], "anzianita": 19 },
-  { "id": "burrow",       "name": "Burrow",       "colors": ["W", "G"], "anzianita": 20 }
+  { "id": "burrow",       "name": "Burrow",       "colors": ["W", "G"], "anzianita": 20 },
+  { "id": "rampage",       "name": "Rampage",       "colors": ["B", "G", "R"], "anzianita": 21 },
+  { "id": "flash",         "name": "Flash",         "colors": ["U", "B"], "anzianita": 22 },
+  { "id": "monowhite",     "name": "Mono White",    "colors": ["W"], "anzianita": 23 },
+  { "id": "equimen",       "name": "Equimen",       "colors": ["R", "W"], "anzianita": 24 }
 ]

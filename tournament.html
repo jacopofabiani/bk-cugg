@@ -537,7 +537,7 @@
 
     for (const round of t.rounds) {
       if (round.stageBreak) html += `</div><div class="bracket">`;
-      const isWide = round.name === 'Round of 16' || round.name === 'Play-in';
+      const isWide = ['Round of 16', 'Round of 24', 'Round of 12', 'Play-in'].includes(round.name);
       html += `<div class="round${isWide ? ' round--r16' : ''}">`;
       html += `<div class="round-title">${round.name}</div>`;
       for (const m of round.matches) {

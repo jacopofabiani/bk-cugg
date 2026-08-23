@@ -120,4 +120,12 @@
     "deck": "Artifact",
     "image": "images/mvp/tezzeret.png"
   }
+,
+  {
+    "tournamentId": 18,
+    "tournamentName": "XVIII° Torneo Bob Kelzor",
+    "card": "Illuminator Virtuoso",
+    "deck": "Burrow",
+    "image": "images/mvp/illuminator-virtuoso.png"
+  }
 ]
