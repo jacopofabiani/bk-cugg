@@ -109,6 +109,15 @@
     "tournamentId": 16,
     "tournamentName": "XVI° Torneo Bob Kelzor",
     "card": "Lathiel, the Bounteous Dawn",
-    "deck": "GainLife"
+    "deck": "GainLife",
+    "image": "images/mvp/lathiel.png"
+  }
+,
+  {
+    "tournamentId": 17,
+    "tournamentName": "XVII° Torneo Bob Kelzor",
+    "card": "Tezzeret, Master of the Bridge",
+    "deck": "Artifact",
+    "image": "images/mvp/tezzeret.png"
   }
 ]
