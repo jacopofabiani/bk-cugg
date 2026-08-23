@@ -104,4 +104,11 @@
     "deck": "Burrow",
     "image": "images/mvp/light-paws.png"
   }
+,
+  {
+    "tournamentId": 16,
+    "tournamentName": "XVI° Torneo Bob Kelzor",
+    "card": "Lathiel, the Bounteous Dawn",
+    "deck": "GainLife"
+  }
 ]

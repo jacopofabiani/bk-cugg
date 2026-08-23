@@ -311,4 +311,31 @@
       { "deck": "Goblin",       "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
     ]
   }
+,
+  {
+    "tournamentId": 16,
+    "tournamentName": "XVI° Torneo Bob Kelzor",
+    "scores": [
+      { "deck": "GainLife",     "gamePoints": 5, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 5, "total": 10 },
+      { "deck": "Assassins",    "gamePoints": 4, "bonusGroup": 0, "bonusFinalist": 2, "bonusWinner": 0, "total": 6  },
+      { "deck": "Reanimate",    "gamePoints": 2, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "LoTR",         "gamePoints": 2, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Goading",      "gamePoints": 2, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Poison",       "gamePoints": 2, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Discard",      "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Artifact",     "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Goblin",       "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Vampiri",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Planeswalker", "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Cycling",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Flying",       "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Burrow",       "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Skarty",       "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Destroy",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Elves",        "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Mordor",       "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Token",        "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Dino",         "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
+    ]
+  }
 ]
