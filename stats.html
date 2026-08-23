@@ -385,42 +385,6 @@
     `).join('')}</div>`;
   }
 
-  function deckTable(rows) {
-    const maxWin = Math.max(...rows.map(r => r.winPct));
-    return `
-      <div class="table-wrap scroll-x">
-        <table>
-          <thead>
-            <tr>
-              <th>Deck</th>
-              <th class="num">Editions</th>
-              <th class="num">Titles</th>
-              <th class="num">Finals</th>
-              <th class="num">W–L</th>
-              <th>Match win rate</th>
-              <th class="num">Games</th>
-              <th class="num">Points</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(r => `
-              <tr>
-                <td class="deck-cell">${r.colors.map(c => `<span class="color-pip color-${c}"></span>`).join('')}${esc(r.deck)}</td>
-                <td class="num">${r.editions}</td>
-                <td class="num">${r.titles || '<span class="muted">–</span>'}</td>
-                <td class="num">${r.finals || '<span class="muted">–</span>'}</td>
-                <td class="num">${r.w}–${r.l}</td>
-                <td class="bar-cell">${bar(r.winPct, maxWin, r.played ? r.winPct + '%' : '–')}</td>
-                <td class="num">${r.gf}–${r.ga}</td>
-                <td class="num">${r.points}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    `;
-  }
-
   function matrix(decks, h2h) {
     const head = decks.map(d => `<th class="col-head"><span>${esc(d)}</span></th>`).join('');
     const body = decks.map(row => `
@@ -581,10 +545,6 @@
           detail: nearly ? `${nearly.finals} final${nearly.finals === 1 ? '' : 's'} lost · ${nearly.points} points` : '' },
         { label: 'Clean sweeps', value: `${pct(sweeps, bo3)}%`, detail: `${sweeps} of ${bo3} best-of-three matches ended 2–0` }
       ])}
-
-      <h2>Deck performance</h2>
-      <div class="section-note">Match records cover the knockout stage only — group-stage results aren't recorded. Sorted by titles, then win rate.</div>
-      ${deckTable(deckRows)}
 
       <h2>Head to head</h2>
       <div class="section-note">Knockout meetings between the ${core.length} most active decks, read as <strong>row v column</strong>. Darker means the row deck won more.</div>
