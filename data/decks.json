@@ -22,5 +22,9 @@
   { "id": "rampage",       "name": "Rampage",       "colors": ["B", "G", "R"], "anzianita": 21 },
   { "id": "flash",         "name": "Flash",         "colors": ["U", "B"], "anzianita": 22 },
   { "id": "monowhite",     "name": "Mono White",    "colors": ["W"], "anzianita": 23 },
-  { "id": "equimen",       "name": "Equimen",       "colors": ["R", "W"], "anzianita": 24 }
+  { "id": "equimen",       "name": "Equimen",       "colors": ["R", "W"], "anzianita": 24 },
+  { "id": "monoblack",     "name": "Mono Black",    "colors": ["B"], "anzianita": 25 },
+  { "id": "monoblue",      "name": "Mono Blue",     "colors": ["U"], "anzianita": 26 },
+  { "id": "monogreen",     "name": "Mono Green",    "colors": ["G"], "anzianita": 27 },
+  { "id": "monored",       "name": "Mono Red",      "colors": ["R"], "anzianita": 28 }
 ]

@@ -127,5 +127,12 @@
     "card": "Illuminator Virtuoso",
     "deck": "Burrow",
     "image": "images/mvp/illuminator-virtuoso.png"
+  },
+  {
+    "tournamentId": 19,
+    "tournamentName": "XIX° Torneo Bob Kelzor",
+    "card": "Bloodletter of Aclazotz",
+    "deck": "Discard",
+    "image": "images/mvp/bloodletter-of-aclazotz.png"
   }
 ]
