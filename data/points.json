@@ -429,5 +429,39 @@
       { "deck": "GainLife",     "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
       { "deck": "Mono Blue",    "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
     ]
+  },
+  {
+    "tournamentId": 20,
+    "tournamentName": "XX° Torneo Bob Kelzor",
+    "scores": [
+      { "deck": "Token",       "gamePoints": 4, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 5, "total": 9  },
+      { "deck": "Discard",     "gamePoints": 4, "bonusGroup": 0, "bonusFinalist": 2, "bonusWinner": 0, "total": 6  },
+      { "deck": "Elves",       "gamePoints": 3, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
+      { "deck": "Assassins",   "gamePoints": 2, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Burrow",      "gamePoints": 2, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Mono Black",  "gamePoints": 2, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Vampiri",     "gamePoints": 2, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Artifact",    "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Dino",        "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Equimen",     "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Flying",      "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Goading",     "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Mono White",  "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Rampage",     "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Skarty",      "gamePoints": 1, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Cycling",     "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Destroy",     "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Flash",       "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "GainLife",    "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Goblin",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "LoTR",        "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Mono Blue",   "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Mono Green",  "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Mono Red",    "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Mordor",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Planeswalker","gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Poison",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Reanimate",   "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
+    ]
   }
 ]

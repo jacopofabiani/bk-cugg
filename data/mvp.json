@@ -134,5 +134,12 @@
     "card": "Bloodletter of Aclazotz",
     "deck": "Discard",
     "image": "images/mvp/bloodletter-of-aclazotz.png"
+  },
+  {
+    "tournamentId": 20,
+    "tournamentName": "XX° Torneo Bob Kelzor",
+    "card": "Leonin Warleader",
+    "deck": "Token",
+    "image": "images/mvp/leonin-warleader.png"
   }
 ]
