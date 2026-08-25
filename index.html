@@ -10,8 +10,8 @@
     :root {
       /* how long each MVP stays on screen - the progress bar uses the same value */
       --mvp-interval: 5s;
-      /* 0.20 = 80% faded. Raise for a bolder background, lower for a subtler one. */
-      --mvp-opacity: 0.20;
+      /* 0.40 = 60% faded. Raise for a bolder background, lower for a subtler one. */
+      --mvp-opacity: 0.40;
     }
 
     body {
@@ -95,7 +95,7 @@
       position: relative;
       z-index: 1;
       display: flex;
-      gap: 24px;
+      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -103,21 +103,21 @@
     .nav-card {
       background: #fff;
       border: 1.5px solid #000;
-      border-radius: 12px;
-      padding: 32px 40px;
+      border-radius: 10px;
+      padding: 16px 20px;
       text-decoration: none;
       color: #000;
       text-align: center;
       transition: background 0.15s;
-      min-width: 160px;
+      min-width: 104px;
     }
 
     .nav-card:hover { background: #f5f5f5; }
 
-    .nav-card .icon { font-size: 2.4rem; margin-bottom: 12px; }
+    .nav-card .icon { font-size: 1.7rem; margin-bottom: 6px; }
 
     .nav-card .label {
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: bold;
     }
 
