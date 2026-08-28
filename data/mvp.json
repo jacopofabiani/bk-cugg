@@ -173,5 +173,17 @@
       "deck": "Elves",
       "image": "images/scarpa/elvish-promenade.png"
     }
+  },
+  {
+    "tournamentId": 22,
+    "tournamentName": "XXII° Torneo Bob Kelzor",
+    "card": "Ajani, Nacatl Pariah",
+    "deck": "Token",
+    "image": "images/mvp/ajani-nacatl-pariah.png",
+    "scarpa": {
+      "card": "Rite of Oblivion",
+      "deck": "Token",
+      "image": "images/scarpa/rite-of-oblivion.png"
+    }
   }
 ]

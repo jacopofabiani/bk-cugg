@@ -1083,5 +1083,76 @@
         ]
       }
     ]
+  },
+  {
+    "id": 22,
+    "name": "XXII° Torneo Bob Kelzor",
+    "type": "classic",
+    "startDate": "2025-03-07",
+    "endDate": "2025-03-21",
+    "winner": "Token",
+    "mvp": "Ajani, Nacatl Pariah",
+    "scarpa": "Rite of Oblivion",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Round of 28",
+        "matches": [
+          { "player1": "Mono Green",   "score1": 2, "player2": "Vampiri",    "score2": 0 },
+          { "player1": "Assassins",    "score1": 1, "player2": "Mono White", "score2": 2 },
+          { "player1": "Skarty",       "score1": 1, "player2": "Elves",      "score2": 2 },
+          { "player1": "Cycling",      "score1": 0, "player2": "Dino",       "score2": 2 },
+          { "player1": "Mono Red",     "score1": 0, "player2": "Poison",     "score2": 2 },
+          { "player1": "Goading",      "score1": 1, "player2": "Artifact",   "score2": 2 },
+          { "player1": "Reanimate",    "score1": 2, "player2": "Goblin",     "score2": 1 },
+          { "player1": "Mono Black",   "score1": 2, "player2": "Flash",      "score2": 0 },
+          { "player1": "Planeswalker", "score1": 0, "player2": "GainLife",   "score2": 2 },
+          { "player1": "Rampage",      "score1": 1, "player2": "LoTR",       "score2": 2 },
+          { "player1": "Equimen",      "score1": 1, "player2": "Mono Blue",  "score2": 2 },
+          { "player1": "Flying",       "score1": 2, "player2": "Mordor",     "score2": 0 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Round of 16",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Token",      "score1": 2, "player2": "Mono Green", "score2": 0 },
+          { "player1": "Mono White", "score1": 2, "player2": "Elves",      "score2": 0 },
+          { "player1": "Dino",       "score1": 2, "player2": "Poison",     "score2": 0 },
+          { "player1": "Artifact",   "score1": 1, "player2": "Discard",    "score2": 2 },
+          { "player1": "Burrow",     "score1": 2, "player2": "Reanimate",  "score2": 1 },
+          { "player1": "Mono Black", "score1": 2, "player2": "GainLife",   "score2": 0 },
+          { "player1": "LoTR",       "score1": 2, "player2": "Mono Blue",  "score2": 1 },
+          { "player1": "Flying",     "score1": 0, "player2": "Destroy",    "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Token",  "score1": 2, "player2": "Mono White", "score2": 0 },
+          { "player1": "Dino",   "score1": 0, "player2": "Discard",    "score2": 2 },
+          { "player1": "Burrow", "score1": 2, "player2": "Mono Black", "score2": 0 },
+          { "player1": "LoTR",   "score1": 0, "player2": "Destroy",    "score2": 2 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Token",  "score1": 2, "player2": "Discard", "score2": 1 },
+          { "player1": "Burrow", "score1": 2, "player2": "Destroy", "score2": 1 }
+        ]
+      },
+      {
+        "round": 5,
+        "name": "Final",
+        "matches": [
+          { "player1": "Token", "score1": 2, "player2": "Burrow", "score2": 0 }
+        ]
+      }
+    ]
   }
 ]
