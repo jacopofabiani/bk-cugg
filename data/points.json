@@ -531,5 +531,43 @@
       { "deck": "Planeswalker", "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
       { "deck": "Vampiri",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
     ]
+  },
+  {
+    "tournamentId": 23,
+    "tournamentName": "XXIII° Torneo Bob Kelzor",
+    "scores": [
+      { "deck": "Discard",      "gamePoints": 8, "bonusGroup": 1, "bonusFinalist": 0, "bonusWinner": 5, "total": 14 },
+      { "deck": "Burrow",       "gamePoints": 7, "bonusGroup": 2, "bonusFinalist": 2, "bonusWinner": 0, "total": 11 },
+      { "deck": "Token",        "gamePoints": 5, "bonusGroup": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 7  },
+      { "deck": "Destroy",      "gamePoints": 5, "bonusGroup": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 6  },
+      { "deck": "Combo",        "gamePoints": 3, "bonusGroup": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 4  },
+      { "deck": "Milling",      "gamePoints": 2, "bonusGroup": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 4  },
+      { "deck": "Assassins",    "gamePoints": 2, "bonusGroup": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
+      { "deck": "Cycling",      "gamePoints": 2, "bonusGroup": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
+      { "deck": "Elves",        "gamePoints": 1, "bonusGroup": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
+      { "deck": "Flying",       "gamePoints": 1, "bonusGroup": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
+      { "deck": "Reanimate",    "gamePoints": 1, "bonusGroup": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 3  },
+      { "deck": "Mono Red",     "gamePoints": 1, "bonusGroup": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Mordor",       "gamePoints": 0, "bonusGroup": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Poison",       "gamePoints": 0, "bonusGroup": 2, "bonusFinalist": 0, "bonusWinner": 0, "total": 2  },
+      { "deck": "Artifact",     "gamePoints": 0, "bonusGroup": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Mono Blue",    "gamePoints": 0, "bonusGroup": 1, "bonusFinalist": 0, "bonusWinner": 0, "total": 1  },
+      { "deck": "Dino",         "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Equimen",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Flash",        "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Flicker",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "GainLife",     "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Goading",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Goblin",       "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "LoTR",         "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Mario Draghi", "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Mono Black",   "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Mono Green",   "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Mono White",   "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Planeswalker", "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Rampage",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Skarty",       "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  },
+      { "deck": "Vampiri",      "gamePoints": 0, "bonusGroup": 0, "bonusFinalist": 0, "bonusWinner": 0, "total": 0  }
+    ]
   }
 ]

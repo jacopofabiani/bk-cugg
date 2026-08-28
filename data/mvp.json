@@ -185,5 +185,17 @@
       "deck": "Token",
       "image": "images/scarpa/rite-of-oblivion.png"
     }
+  },
+  {
+    "tournamentId": 23,
+    "tournamentName": "XXIII° Torneo Bob Kelzor",
+    "card": "Liliana of the Veil",
+    "deck": "Discard",
+    "image": "images/mvp/liliana-of-the-veil.png",
+    "scarpa": {
+      "card": "Thoughtseize",
+      "deck": "Discard",
+      "image": "images/scarpa/thoughtseize.png"
+    }
   }
 ]

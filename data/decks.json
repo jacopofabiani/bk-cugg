@@ -26,5 +26,9 @@
   { "id": "monoblack",     "name": "Mono Black",    "colors": ["B"], "anzianita": 25 },
   { "id": "monoblue",      "name": "Mono Blue",     "colors": ["U"], "anzianita": 26 },
   { "id": "monogreen",     "name": "Mono Green",    "colors": ["G"], "anzianita": 27 },
-  { "id": "monored",       "name": "Mono Red",      "colors": ["R"], "anzianita": 28 }
+  { "id": "monored",       "name": "Mono Red",      "colors": ["R"], "anzianita": 28 },
+  { "id": "combo",         "name": "Combo",         "colors": ["B", "R"], "anzianita": 29 },
+  { "id": "milling",       "name": "Milling",       "colors": ["B", "U"], "anzianita": 30 },
+  { "id": "flicker",       "name": "Flicker",       "colors": ["W", "U"], "anzianita": 31 },
+  { "id": "mariodraghi",   "name": "Mario Draghi",  "colors": ["R"], "anzianita": 32 }
 ]

@@ -1154,5 +1154,139 @@
         ]
       }
     ]
+  },
+  {
+    "id": 23,
+    "name": "XXIII° Torneo Bob Kelzor",
+    "type": "groups",
+    "startDate": "2025-04-04",
+    "endDate": "2025-06-06",
+    "winner": "Discard",
+    "mvp": "Liliana of the Veil",
+    "scarpa": "Thoughtseize",
+    "groups": [
+      {
+        "name": "A",
+        "qualified": 2,
+        "standings": [
+          "Flying",
+          "Assassins",
+          "Mono Black",
+          "Flash"
+        ]
+      },
+      {
+        "name": "B",
+        "qualified": 2,
+        "standings": [
+          "Reanimate",
+          "Destroy",
+          "Equimen",
+          "Mario Draghi"
+        ]
+      },
+      {
+        "name": "C",
+        "qualified": 2,
+        "standings": [
+          "Mordor",
+          "Artifact",
+          "GainLife",
+          "Rampage"
+        ]
+      },
+      {
+        "name": "D",
+        "qualified": 2,
+        "standings": [
+          "Burrow",
+          "Cycling",
+          "Mono Green",
+          "Flicker"
+        ]
+      },
+      {
+        "name": "E",
+        "qualified": 2,
+        "standings": [
+          "Poison",
+          "Mono Blue",
+          "LoTR",
+          "Goading"
+        ]
+      },
+      {
+        "name": "F",
+        "qualified": 2,
+        "standings": [
+          "Milling",
+          "Discard",
+          "Skarty",
+          "Vampiri"
+        ]
+      },
+      {
+        "name": "G",
+        "qualified": 2,
+        "standings": [
+          "Elves",
+          "Mono Red",
+          "Goblin",
+          "Dino"
+        ]
+      },
+      {
+        "name": "H",
+        "qualified": 2,
+        "standings": [
+          "Token",
+          "Combo",
+          "Mono White",
+          "Planeswalker"
+        ]
+      }
+    ],
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Round of 16",
+        "matches": [
+          { "player1": "Flying",    "score1": 1, "player2": "Destroy",   "score2": 2 },
+          { "player1": "Mordor",    "score1": 0, "player2": "Cycling",   "score2": 2 },
+          { "player1": "Poison",    "score1": 0, "player2": "Discard",   "score2": 2 },
+          { "player1": "Elves",     "score1": 1, "player2": "Combo",     "score2": 2 },
+          { "player1": "Reanimate", "score1": 1, "player2": "Assassins", "score2": 2 },
+          { "player1": "Burrow",    "score1": 2, "player2": "Artifact",  "score2": 0 },
+          { "player1": "Milling",   "score1": 2, "player2": "Mono Blue", "score2": 0 },
+          { "player1": "Token",     "score1": 2, "player2": "Mono Red",  "score2": 1 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Destroy",   "score1": 2, "player2": "Cycling", "score2": 0 },
+          { "player1": "Discard",   "score1": 2, "player2": "Combo",   "score2": 1 },
+          { "player1": "Assassins", "score1": 0, "player2": "Burrow",  "score2": 2 },
+          { "player1": "Milling",   "score1": 0, "player2": "Token",   "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Destroy", "score1": 1, "player2": "Discard", "score2": 2 },
+          { "player1": "Burrow",  "score1": 2, "player2": "Token",   "score2": 1 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Final",
+        "matches": [
+          { "player1": "Discard", "score1": 2, "player2": "Burrow", "score2": 1 }
+        ]
+      }
+    ]
   }
 ]
