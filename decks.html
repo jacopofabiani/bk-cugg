@@ -73,6 +73,32 @@
     .color-R { background: #ef4444; }
     .color-G { background: #22c55e; }
 
+    /* Phones: three decks per row -- an iPhone SE is only 320px wide, so the
+       card has to give up most of its padding and the pips shrink with it. */
+    @media (max-width: 600px) {
+      body { padding: 16px 10px; }
+
+      .deck-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .deck-card {
+        padding: 10px 6px;
+        gap: 6px;
+        border-radius: 8px;
+      }
+
+      .deck-name { font-size: 0.75rem; }
+
+      .colors { gap: 4px; }
+
+      .color-pip {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
     #error { color: red; margin-top: 20px; }
   </style>
   <script src="nav.js" defer></script>
