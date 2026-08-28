@@ -190,77 +190,6 @@
       text-align: right;
     }
 
-    /* --- head-to-head matrix --- */
-    .matrix { width: auto; border-collapse: separate; border-spacing: 2px; font-size: 0.75rem; }
-
-    .matrix th {
-      border-bottom: none;
-      padding: 2px 6px;
-      font-size: 0.68rem;
-    }
-
-    .matrix th.row-head {
-      text-align: right;
-      color: #000;
-      font-weight: bold;
-      text-transform: none;
-      letter-spacing: 0;
-      font-size: 0.78rem;
-    }
-
-    .matrix th.col-head {
-      text-align: left;
-      height: 78px;
-      vertical-align: bottom;
-      padding-bottom: 6px;
-    }
-
-    .matrix th.col-head span {
-      display: inline-block;
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      color: #000;
-      font-weight: bold;
-      text-transform: none;
-      letter-spacing: 0;
-      font-size: 0.78rem;
-    }
-
-    .matrix td {
-      border-bottom: none;
-      padding: 0;
-      width: 42px;
-      height: 30px;
-      text-align: center;
-      font-variant-numeric: tabular-nums;
-      border-radius: 3px;
-      cursor: default;
-    }
-
-    .matrix td.empty { background: #fafafa; color: #ccc; }
-    .matrix td.self  { background: repeating-linear-gradient(45deg, #eee, #eee 3px, #fff 3px, #fff 6px); }
-    .matrix td:hover { outline: 2px solid #000; outline-offset: -2px; }
-
-    .legend {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 12px;
-      font-size: 0.75rem;
-      color: #555;
-    }
-
-    .legend-scale {
-      display: flex;
-      gap: 2px;
-    }
-
-    .legend-swatch {
-      width: 26px;
-      height: 12px;
-      border-radius: 2px;
-    }
-
     /* --- colors --- */
     .color-pip {
       width: 16px;
@@ -342,13 +271,6 @@
     return out + '°';
   }
 
-  // Sequential single-hue ramp on a white surface. Ink flips to white past the
-  // point where black text drops below 4.5:1 contrast.
-  function shade(ratio) {
-    const a = 0.06 + 0.74 * ratio;
-    return { bg: `rgba(0,0,0,${a.toFixed(3)})`, fg: a >= 0.55 ? '#fff' : '#000' };
-  }
-
   function bar(value, max, label) {
     const w = (max && value) ? Math.max(2, Math.round(100 * value / max)) : 0;
     return `
@@ -383,36 +305,6 @@
         <div class="record-detail">${esc(c.detail)}</div>
       </div>
     `).join('')}</div>`;
-  }
-
-  function matrix(decks, h2h) {
-    const head = decks.map(d => `<th class="col-head"><span>${esc(d)}</span></th>`).join('');
-    const body = decks.map(row => `
-      <tr>
-        <th class="row-head">${esc(row)}</th>
-        ${decks.map(col => {
-          if (row === col) return `<td class="self"></td>`;
-          const r = h2h[row]?.[col];
-          if (!r) return `<td class="empty" title="${esc(row)} and ${esc(col)} never met">·</td>`;
-          const s = shade(r.w / (r.w + r.l));
-          return `<td style="background:${s.bg};color:${s.fg}"
-                      title="${esc(row)} ${r.w}–${r.l} ${esc(col)} in the knockout stage">${r.w}–${r.l}</td>`;
-        }).join('')}
-      </tr>
-    `).join('');
-
-    const swatches = [0, 0.25, 0.5, 0.75, 1]
-      .map(v => `<div class="legend-swatch" style="background:${shade(v).bg}"></div>`).join('');
-
-    return `
-      <div class="scroll-x">
-        <table class="matrix">
-          <thead><tr><th></th>${head}</tr></thead>
-          <tbody>${body}</tbody>
-        </table>
-      </div>
-      <div class="legend"><span>Row deck loses</span><div class="legend-scale">${swatches}</div><span>Row deck wins</span></div>
-    `;
   }
 
   // align: per-column 'left' | 'num', defaulting to left for the first column
@@ -473,13 +365,11 @@
       }
     }
 
-    // ---- head-to-head ----
-    const h2h = {}, pairs = {};
+    // ---- rivalries ----
+    const pairs = {};
     for (const m of ko) {
       const [a, b] = [m.player1, m.player2];
       const aWon = m.score1 > m.score2;
-      ((h2h[a] ||= {})[b] ||= { w: 0, l: 0 })[aWon ? 'w' : 'l']++;
-      ((h2h[b] ||= {})[a] ||= { w: 0, l: 0 })[aWon ? 'l' : 'w']++;
       const key = [a, b].sort().join('|');
       const p = pairs[key] ||= { a: [a, b].sort()[0], b: [a, b].sort()[1], n: 0, wins: {} };
       p.n++;
@@ -512,9 +402,6 @@
       };
     }).sort((a, b) => b.titles - a.titles || b.winPct - a.winPct || b.points - a.points);
 
-    // decks with enough knockout meetings for the matrix to be meaningful
-    const core = Object.entries(rec).filter(([, r]) => r.w + r.l >= 8)
-      .sort((a, b) => (b[1].w + b[1].l) - (a[1].w + a[1].l)).map(([d]) => d);
 
     const topStreak = Object.entries(best).sort((a, b) => b[1] - a[1])[0];
     const bestRate = deckRows.filter(r => r.played >= 8).sort((a, b) => b.winPct - a.winPct)[0];
@@ -545,10 +432,6 @@
           detail: nearly ? `${nearly.finals} final${nearly.finals === 1 ? '' : 's'} lost · ${nearly.points} points` : '' },
         { label: 'Clean sweeps', value: `${pct(sweeps, bo3)}%`, detail: `${sweeps} of ${bo3} best-of-three matches ended 2–0` }
       ])}
-
-      <h2>Head to head</h2>
-      <div class="section-note">Knockout meetings between the ${core.length} most active decks, read as <strong>row v column</strong>. Darker means the row deck won more.</div>
-      ${matrix(core, h2h)}
 
       <h2>Rivalries</h2>
       <div class="section-note">Pairings that have met most often in the knockout stage.</div>
@@ -590,11 +473,11 @@
         const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
         const agg = {};
         for (const t of tournaments) {
-          const a = agg[t.type] ||= { eds: [], matches: 0, games: 0, titles: {}, rec: {}, pts: {} };
+          const a = agg[t.type] ||= { eds: [], matches: 0, titles: {}, rec: {}, pts: {} };
           a.eds.push(t.id);
           a.titles[t.winner] = (a.titles[t.winner] || 0) + 1;
           for (const r of t.rounds) for (const m of r.matches) {
-            a.matches++; a.games += m.score1 + m.score2;
+            a.matches++;
             for (const [d, gf, ga] of [[m.player1, m.score1, m.score2], [m.player2, m.score2, m.score1]]) {
               const x = a.rec[d] ||= { w: 0, l: 0 };
               gf > ga ? x.w++ : x.l++;
@@ -609,18 +492,16 @@
         const fmts = Object.keys(agg).sort((a, b) => agg[b].eds.length - agg[a].eds.length);
 
         const summary = simpleTable(
-          ['Format', 'Editions', 'Matches', 'Games / match', 'Champions'],
+          ['Format', 'Editions', 'Champions'],
           fmts.map(f => {
             const a = agg[f];
             return [
               `<span class="deck-cell">${esc(cap(f))}</span>`,
               `${a.eds.length} <span class="muted">${a.eds.map(toRoman).join(', ')}</span>`,
-              a.matches,
-              (a.games / a.matches).toFixed(2),
               Object.entries(a.titles).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))
                 .map(([d, n]) => `${esc(d)} ${n}`).join(' · ')
             ];
-          }), ['left', 'left', 'num', 'num', 'left']);
+          }), ['left', 'left', 'left']);
 
         const blocks = fmts.map(f => {
           const a = agg[f];
