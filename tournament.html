@@ -248,14 +248,25 @@
       text-align: center;
     }
 
-    .mvp-section {
+    .awards {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 16px;
       margin-top: 36px;
+    }
+
+    .mvp-section {
       background: #fff;
       border: 1.5px solid #000;
       border-radius: 10px;
       padding: 16px 24px;
       display: inline-block;
     }
+
+    /* Scarpa d'Oro is the secondary title, so it gets a smaller card and art. */
+    .mvp-section--scarpa .mvp-name { font-size: 1rem; }
+    .mvp-section--scarpa img { width: 80px; }
 
     .mvp-label {
       color: #555;
@@ -518,6 +529,20 @@
     `;
   }
 
+  // Scarpa d'Oro arrived with the XXI edition -- earlier ones carry a null.
+  function scarpaHtml(t, mvpData) {
+    const card = t.scarpa || mvpData?.scarpa?.card;
+    if (!card) return '';
+    const img = mvpData?.scarpa?.image;
+    return `
+      <div class="mvp-section mvp-section--scarpa">
+        <div class="mvp-label">Scarpa d'Oro</div>
+        ${img ? `<img src="${img}" alt="${card}" style="border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
+        <div class="mvp-name">${card}</div>
+      </div>
+    `;
+  }
+
   function showTournament(index) {
     // Update active button
     allTournaments.forEach((_, i) => {
@@ -573,10 +598,13 @@
           <div class="winner-label">${t.winner}</div>
         </div>
       </div>
-      <div class="mvp-section">
-        <div class="mvp-label">MVP</div>
-        ${mvpData?.image ? `<img src="${mvpData.image}" alt="${t.mvp}" style="width:120px;border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
-        <div class="mvp-name">${t.mvp}</div>
+      <div class="awards">
+        <div class="mvp-section">
+          <div class="mvp-label">MVP</div>
+          ${mvpData?.image ? `<img src="${mvpData.image}" alt="${t.mvp}" style="width:120px;border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
+          <div class="mvp-name">${t.mvp}</div>
+        </div>
+        ${scarpaHtml(t, mvpData)}
       </div>
       <br>
       ${buildPointsHtml(t.id)}

@@ -79,6 +79,37 @@
       color: #555;
     }
 
+    /* Scarpa d'Oro: same card, half the art -- it ranks below the MVP. */
+    .scarpa {
+      border-top: 1px solid #000;
+      padding-top: 10px;
+      margin-top: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .scarpa-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+    }
+
+    .scarpa-img {
+      width: 70px;
+      border-radius: 4px;
+      border: 1px solid #000;
+    }
+
+    .scarpa-name {
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
     #error { color: red; margin-top: 20px; }
   </style>
   <script src="nav.js" defer></script>
@@ -103,6 +134,19 @@
     return result + '°';
   }
 
+  // Scarpa d'Oro arrived with the XXI edition -- earlier ones carry a null.
+  function scarpaHtml(s) {
+    if (!s) return '';
+    return `
+      <div class="scarpa">
+        <div class="scarpa-label">Scarpa d'Oro</div>
+        ${s.image ? `<img class="scarpa-img" src="${s.image}" alt="${s.card}">` : ''}
+        <div class="scarpa-name">${s.card}</div>
+        <div class="mvp-deck">${s.deck}</div>
+      </div>
+    `;
+  }
+
   async function load() {
     const res = await fetch('data/mvp.json');
     const mvps = await res.json();
@@ -116,6 +160,7 @@
           <div class="mvp-card-name">${m.card}</div>
           <div class="mvp-deck">${m.deck}</div>
         </div>
+        ${scarpaHtml(m.scarpa)}
       </div>
     `).join('');
   }

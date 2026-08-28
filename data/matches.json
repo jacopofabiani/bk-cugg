@@ -7,6 +7,7 @@
     "endDate": "2024-04-27",
     "winner": "Token",
     "mvp": "Leonin Warleader",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -43,6 +44,7 @@
     "endDate": "2024-05-04",
     "winner": "Goblin",
     "mvp": "Krenko, Mob Boss",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -79,6 +81,7 @@
     "endDate": "2024-05-19",
     "winner": "Destroy",
     "mvp": "Etrata, Deadly Fugitive",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -115,6 +118,7 @@
     "endDate": "2024-05-31",
     "winner": "Flying",
     "mvp": "Aclazotz, Deepest Betrayal",
+    "scarpa": null,
     "groups": [
       { "name": "A", "qualified": 1, "standings": ["Flying", "Token", "Dino"] },
       { "name": "B", "qualified": 1, "standings": ["Goading", "GainLife", "LoTR"] },
@@ -147,6 +151,7 @@
     "endDate": "2024-06-15",
     "winner": "Destroy",
     "mvp": "Jace, the Perfected Mind",
+    "scarpa": null,
     "groups": [
       { "name": "A", "qualified": 1, "standings": ["Token", "Elves", "Goading"] },
       { "name": "B", "qualified": 1, "standings": ["Goblin", "Poison", "Dino"] },
@@ -179,6 +184,7 @@
     "endDate": "2024-06-23",
     "winner": "Destroy",
     "mvp": "Jace, the Perfected Mind",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -226,6 +232,7 @@
     "endDate": "2024-07-06",
     "winner": "Token",
     "mvp": "Deep-Cavern Bat",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -275,6 +282,7 @@
     "endDate": "2024-08-09",
     "winner": "Destroy",
     "mvp": "Jace, the Perfected Mind",
+    "scarpa": null,
     "groups": [
       { "name": "A", "qualified": 2, "standings": ["Assassins", "Elves", "Vampiri", "Goblin"] },
       { "name": "B", "qualified": 2, "standings": ["LoTR", "Destroy", "Goading", "Discard"] },
@@ -318,6 +326,7 @@
     "endDate": "2024-09-21",
     "winner": "Token",
     "mvp": "Kaya, Spirits' Justice",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -369,6 +378,7 @@
     "endDate": "2024-10-05",
     "winner": "Artifact",
     "mvp": "Master of Etherium",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -420,6 +430,7 @@
     "endDate": "2024-11-08",
     "winner": "Destroy",
     "mvp": "Jace, the Perfected Mind",
+    "scarpa": null,
     "groups": [
       { "name": "A", "qualified": 2, "standings": ["Artifact", "Elves", "Reanimate", "Burrow", "Goblin"] },
       { "name": "B", "qualified": 2, "standings": ["Token", "Vampiri", "Dino", "Planeswalker", "Goading"] },
@@ -463,6 +474,7 @@
     "endDate": "2024-11-16",
     "winner": "Artifact",
     "mvp": "Tezzeret, Master of the Bridge",
+    "scarpa": null,
     "groups": [
       { "name": "A", "qualified": 2, "standings": ["Assassins", "Discard", "Vampiri", "Mordor", "LoTR"] },
       { "name": "B", "qualified": 2, "standings": ["Token", "GainLife", "Cycling", "Elves", "Planeswalker"] },
@@ -506,6 +518,7 @@
     "endDate": "2024-11-20",
     "winner": "Cycling",
     "mvp": "Drannith Stinger",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -568,6 +581,7 @@
     "endDate": "2024-11-24",
     "winner": "Burrow",
     "mvp": "Illuminator Virtuoso",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -630,6 +644,7 @@
     "endDate": "2024-11-25",
     "winner": "Burrow",
     "mvp": "Light-Paws, Emperor's Voice",
+    "scarpa": null,
     "groups": [
       { "name": "A", "qualified": 2, "standings": ["Elves", "Planeswalker", "Token", "GainLife", "LoTR"] },
       { "name": "B", "qualified": 2, "standings": ["Reanimate", "Discard", "Artifact", "Cycling", "Goading"] },
@@ -674,6 +689,7 @@
     "endDate": "2024-12-06",
     "winner": "GainLife",
     "mvp": "Lathiel, the Bounteous Dawn",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -737,6 +753,7 @@
     "endDate": "2025-01-12",
     "winner": "Artifact",
     "mvp": "Tezzeret, Master of the Bridge",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -800,6 +817,7 @@
     "endDate": "2025-01-19",
     "winner": "Burrow",
     "mvp": "Illuminator Virtuoso",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -861,6 +879,7 @@
     "endDate": "2025-01-31",
     "winner": "Discard",
     "mvp": "Bloodletter of Aclazotz",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -931,6 +950,7 @@
     "endDate": "2025-02-05",
     "winner": "Token",
     "mvp": "Leonin Warleader",
+    "scarpa": null,
     "rounds": [
       {
         "round": 1,
@@ -989,6 +1009,77 @@
         "name": "Final",
         "matches": [
           { "player1": "Token","score1": 1, "player2": "Discard","score2": 0 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "name": "XXI° Torneo Bob Kelzor",
+    "type": "classic",
+    "startDate": "2025-02-09",
+    "endDate": "2025-02-28",
+    "winner": "Elves",
+    "mvp": "Elvish Warmaster",
+    "scarpa": "Elvish Promenade",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Round of 28",
+        "matches": [
+          { "player1": "Goblin",     "score1": 2, "player2": "Planeswalker", "score2": 1 },
+          { "player1": "Cycling",    "score1": 2, "player2": "Mono Red",     "score2": 0 },
+          { "player1": "Vampiri",    "score1": 1, "player2": "Mordor",       "score2": 2 },
+          { "player1": "Poison",     "score1": 2, "player2": "Rampage",      "score2": 0 },
+          { "player1": "Mono White", "score1": 2, "player2": "GainLife",     "score2": 0 },
+          { "player1": "Goading",    "score1": 0, "player2": "Dino",         "score2": 2 },
+          { "player1": "Flying",     "score1": 0, "player2": "Burrow",       "score2": 2 },
+          { "player1": "Skarty",     "score1": 0, "player2": "Reanimate",    "score2": 2 },
+          { "player1": "Mono Blue",  "score1": 2, "player2": "LoTR",         "score2": 1 },
+          { "player1": "Equimen",    "score1": 1, "player2": "Mono Green",   "score2": 2 },
+          { "player1": "Flash",      "score1": 0, "player2": "Assassins",    "score2": 2 },
+          { "player1": "Mono Black", "score1": 0, "player2": "Elves",        "score2": 2 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Round of 16",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Artifact",   "score1": 1, "player2": "Goblin",     "score2": 2 },
+          { "player1": "Cycling",    "score1": 2, "player2": "Mordor",     "score2": 0 },
+          { "player1": "Poison",     "score1": 2, "player2": "Mono White", "score2": 0 },
+          { "player1": "Dino",       "score1": 0, "player2": "Discard",    "score2": 2 },
+          { "player1": "Destroy",    "score1": 1, "player2": "Burrow",     "score2": 2 },
+          { "player1": "Reanimate",  "score1": 2, "player2": "Mono Blue",  "score2": 1 },
+          { "player1": "Mono Green", "score1": 0, "player2": "Assassins",  "score2": 2 },
+          { "player1": "Elves",      "score1": 2, "player2": "Token",      "score2": 0 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Goblin",    "score1": 0, "player2": "Cycling",   "score2": 2 },
+          { "player1": "Poison",    "score1": 0, "player2": "Discard",   "score2": 2 },
+          { "player1": "Burrow",    "score1": 2, "player2": "Reanimate", "score2": 0 },
+          { "player1": "Assassins", "score1": 0, "player2": "Elves",     "score2": 2 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Cycling", "score1": 0, "player2": "Discard", "score2": 2 },
+          { "player1": "Burrow",  "score1": 0, "player2": "Elves",   "score2": 2 }
+        ]
+      },
+      {
+        "round": 5,
+        "name": "Final",
+        "matches": [
+          { "player1": "Discard", "score1": 1, "player2": "Elves", "score2": 2 }
         ]
       }
     ]

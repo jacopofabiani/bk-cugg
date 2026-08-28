@@ -212,6 +212,39 @@
     `;
   }
 
+  // Scarpa d'Oro is tallied per card like the MVP, and only from the XXI
+  // edition on -- earlier entries carry a null, so the section stays hidden
+  // until there is something to show.
+  function scarpaCardsHtml(mvps, decksByName) {
+    const awarded = mvps.filter(m => m.scarpa);
+    if (!awarded.length) return '';
+
+    const byCard = {};
+    for (const m of awarded) {
+      const a = byCard[m.scarpa.card] ||= { card: m.scarpa.card, decks: new Set(), n: 0 };
+      a.decks.add(m.scarpa.deck);
+      a.n++;
+    }
+    const ranked = Object.values(byCard).sort((a, b) => b.n - a.n || a.card.localeCompare(b.card));
+
+    return `
+      <h2>Scarpa d'Oro</h2>
+      <div class="titles">
+        ${ranked.map(a => `
+          <div class="title-card">
+            <div class="title-count">${a.n}</div>
+            <div class="title-deck">
+              <div class="title-name">${a.card}</div>
+              <div class="title-sub">${[...a.decks].map(d =>
+                `${d} ${colorsHtml(d, decksByName)}`).join(' · ')}</div>
+              <div class="title-stars">${'\u{1f45f}'.repeat(a.n)}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
   async function load() {
     const [matchRes, deckRes, mvpRes] = await Promise.all([
       fetch('data/matches.json'),
@@ -231,6 +264,7 @@
       ${runnerUpsHtml(tournaments, decksByName)}
       <h2>MVP awards</h2>
       ${mvpCardsHtml(mvps, decksByName)}
+      ${scarpaCardsHtml(mvps, decksByName)}
     `;
   }
 

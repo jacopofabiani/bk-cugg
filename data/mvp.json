@@ -4,105 +4,120 @@
     "tournamentName": "I° Torneo Bobby Kelzor",
     "card": "Leonin Warleader",
     "deck": "Token",
-    "image": "images/mvp/leonin-warleader.png"
+    "image": "images/mvp/leonin-warleader.png",
+    "scarpa": null
   },
   {
     "tournamentId": 2,
     "tournamentName": "II° Torneo Bobby Kelzor",
     "card": "Krenko, Mob Boss",
     "deck": "Goblin",
-    "image": "images/mvp/krenko.png"
+    "image": "images/mvp/krenko.png",
+    "scarpa": null
   },
   {
     "tournamentId": 3,
     "tournamentName": "III° Torneo Bobby Kelzor",
     "card": "Etrata, Deadly Fugitive",
     "deck": "Destroy",
-    "image": "images/mvp/etrata.png"
+    "image": "images/mvp/etrata.png",
+    "scarpa": null
   },
   {
     "tournamentId": 4,
     "tournamentName": "IV° Torneo Bobby Kelzor",
     "card": "Aclazotz, Deepest Betrayal",
     "deck": "Flying",
-    "image": "images/mvp/aclazotz.png"
+    "image": "images/mvp/aclazotz.png",
+    "scarpa": null
   },
   {
     "tournamentId": 5,
     "tournamentName": "V° Torneo Bob Kelzor",
     "card": "Jace, the Perfected Mind",
     "deck": "Destroy",
-    "image": "images/mvp/jace.png"
+    "image": "images/mvp/jace.png",
+    "scarpa": null
   },
   {
     "tournamentId": 6,
     "tournamentName": "VI° Torneo Bob Kelzor",
     "card": "Jace, the Perfected Mind",
     "deck": "Destroy",
-    "image": "images/mvp/jace.png"
+    "image": "images/mvp/jace.png",
+    "scarpa": null
   },
   {
     "tournamentId": 7,
     "tournamentName": "VII° Torneo Bob Kelzor",
     "card": "Deep-Cavern Bat",
     "deck": "Token",
-    "image": "images/mvp/deep-cavern-bat.png"
+    "image": "images/mvp/deep-cavern-bat.png",
+    "scarpa": null
   },
   {
     "tournamentId": 8,
     "tournamentName": "VIII° Torneo Bob Kelzor",
     "card": "Jace, the Perfected Mind",
     "deck": "Destroy",
-    "image": "images/mvp/jace.png"
+    "image": "images/mvp/jace.png",
+    "scarpa": null
   },
   {
     "tournamentId": 9,
     "tournamentName": "IX° Torneo Bob Kelzor",
     "card": "Kaya, Spirits' Justice",
     "deck": "Token",
-    "image": "images/mvp/kaya.png"
+    "image": "images/mvp/kaya.png",
+    "scarpa": null
   },
   {
     "tournamentId": 10,
     "tournamentName": "X° Torneo Bob Kelzor",
     "card": "Master of Etherium",
     "deck": "Artifact",
-    "image": "images/mvp/master-of-etherium.png"
+    "image": "images/mvp/master-of-etherium.png",
+    "scarpa": null
   },
   {
     "tournamentId": 11,
     "tournamentName": "XI° Torneo Bob Kelzor",
     "card": "Jace, the Perfected Mind",
     "deck": "Destroy",
-    "image": "images/mvp/jace.png"
+    "image": "images/mvp/jace.png",
+    "scarpa": null
   },
   {
     "tournamentId": 12,
     "tournamentName": "XII° Torneo Bob Kelzor",
     "card": "Tezzeret, Master of the Bridge",
     "deck": "Artifact",
-    "image": "images/mvp/tezzeret.png"
+    "image": "images/mvp/tezzeret.png",
+    "scarpa": null
   },
   {
     "tournamentId": 13,
     "tournamentName": "XIII° Torneo Bob Kelzor",
     "card": "Drannith Stinger",
     "deck": "Cycling",
-    "image": "images/mvp/drannith-stinger.png"
+    "image": "images/mvp/drannith-stinger.png",
+    "scarpa": null
   },
   {
     "tournamentId": 14,
     "tournamentName": "XIV° Torneo Bob Kelzor",
     "card": "Illuminator Virtuoso",
     "deck": "Burrow",
-    "image": "images/mvp/illuminator-virtuoso.png"
+    "image": "images/mvp/illuminator-virtuoso.png",
+    "scarpa": null
   },
   {
     "tournamentId": 15,
     "tournamentName": "XV° Torneo Bob Kelzor",
     "card": "Light-Paws, Emperor's Voice",
     "deck": "Burrow",
-    "image": "images/mvp/light-paws.png"
+    "image": "images/mvp/light-paws.png",
+    "scarpa": null
   }
 ,
   {
@@ -110,7 +125,8 @@
     "tournamentName": "XVI° Torneo Bob Kelzor",
     "card": "Lathiel, the Bounteous Dawn",
     "deck": "GainLife",
-    "image": "images/mvp/lathiel.png"
+    "image": "images/mvp/lathiel.png",
+    "scarpa": null
   }
 ,
   {
@@ -118,7 +134,8 @@
     "tournamentName": "XVII° Torneo Bob Kelzor",
     "card": "Tezzeret, Master of the Bridge",
     "deck": "Artifact",
-    "image": "images/mvp/tezzeret.png"
+    "image": "images/mvp/tezzeret.png",
+    "scarpa": null
   }
 ,
   {
@@ -126,20 +143,35 @@
     "tournamentName": "XVIII° Torneo Bob Kelzor",
     "card": "Illuminator Virtuoso",
     "deck": "Burrow",
-    "image": "images/mvp/illuminator-virtuoso.png"
+    "image": "images/mvp/illuminator-virtuoso.png",
+    "scarpa": null
   },
   {
     "tournamentId": 19,
     "tournamentName": "XIX° Torneo Bob Kelzor",
     "card": "Bloodletter of Aclazotz",
     "deck": "Discard",
-    "image": "images/mvp/bloodletter-of-aclazotz.png"
+    "image": "images/mvp/bloodletter-of-aclazotz.png",
+    "scarpa": null
   },
   {
     "tournamentId": 20,
     "tournamentName": "XX° Torneo Bob Kelzor",
     "card": "Leonin Warleader",
     "deck": "Token",
-    "image": "images/mvp/leonin-warleader.png"
+    "image": "images/mvp/leonin-warleader.png",
+    "scarpa": null
+  },
+  {
+    "tournamentId": 21,
+    "tournamentName": "XXI° Torneo Bob Kelzor",
+    "card": "Elvish Warmaster",
+    "deck": "Elves",
+    "image": "images/mvp/elvish-warmaster.png",
+    "scarpa": {
+      "card": "Elvish Promenade",
+      "deck": "Elves",
+      "image": "images/scarpa/elvish-promenade.png"
+    }
   }
 ]
