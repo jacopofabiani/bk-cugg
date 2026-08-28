@@ -33,7 +33,7 @@
     .mvp-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 24px;
+      gap: 16px;
       justify-content: flex-start;
     }
 
@@ -41,12 +41,12 @@
       background: #fff;
       border: 1.5px solid #000;
       border-radius: 12px;
-      padding: 16px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 10px;
-      width: 180px;
+      width: 150px;
     }
 
     .mvp-tournament {
@@ -56,7 +56,7 @@
     }
 
     .mvp-card-img {
-      width: 140px;
+      width: 118px;
       border-radius: 4px;
       border: 1px solid #000;
     }
@@ -99,7 +99,7 @@
     }
 
     .scarpa-img {
-      width: 70px;
+      width: 62px;
       border-radius: 4px;
       border: 1px solid #000;
     }
@@ -108,6 +108,26 @@
       font-size: 0.8rem;
       font-weight: bold;
       text-align: center;
+    }
+
+    /* Phones: two cards per row whatever the width -- an iPhone SE is 320px. */
+    @media (max-width: 600px) {
+      body { padding: 16px 10px; }
+
+      .mvp-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .mvp-card {
+        width: auto;
+        min-width: 0;
+        padding: 12px 8px;
+      }
+
+      .mvp-card-img { width: 100%; }
+      .scarpa-img { width: 60%; }
     }
 
     #error { color: red; margin-top: 20px; }
