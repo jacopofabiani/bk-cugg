@@ -197,5 +197,17 @@
       "deck": "Discard",
       "image": "images/scarpa/thoughtseize.png"
     }
+  },
+  {
+    "tournamentId": 24,
+    "tournamentName": "XXIV° Torneo Bob Kelzor",
+    "card": "Hellkite Overlord",
+    "deck": "Reanimate",
+    "image": "images/mvp/hellkite-overlord.png",
+    "scarpa": {
+      "card": "Entomb",
+      "deck": "Reanimate",
+      "image": "images/scarpa/entomb.png"
+    }
   }
 ]
