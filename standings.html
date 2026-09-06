@@ -336,7 +336,10 @@
       const tournament = allTournaments[i];
       const matchData = allMatches.find(m => m.id === tournament.tournamentId);
       if (matchData) {
-        for (const round of matchData.rounds) {
+        // An A/B edition keeps its second bracket in seriesB; those are real
+        // games played and score points, so they belong in the tally too.
+        const rounds = matchData.rounds.concat(matchData.seriesB?.rounds || []);
+        for (const round of rounds) {
           for (const match of round.matches) {
             const games = match.score1 + match.score2;
             gamesPlayedMap[match.player1] = (gamesPlayedMap[match.player1] || 0) + games;

@@ -318,9 +318,12 @@
     const colorsOf = Object.fromEntries(decks.map(d => [d.name, d.colors]));
 
     // ---- flatten the knockout stage (group matches aren't recorded) ----
+    // A/B editions play a second bracket under seriesB. Those matches count
+    // towards records and streaks; only its title does not (see below).
+    const bracketsOf = t => t.rounds.concat(t.seriesB?.rounds || []);
     const ko = [];
     for (const t of tournaments) {
-      for (const r of t.rounds) {
+      for (const r of bracketsOf(t)) {
         for (const m of r.matches) ko.push({ tournament: t, round: r.name, ...m });
       }
     }
@@ -452,7 +455,7 @@
       })()}
 
       <h2>Formats</h2>
-      <div class="section-note">Every edition runs under one of three formats. Match records below cover the knockout stage of that format only.</div>
+      <div class="section-note">Every edition runs under one of a handful of formats. Match records below cover the knockout stage of that format only.</div>
       ${(() => {
         const typeOf = Object.fromEntries(tournaments.map(t => [t.id, t.type]));
         const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -461,7 +464,7 @@
           const a = agg[t.type] ||= { eds: [], matches: 0, titles: {}, rec: {}, pts: {} };
           a.eds.push(t.id);
           a.titles[t.winner] = (a.titles[t.winner] || 0) + 1;
-          for (const r of t.rounds) for (const m of r.matches) {
+          for (const r of bracketsOf(t)) for (const m of r.matches) {
             a.matches++;
             for (const [d, gf, ga] of [[m.player1, m.score1, m.score2], [m.player2, m.score2, m.score1]]) {
               const x = a.rec[d] ||= { w: 0, l: 0 };

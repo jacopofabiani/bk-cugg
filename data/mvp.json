@@ -209,5 +209,17 @@
       "deck": "Reanimate",
       "image": "images/scarpa/entomb.png"
     }
+  },
+  {
+    "tournamentId": 25,
+    "tournamentName": "XXV° Torneo Bob Kelzor",
+    "card": "Illuminator Virtuoso",
+    "deck": "Burrow",
+    "image": "images/mvp/illuminator-virtuoso.png",
+    "scarpa": {
+      "card": "Sheltered by Ghosts",
+      "deck": "Burrow",
+      "image": "images/scarpa/sheltered-by-ghosts.png"
+    }
   }
 ]

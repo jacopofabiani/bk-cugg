@@ -233,6 +233,16 @@
       text-align: center;
     }
 
+    /* A/B editions stack two brackets on one page; each gets a heading. */
+    .series-title {
+      font-size: 1.15rem;
+      margin: 4px 0 16px;
+      padding-bottom: 6px;
+      border-bottom: 1.5px solid #000;
+    }
+
+    .series-title + .bracket { margin-top: 0; }
+
     .awards {
       display: flex;
       flex-wrap: wrap;
@@ -514,38 +524,14 @@
     `;
   }
 
-  // Scarpa d'Oro arrived with the XXI edition -- earlier ones carry a null.
-  function scarpaHtml(t, mvpData) {
-    const card = t.scarpa || mvpData?.scarpa?.card;
-    if (!card) return '';
-    const img = mvpData?.scarpa?.image;
-    return `
-      <div class="mvp-section mvp-section--scarpa">
-        <div class="mvp-label">Scarpa d'Oro</div>
-        ${img ? `<img src="${img}" alt="${card}" style="border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
-        <div class="mvp-name">${card}</div>
-      </div>
-    `;
-  }
+  // Renders one bracket end to end: rounds, trophy and awards. A normal edition
+  // calls this once; an A/B edition calls it again for Serie B, which carries
+  // its own winner and awards on the tournament object.
+  function seriesHtml(s) {
+    let html = s.label ? `<h2 class="series-title">${s.label}</h2>` : '';
+    html += '<div class="bracket">\n';
 
-  function showTournament(index) {
-    // Update active button
-    allTournaments.forEach((_, i) => {
-      document.getElementById(`btn-${i}`).classList.toggle('active', i === index);
-    });
-
-    const t = allTournaments[index];
-    const mvpData = allMvps.find(m => m.tournamentId === t.id);
-    const content = document.getElementById('content');
-
-    let html = `
-      <h1>${t.name}</h1>
-      <div class="meta">${formatDateRange(t.startDate, t.endDate)}${t.type ? ` · ${t.type}` : ''}</div>
-      ${t.type === 'groups' ? buildGroupsHtml(t) : ''}
-      <div class="bracket">
-    `;
-
-    for (const round of t.rounds) {
+    for (const round of s.rounds) {
       if (round.stageBreak) html += `</div><div class="bracket">`;
       const isWide = ['Round of 32', 'Round of 16', 'Round of 24', 'Round of 28', 'Round of 12', 'Play-in'].includes(round.name);
       html += `<div class="round${isWide ? ' round--r16' : ''}">`;
@@ -580,17 +566,57 @@
             <div class="trophy-stem"></div>
             <div class="trophy-base"></div>
           </div>
-          <div class="winner-label">${t.winner}</div>
+          <div class="winner-label">${s.winner}</div>
         </div>
       </div>
       <div class="awards">
         <div class="mvp-section">
           <div class="mvp-label">MVP</div>
-          ${mvpData?.image ? `<img src="${mvpData.image}" alt="${t.mvp}" style="width:120px;border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
-          <div class="mvp-name">${t.mvp}</div>
+          ${s.mvpImage ? `<img src="${s.mvpImage}" alt="${s.mvp}" style="width:120px;border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
+          <div class="mvp-name">${s.mvp}</div>
         </div>
-        ${scarpaHtml(t, mvpData)}
+        ${s.scarpa ? `
+        <div class="mvp-section mvp-section--scarpa">
+          <div class="mvp-label">${s.scarpaLabel || "Scarpa d'Oro"}</div>
+          ${s.scarpaImage ? `<img src="${s.scarpaImage}" alt="${s.scarpa}" style="border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
+          <div class="mvp-name">${s.scarpa}</div>
+        </div>` : ''}
       </div>
+    `;
+    return html;
+  }
+
+  function showTournament(index) {
+    // Update active button
+    allTournaments.forEach((_, i) => {
+      document.getElementById(`btn-${i}`).classList.toggle('active', i === index);
+    });
+
+    const t = allTournaments[index];
+    const mvpData = allMvps.find(m => m.tournamentId === t.id);
+    const content = document.getElementById('content');
+
+    let html = `
+      <h1>${t.name}</h1>
+      <div class="meta">${formatDateRange(t.startDate, t.endDate)}${t.type ? ` · ${t.type}` : ''}</div>
+      ${t.type === 'groups' ? buildGroupsHtml(t) : ''}
+    `;
+
+    // Scarpa d'Oro arrived with the XXI edition -- earlier ones carry a null,
+    // so seriesHtml drops the block when there is no card.
+    html += seriesHtml({
+      label: t.seriesLabel,
+      rounds: t.rounds,
+      winner: t.winner,
+      mvp: t.mvp,
+      mvpImage: mvpData?.image,
+      scarpa: t.scarpa || mvpData?.scarpa?.card,
+      scarpaImage: mvpData?.scarpa?.image
+    });
+
+    if (t.seriesB) html += seriesHtml(t.seriesB);
+
+    html += `
       <br>
       ${buildPointsHtml(t.id)}
     `;

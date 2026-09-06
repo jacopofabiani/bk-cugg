@@ -93,6 +93,13 @@
     .color-R { background: #ef4444; }
     .color-G { background: #22c55e; }
 
+    .section-note {
+      color: #555;
+      font-size: 0.85rem;
+      margin: -6px 0 14px;
+      max-width: 620px;
+    }
+
     #error { color: red; margin-top: 20px; }
   </style>
   <script src="nav.js?v=2" defer></script>
@@ -167,6 +174,24 @@
       if (second) counts[second] = (counts[second] || 0) + 1;
     }
     return countCardsHtml(counts, decksByName, '🥈');
+  }
+
+  // An A/B edition crowns two winners, but only Serie A's counts as a Bob Kelzor
+  // title -- so Titles and Runner-ups above ignore t.seriesB entirely and the
+  // Serie B roll of honour lives in its own section.
+  function serieBHtml(tournaments, decksByName) {
+    const ab = tournaments.filter(t => t.seriesB);
+    if (!ab.length) return '';
+
+    const counts = {};
+    for (const t of ab) counts[t.seriesB.winner] = (counts[t.seriesB.winner] || 0) + 1;
+
+    return `
+      <h2>Serie B</h2>
+      <p class="section-note">Winners of the secondary bracket in A/B editions.
+        These do not count towards the titles at the top of the page.</p>
+      ${countCardsHtml(counts, decksByName, '\u{1f3c5}')}
+    `;
   }
 
   // MVPs are counted per card, not per deck: the MVP has always come from the
@@ -250,6 +275,7 @@
       <h2>MVP awards</h2>
       ${mvpCardsHtml(mvps, decksByName)}
       ${scarpaCardsHtml(mvps, decksByName)}
+      ${serieBHtml(tournaments, decksByName)}
     `;
   }
 
