@@ -221,5 +221,29 @@
       "deck": "Burrow",
       "image": "images/scarpa/sheltered-by-ghosts.png"
     }
+  },
+  {
+    "tournamentId": 26,
+    "tournamentName": "XXVI° Torneo Bob Kelzor",
+    "card": "Emrakul, the Aeons Torn",
+    "deck": "Flying",
+    "image": "images/mvp/emrakul-the-aeons-torn.png",
+    "scarpa": {
+      "card": "Forsaken Monument",
+      "deck": "Flying",
+      "image": "images/scarpa/forsaken-monument.png"
+    }
+  },
+  {
+    "tournamentId": 27,
+    "tournamentName": "XXVII° Torneo Bob Kelzor",
+    "card": "Hedron Crab",
+    "deck": "Milling",
+    "image": "images/mvp/hedron-crab.png",
+    "scarpa": {
+      "card": "Tasha's Hideous Laughter",
+      "deck": "Milling",
+      "image": "images/scarpa/tashas-hideous-laughter.png"
+    }
   }
 ]

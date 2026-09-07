@@ -1467,5 +1467,184 @@
         }
       ]
     }
+  },
+  {
+    "id": 26,
+    "name": "XXVI° Torneo Bob Kelzor",
+    "type": "A/B",
+    "startDate": "2025-09-05",
+    "endDate": "2025-09-21",
+    "winner": "Flying",
+    "mvp": "Emrakul, the Aeons Torn",
+    "scarpa": "Forsaken Monument",
+    "seriesLabel": "Serie A",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Round of 16",
+        "matches": [
+          { "player1": "Mono White", "score1": 2, "player2": "Assassins", "score2": 1 },
+          { "player1": "Mono Black", "score1": 2, "player2": "Artifact",  "score2": 1 },
+          { "player1": "Cycling",    "score1": 1, "player2": "Vampiri",   "score2": 2 },
+          { "player1": "Destroy",    "score1": 0, "player2": "Goblin",    "score2": 2 },
+          { "player1": "Discard",    "score1": 2, "player2": "Poison",    "score2": 1 },
+          { "player1": "Burrow",     "score1": 0, "player2": "Token",     "score2": 2 },
+          { "player1": "GainLife",   "score1": 0, "player2": "Reanimate", "score2": 2 },
+          { "player1": "Elves",      "score1": 0, "player2": "Flying",    "score2": 2 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Mono White", "score1": 1, "player2": "Mono Black", "score2": 2 },
+          { "player1": "Vampiri",    "score1": 2, "player2": "Goblin",     "score2": 0 },
+          { "player1": "Discard",    "score1": 2, "player2": "Token",      "score2": 0 },
+          { "player1": "Reanimate",  "score1": 1, "player2": "Flying",     "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Mono Black", "score1": 2, "player2": "Vampiri", "score2": 1 },
+          { "player1": "Discard",    "score1": 0, "player2": "Flying",  "score2": 2 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Final",
+        "matches": [
+          { "player1": "Mono Black", "score1": 0, "player2": "Flying", "score2": 2 }
+        ]
+      }
+    ],
+    "seriesB": {
+      "label": "Serie B",
+      "winner": "Mono Red",
+      "mvp": "Slickshot Show-Off",
+      "mvpImage": "images/mvp/slickshot-show-off.png",
+      "scarpa": "Reckless Charge",
+      "scarpaLabel": "Scarpa d'Argento",
+      "scarpaImage": "images/scarpa/reckless-charge.png",
+      "rounds": [
+        {
+          "round": 1,
+          "name": "Round of 16",
+          "matches": [
+            { "player1": "Combo",        "score1": 0, "player2": "Skarty",     "score2": 2 },
+            { "player1": "Goading",      "score1": 0, "player2": "Mono Red",   "score2": 2 },
+            { "player1": "Mario Draghi", "score1": 1, "player2": "Dino",       "score2": 2 },
+            { "player1": "Mono Blue",    "score1": 2, "player2": "Equimen",    "score2": 0 },
+            { "player1": "LoTR",         "score1": 2, "player2": "Rampage",    "score2": 1 },
+            { "player1": "Flash",        "score1": 2, "player2": "Mono Green", "score2": 1 },
+            { "player1": "Planeswalker", "score1": 1, "player2": "Flicker",    "score2": 2 },
+            { "player1": "Milling",      "score1": 2, "player2": "Mordor",     "score2": 1 }
+          ]
+        },
+        {
+          "round": 2,
+          "name": "Quarterfinals",
+          "stageBreak": true,
+          "matches": [
+            { "player1": "Skarty",  "score1": 0, "player2": "Mono Red",  "score2": 2 },
+            { "player1": "Dino",    "score1": 0, "player2": "Mono Blue", "score2": 2 },
+            { "player1": "LoTR",    "score1": 1, "player2": "Flash",     "score2": 2 },
+            { "player1": "Flicker", "score1": 2, "player2": "Milling",   "score2": 0 }
+          ]
+        },
+        {
+          "round": 3,
+          "name": "Semifinals",
+          "matches": [
+            { "player1": "Mono Red", "score1": 2, "player2": "Mono Blue", "score2": 1 },
+            { "player1": "Flash",    "score1": 1, "player2": "Flicker",   "score2": 2 }
+          ]
+        },
+        {
+          "round": 4,
+          "name": "Final",
+          "matches": [
+            { "player1": "Mono Red", "score1": 2, "player2": "Flicker", "score2": 0 }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 27,
+    "name": "XXVII° Torneo Bob Kelzor",
+    "type": "special edition",
+    "startDate": "2025-09-26",
+    "endDate": "2025-09-26",
+    "winner": "Milling",
+    "mvp": "Hedron Crab",
+    "scarpa": "Tasha's Hideous Laughter",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Round of 32",
+        "matches": [
+          { "player1": "Rampage",   "score1": 0, "player2": "Artifact",     "score2": 1 },
+          { "player1": "Vampiri",   "score1": 0, "player2": "Mono Black",   "score2": 1 },
+          { "player1": "Poison",    "score1": 0, "player2": "Reanimate",    "score2": 1 },
+          { "player1": "Assassins", "score1": 1, "player2": "Mario Draghi", "score2": 0 },
+          { "player1": "Cycling",   "score1": 1, "player2": "Skarty",       "score2": 0 },
+          { "player1": "Elves",     "score1": 0, "player2": "Mono White",   "score2": 1 },
+          { "player1": "Destroy",   "score1": 0, "player2": "Flying",       "score2": 1 },
+          { "player1": "Burrow",    "score1": 1, "player2": "GainLife",     "score2": 0 },
+          { "player1": "Token",     "score1": 1, "player2": "Discard",      "score2": 0 },
+          { "player1": "Mono Red",  "score1": 1, "player2": "Mono Green",   "score2": 0 },
+          { "player1": "Dino",      "score1": 0, "player2": "Flicker",      "score2": 1 },
+          { "player1": "LoTR",      "score1": 1, "player2": "Goblin",       "score2": 0 },
+          { "player1": "Equimen",   "score1": 0, "player2": "Milling",      "score2": 1 },
+          { "player1": "Combo",     "score1": 0, "player2": "Planeswalker", "score2": 1 },
+          { "player1": "Mono Blue", "score1": 0, "player2": "Goading",      "score2": 1 },
+          { "player1": "Flash",     "score1": 0, "player2": "Mordor",       "score2": 1 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Round of 16",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Artifact",  "score1": 1, "player2": "Mono Black",   "score2": 0 },
+          { "player1": "Reanimate", "score1": 0, "player2": "Assassins",    "score2": 1 },
+          { "player1": "Cycling",   "score1": 0, "player2": "Mono White",   "score2": 1 },
+          { "player1": "Flying",    "score1": 1, "player2": "Burrow",       "score2": 0 },
+          { "player1": "Token",     "score1": 0, "player2": "Mono Red",     "score2": 1 },
+          { "player1": "Flicker",   "score1": 0, "player2": "LoTR",         "score2": 1 },
+          { "player1": "Milling",   "score1": 1, "player2": "Planeswalker", "score2": 0 },
+          { "player1": "Goading",   "score1": 0, "player2": "Mordor",       "score2": 1 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Artifact",   "score1": 0, "player2": "Assassins", "score2": 1 },
+          { "player1": "Mono White", "score1": 1, "player2": "Flying",    "score2": 0 },
+          { "player1": "Mono Red",   "score1": 0, "player2": "LoTR",      "score2": 1 },
+          { "player1": "Milling",    "score1": 1, "player2": "Mordor",    "score2": 0 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Assassins", "score1": 0, "player2": "Mono White", "score2": 1 },
+          { "player1": "LoTR",      "score1": 0, "player2": "Milling",    "score2": 1 }
+        ]
+      },
+      {
+        "round": 5,
+        "name": "Final",
+        "matches": [
+          { "player1": "Mono White", "score1": 0, "player2": "Milling", "score2": 1 }
+        ]
+      }
+    ]
   }
 ]
