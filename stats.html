@@ -191,6 +191,7 @@
     .color-B { background: #1f2937; }
     .color-R { background: #ef4444; }
     .color-G { background: #22c55e; }
+    .color-C { background: #9ca3af; }
 
     /* --- finals list --- */
     .finals {
@@ -318,9 +319,12 @@
     const colorsOf = Object.fromEntries(decks.map(d => [d.name, d.colors]));
 
     // ---- flatten the knockout stage (group matches aren't recorded) ----
-    // A/B editions play a second bracket under seriesB. Those matches count
-    // towards records and streaks; only its title does not (see below).
-    const bracketsOf = t => t.rounds.concat(t.seriesB?.rounds || []);
+    // A/B editions play a second bracket under seriesB, A/B/C ones a third
+    // under seriesC. Those matches count towards records and streaks; only
+    // their titles do not (see below).
+    const bracketsOf = t => t.rounds
+      .concat(t.seriesB?.rounds || [])
+      .concat(t.seriesC?.rounds || []);
     const ko = [];
     for (const t of tournaments) {
       for (const r of bracketsOf(t)) {

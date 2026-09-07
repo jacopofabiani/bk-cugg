@@ -30,5 +30,9 @@
   { "id": "combo",         "name": "Combo",         "colors": ["B", "R"], "anzianita": 29 },
   { "id": "milling",       "name": "Milling",       "colors": ["B", "U"], "anzianita": 30 },
   { "id": "flicker",       "name": "Flicker",       "colors": ["W", "U"], "anzianita": 31 },
-  { "id": "mariodraghi",   "name": "Mario Draghi",  "colors": ["R"], "anzianita": 32 }
+  { "id": "mariodraghi",   "name": "Mario Draghi",  "colors": ["R"], "anzianita": 32 },
+  { "id": "ugin",          "name": "Ugin",          "colors": ["C"], "anzianita": 33 },
+  { "id": "angels",        "name": "Angels",        "colors": ["W", "R"], "anzianita": 34 },
+  { "id": "bugs",          "name": "Bugs",          "colors": ["B", "G"], "anzianita": 35 },
+  { "id": "toys",          "name": "Toys",          "colors": ["R", "W"], "anzianita": 36 }
 ]

@@ -245,5 +245,17 @@
       "deck": "Milling",
       "image": "images/scarpa/tashas-hideous-laughter.png"
     }
+  },
+  {
+    "tournamentId": 28,
+    "tournamentName": "XXVIII° Torneo Bob Kelzor",
+    "card": "Illuminator Virtuoso",
+    "deck": "Burrow",
+    "image": "images/mvp/illuminator-virtuoso.png",
+    "scarpa": {
+      "card": "Sheltered by Ghosts",
+      "deck": "Burrow",
+      "image": "images/scarpa/sheltered-by-ghosts.png"
+    }
   }
 ]

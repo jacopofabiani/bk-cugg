@@ -92,6 +92,7 @@
     .color-B { background: #1f2937; }
     .color-R { background: #ef4444; }
     .color-G { background: #22c55e; }
+    .color-C { background: #9ca3af; }
 
     .section-note {
       color: #555;
@@ -176,19 +177,19 @@
     return countCardsHtml(counts, decksByName, '🥈');
   }
 
-  // An A/B edition crowns two winners, but only Serie A's counts as a Bob Kelzor
-  // title -- so Titles and Runner-ups above ignore t.seriesB entirely and the
-  // Serie B roll of honour lives in its own section.
-  function serieBHtml(tournaments, decksByName) {
-    const ab = tournaments.filter(t => t.seriesB);
-    if (!ab.length) return '';
+  // An A/B (or A/B/C) edition crowns more than one winner, but only Serie A's
+  // counts as a Bob Kelzor title -- so Titles and Runner-ups above ignore the
+  // lower series entirely and each one gets its own roll of honour below.
+  function lowerSerieHtml(tournaments, decksByName, key, label) {
+    const eds = tournaments.filter(t => t[key]);
+    if (!eds.length) return '';
 
     const counts = {};
-    for (const t of ab) counts[t.seriesB.winner] = (counts[t.seriesB.winner] || 0) + 1;
+    for (const t of eds) counts[t[key].winner] = (counts[t[key].winner] || 0) + 1;
 
     return `
-      <h2>Serie B</h2>
-      <p class="section-note">Winners of the secondary bracket in A/B editions.
+      <h2>${label}</h2>
+      <p class="section-note">Winners of the ${label} bracket in multi-series editions.
         These do not count towards the titles at the top of the page.</p>
       ${countCardsHtml(counts, decksByName, '\u{1f3c5}')}
     `;
@@ -275,7 +276,8 @@
       <h2>MVP awards</h2>
       ${mvpCardsHtml(mvps, decksByName)}
       ${scarpaCardsHtml(mvps, decksByName)}
-      ${serieBHtml(tournaments, decksByName)}
+      ${lowerSerieHtml(tournaments, decksByName, 'seriesB', 'Serie B')}
+      ${lowerSerieHtml(tournaments, decksByName, 'seriesC', 'Serie C')}
     `;
   }
 
