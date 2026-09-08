@@ -205,6 +205,11 @@
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const pct = (n, d) => d ? Math.round(100 * n / d) : 0;
 
+  function fmtDate(str) {
+    const [y, m, d] = str.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
   function toRoman(n) {
     const vals = [10, 9, 5, 4, 1];
     const syms = ['X', 'IX', 'V', 'IV', 'I'];
@@ -388,6 +393,31 @@
     const champ = deckRows.filter(r => r.titles).sort((a, b) => b.titles - a.titles)[0];
     const nearly = deckRows.filter(r => !r.titles).sort((a, b) => b.finals - a.finals || b.points - a.points)[0];
 
+    // ---- one-number records ----
+    const days = t => Math.round((new Date(t.endDate) - new Date(t.startDate)) / 864e5);
+    const longest = [...tournaments].sort((a, b) => days(b) - days(a))[0];
+
+    // The longest a champion has waited between two of its own titles, counted
+    // in editions it went without.
+    const titleRuns = {};
+    tournaments.forEach((t, i) => (titleRuns[t.winner] ||= []).push(i));
+    let drought = null;
+    for (const [deck, ix] of Object.entries(titleRuns)) {
+      for (let i = 1; i < ix.length; i++) {
+        const gap = ix[i] - ix[i - 1] - 1;
+        if (!drought || gap > drought.gap)
+          drought = { deck, gap, from: tournaments[ix[i - 1]].id, to: tournaments[ix[i]].id };
+      }
+    }
+
+    let bigScore = null;
+    for (const p of points) {
+      for (const sc of p.scores) {
+        if (!bigScore || sc.total > bigScore.total)
+          bigScore = { deck: sc.deck, total: sc.total, id: p.tournamentId };
+      }
+    }
+
     document.getElementById('content').innerHTML = `
       ${kpis({
         editions: tournaments.length,
@@ -406,7 +436,13 @@
         { label: 'Fiercest rivalry', value: `${topPair.a} v ${topPair.b}`,
           detail: `${topPair.n} meetings · ${Object.entries(topPair.wins).map(([d, n]) => `${d} ${n}`).join(', ')}` },
         { label: 'Best without a title', value: nearly ? nearly.deck : '–',
-          detail: nearly ? `${nearly.finals} final${nearly.finals === 1 ? '' : 's'} lost · ${nearly.points} points` : '' }
+          detail: nearly ? `${nearly.finals} final${nearly.finals === 1 ? '' : 's'} lost · ${nearly.points} points` : '' },
+        { label: 'Longest tournament', value: `${toRoman(longest.id)} · ${days(longest)} days`,
+          detail: `${fmtDate(longest.startDate)} to ${fmtDate(longest.endDate)}` },
+        { label: 'Longest title drought', value: drought ? `${drought.deck} · ${drought.gap} editions` : '–',
+          detail: drought ? `between ${toRoman(drought.from)} and ${toRoman(drought.to)}` : '' },
+        { label: 'Most points in one edition', value: `${bigScore.deck} · ${bigScore.total}`,
+          detail: `at ${toRoman(bigScore.id)}` }
       ])}
 
       <h2>Finals</h2>
