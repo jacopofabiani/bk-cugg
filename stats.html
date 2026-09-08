@@ -326,11 +326,10 @@
     const titles = {}, finals = {}, runnerUps = {}, editions = {}, totalPoints = {};
     for (const t of tournaments) {
       titles[t.winner] = (titles[t.winner] || 0) + 1;
-      const last = t.rounds[t.rounds.length - 1];
-      // A group final has each deck in several matches, so count decks, not slots.
-      const contested = new Set(last.matches.flatMap(m => [m.player1, m.player2]));
-      for (const d of contested) finals[d] = (finals[d] || 0) + 1;
+      // Reaching the final means finishing first or second, so a group final
+      // counts its winner and its runner-up and no one else.
       const second = runnerUp(t);
+      for (const d of [t.winner, second]) if (d) finals[d] = (finals[d] || 0) + 1;
       if (second) runnerUps[second] = (runnerUps[second] || 0) + 1;
     }
     for (const p of points) {
@@ -353,13 +352,16 @@
     }
 
     // ---- streaks, in chronological knockout order ----
-    const cur = {}, best = {};
+    const cur = {}, best = {}, curL = {}, worst = {};
     for (const m of ko) {
       const winner = m.score1 > m.score2 ? m.player1 : m.player2;
       const loser = m.score1 > m.score2 ? m.player2 : m.player1;
       cur[winner] = (cur[winner] || 0) + 1;
       best[winner] = Math.max(best[winner] || 0, cur[winner]);
       cur[loser] = 0;
+      curL[loser] = (curL[loser] || 0) + 1;
+      worst[loser] = Math.max(worst[loser] || 0, curL[loser]);
+      curL[winner] = 0;
     }
 
     // ================= render =================
@@ -380,6 +382,7 @@
 
 
     const topStreak = Object.entries(best).sort((a, b) => b[1] - a[1])[0];
+    const worstStreak = Object.entries(worst).sort((a, b) => b[1] - a[1])[0];
     const bestRate = deckRows.filter(r => r.played >= 8).sort((a, b) => b.winPct - a.winPct)[0];
     const topPair = Object.values(pairs).sort((a, b) => b.n - a.n)[0];
     const champ = deckRows.filter(r => r.titles).sort((a, b) => b.titles - a.titles)[0];
@@ -398,6 +401,7 @@
       ${recordCards([
         { label: 'Most titles', value: `${champ.deck} · ${champ.titles}`, detail: `${champ.finals} finals reached` },
         { label: 'Longest win streak', value: `${topStreak[0]} · ${topStreak[1]}`, detail: 'consecutive knockout matches won' },
+        { label: 'Longest lose streak', value: `${worstStreak[0]} · ${worstStreak[1]}`, detail: 'consecutive knockout matches lost' },
         { label: 'Best match win rate', value: `${bestRate.deck} · ${bestRate.winPct}%`, detail: `${bestRate.w}–${bestRate.l} in the knockout stage` },
         { label: 'Fiercest rivalry', value: `${topPair.a} v ${topPair.b}`,
           detail: `${topPair.n} meetings · ${Object.entries(topPair.wins).map(([d, n]) => `${d} ${n}`).join(', ')}` },
@@ -406,7 +410,7 @@
       ])}
 
       <h2>Finals</h2>
-      <div class="section-note">Every edition ends in one final. Runner-up counts the finals a deck lost; XVIII closed on a three-deck group, so its third deck reached a final without being either.</div>
+      <div class="section-note">Runner-ups are the finals a deck lost; conversion is the share of its finals it won.</div>
       ${simpleTable(['Deck', 'Finals', 'Titles', 'Runner-ups', 'Conversion'],
         deckRows.filter(r => r.finals)
           .sort((a, b) => b.runnerUps - a.runnerUps || b.finals - a.finals || a.deck.localeCompare(b.deck))
