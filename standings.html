@@ -119,6 +119,9 @@
 
     tr:first-child td { border-top: none; }
 
+    /* Heavier rule every 8 places, so the table reads in tiers. */
+    tr.tier-start td { border-top-width: 3px; }
+
     .rank { color: #555; font-size: 0.85rem; width: 32px; }
     .rank-1 { color: #000; font-weight: bold; }
     .rank-2 { color: #000; font-weight: bold; }
@@ -382,8 +385,9 @@
     const tbody = document.getElementById('tbody');
     tbody.innerHTML = data.map((d, i) => {
       const rankClass = i < 3 ? `rank-${i+1}` : '';
+      const tierClass = i > 0 && i % 8 === 0 ? 'tier-start' : '';
       return `
-        <tr>
+        <tr class="${tierClass}">
           <td class="rank ${rankClass}">${i + 1}</td>
           <td>${d.deck}</td>
           <td class="sub-pts">${d.tournaments}</td>
