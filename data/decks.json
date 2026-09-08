@@ -3,7 +3,7 @@
   { "id": "vampiri",      "name": "Vampiri",      "colors": ["W", "B"], "anzianita": 2, "is_dead": true, "last_edition": 34, "total_points": 38 },
   { "id": "token",        "name": "Token",        "colors": ["W", "B"], "moxfield": "https://moxfield.com/decks/JJJZc0cir0awNjeANqXxVw", "anzianita": 3 },
   { "id": "goblin",       "name": "Goblin",       "colors": ["R"], "anzianita": 4 },
-  { "id": "gainlife",     "name": "GainLife",     "colors": ["W", "G"], "anzianita": 5 },
+  { "id": "gainlife",     "name": "GainLife",     "colors": ["W"], "oldColors": ["G"], "anzianita": 5 },
   { "id": "goading",      "name": "Goading",      "colors": ["U", "R"], "anzianita": 6, "is_dead": true, "last_edition": 33, "total_points": 11 },
   { "id": "lotr",         "name": "LoTR",         "colors": ["B", "G"], "oldColors": ["U"], "anzianita": 7 },
   { "id": "dino",         "name": "Dino",         "colors": ["R", "G"], "anzianita": 8 },
