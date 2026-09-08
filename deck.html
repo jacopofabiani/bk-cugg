@@ -57,6 +57,38 @@
     .color-G { background: #22c55e; }
     .color-C { background: #9ca3af; }
 
+    .albo-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .albo-row:last-child { margin-bottom: 0; }
+
+    .albo-count {
+      font-size: 1.6rem;
+      font-weight: bold;
+      line-height: 1;
+      min-width: 28px;
+    }
+
+    .albo-label {
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+    }
+
+    .albo-medals { font-size: 0.95rem; }
+
+    .albo-editions {
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 2px;
+    }
+
     .moxfield-link {
       display: inline-block;
       margin-top: 4px;
@@ -82,6 +114,56 @@
 <p id="error"></p>
 
 <script>
+  // The finalist that isn't the winner, matching albo.html: the closing round
+  // is usually one match, but an edition can end in a round robin between the
+  // last decks standing, where the runner-up places second on wins.
+  function runnerUp(t) {
+    const last = t.rounds[t.rounds.length - 1];
+    if (!last || !last.matches.length) return null;
+
+    if (last.matches.length === 1) {
+      const m = last.matches[0];
+      return m.score1 > m.score2 ? m.player2 : m.player1;
+    }
+
+    const wins = {};
+    for (const m of last.matches) {
+      const won  = m.score1 > m.score2 ? m.player1 : m.player2;
+      const lost = m.score1 > m.score2 ? m.player2 : m.player1;
+      wins[won]  = (wins[won] || 0) + 1;
+      wins[lost] = wins[lost] || 0;
+    }
+    const ranked = Object.entries(wins).sort((a, b) => b[1] - a[1]);
+    return ranked.length > 1 ? ranked[1][0] : null;
+  }
+
+  // This deck's roll of honour. Only Serie A counts as a Bob Kelzor title, the
+  // same rule albo.html applies, so lower-series brackets are ignored here.
+  function alboHtml(deck, tournaments) {
+    const titles    = tournaments.filter(t => t.winner === deck.name);
+    const runnerUps = tournaments.filter(t => runnerUp(t) === deck.name);
+    if (!titles.length && !runnerUps.length) return '';
+
+    const row = (list, label, medal) => list.length ? `
+      <div class="albo-row">
+        <div class="albo-count">${list.length}</div>
+        <div>
+          <div class="albo-label">${label}</div>
+          <div class="albo-medals">${medal.repeat(list.length)}</div>
+          <div class="albo-editions">${list.map(t => t.name).join(' · ')}</div>
+        </div>
+      </div>
+    ` : '';
+
+    return `
+      <div class="section">
+        <div class="section-title">Albo</div>
+        ${row(titles, 'Titles', '\u{1f3c6}')}
+        ${row(runnerUps, 'Runner-ups', '\u{1f948}')}
+      </div>
+    `;
+  }
+
   async function load() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
@@ -153,6 +235,7 @@
           ${oldColorPips}
         </div>
       </div>
+      ${alboHtml(deck, tournaments)}
       ${firstTournamentSection}
       ${lastTournamentSection}
       ${totalPointsSection}
