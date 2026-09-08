@@ -257,5 +257,17 @@
       "deck": "Burrow",
       "image": "images/scarpa/sheltered-by-ghosts.png"
     }
+  },
+  {
+    "tournamentId": 29,
+    "tournamentName": "XXIX° Torneo Bob Kelzor",
+    "card": "Illuminator Virtuoso",
+    "deck": "Burrow",
+    "image": "images/mvp/illuminator-virtuoso.png",
+    "scarpa": {
+      "card": "Sheltered by Ghosts",
+      "deck": "Burrow",
+      "image": "images/scarpa/sheltered-by-ghosts.png"
+    }
   }
 ]

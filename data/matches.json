@@ -1755,7 +1755,7 @@
           "round": 1,
           "name": "Play-in",
           "matches": [
-            { "player1": "Mario Draghi", "score1": 2, "player2": "Toys",    "score2": 0 },
+            { "player1": "Mario Draghi", "score1": 2, "player2": "Toy Box", "score2": 0 },
             { "player1": "Skarty",       "score1": 0, "player2": "Rampage", "score2": 2 },
             { "player1": "Bugs",         "score1": 2, "player2": "Angels",  "score2": 1 },
             { "player1": "Combo",        "score1": 0, "player2": "Ugin",    "score2": 2 }
@@ -1785,6 +1785,149 @@
           "name": "Final",
           "matches": [
             { "player1": "Rampage", "score1": 0, "player2": "Ugin", "score2": 2 }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 29,
+    "name": "XXIX° Torneo Bob Kelzor",
+    "type": "A/B/C",
+    "startDate": "2025-11-14",
+    "endDate": "2025-11-28",
+    "winner": "Burrow",
+    "mvp": "Illuminator Virtuoso",
+    "scarpa": "Sheltered by Ghosts",
+    "seriesLabel": "Serie A",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Play-in",
+        "matches": [
+          { "player1": "Milling",   "score1": 1, "player2": "Reanimate",  "score2": 2 },
+          { "player1": "Assassins", "score1": 1, "player2": "Artifact",   "score2": 2 },
+          { "player1": "Flying",    "score1": 2, "player2": "Mono Black", "score2": 0 },
+          { "player1": "Mono Red",  "score1": 2, "player2": "Elves",      "score2": 1 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Discard", "score1": 0, "player2": "Reanimate", "score2": 2 },
+          { "player1": "Destroy", "score1": 0, "player2": "Artifact",  "score2": 2 },
+          { "player1": "Burrow",  "score1": 2, "player2": "Flying",    "score2": 1 },
+          { "player1": "Token",   "score1": 0, "player2": "Mono Red",  "score2": 2 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Reanimate", "score1": 0, "player2": "Artifact", "score2": 2 },
+          { "player1": "Burrow",    "score1": 2, "player2": "Mono Red", "score2": 0 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Final",
+        "matches": [
+          { "player1": "Artifact", "score1": 0, "player2": "Burrow", "score2": 2 }
+        ]
+      }
+    ],
+    "seriesB": {
+      "label": "Serie B",
+      "winner": "Ugin",
+      "mvp": "Ugin, Eye of the Storms",
+      "mvpImage": "images/mvp/ugin-eye-of-the-storms.png",
+      "scarpa": "Kozilek's Command",
+      "scarpaLabel": "Scarpa d'Argento",
+      "scarpaImage": "images/scarpa/kozileks-command.png",
+      "rounds": [
+        {
+          "round": 1,
+          "name": "Play-in",
+          "matches": [
+            { "player1": "Rampage",  "score1": 0, "player2": "Dino",   "score2": 2 },
+            { "player1": "LoTR",     "score1": 2, "player2": "Goblin", "score2": 1 },
+            { "player1": "Equimen",  "score1": 0, "player2": "Ugin",   "score2": 2 },
+            { "player1": "GainLife", "score1": 1, "player2": "Mordor", "score2": 2 }
+          ]
+        },
+        {
+          "round": 2,
+          "name": "Quarterfinals",
+          "stageBreak": true,
+          "matches": [
+            { "player1": "Vampiri",    "score1": 0, "player2": "Dino",   "score2": 2 },
+            { "player1": "Mono White", "score1": 2, "player2": "LoTR",   "score2": 0 },
+            { "player1": "Cycling",    "score1": 0, "player2": "Ugin",   "score2": 2 },
+            { "player1": "Poison",     "score1": 2, "player2": "Mordor", "score2": 1 }
+          ]
+        },
+        {
+          "round": 3,
+          "name": "Semifinals",
+          "matches": [
+            { "player1": "Dino", "score1": 1, "player2": "Mono White", "score2": 2 },
+            { "player1": "Ugin", "score1": 2, "player2": "Poison",     "score2": 1 }
+          ]
+        },
+        {
+          "round": 4,
+          "name": "Final",
+          "matches": [
+            { "player1": "Mono White", "score1": 1, "player2": "Ugin", "score2": 2 }
+          ]
+        }
+      ]
+    },
+    "seriesC": {
+      "label": "Serie C",
+      "winner": "Angels",
+      "mvp": "Giada, Font of Hope",
+      "mvpImage": "images/mvp/giada-font-of-hope.png",
+      "scarpa": "Isochron Scepter",
+      "scarpaLabel": "Scarpa di Bronzo",
+      "scarpaImage": "images/scarpa/isochron-scepter.png",
+      "rounds": [
+        {
+          "round": 1,
+          "name": "Play-in",
+          "matches": [
+            { "player1": "Skarty",       "score1": 2, "player2": "Combo",        "score2": 0 },
+            { "player1": "Mario Draghi", "score1": 2, "player2": "Bugs",         "score2": 0 },
+            { "player1": "Angels",       "score1": 2, "player2": "Planeswalker", "score2": 0 },
+            { "player1": "Flash",        "score1": 0, "player2": "Toy Box",      "score2": 2 }
+          ]
+        },
+        {
+          "round": 2,
+          "name": "Quarterfinals",
+          "stageBreak": true,
+          "matches": [
+            { "player1": "Mono Green", "score1": 2, "player2": "Skarty",       "score2": 1 },
+            { "player1": "Goading",    "score1": 0, "player2": "Mario Draghi", "score2": 2 },
+            { "player1": "Mono Blue",  "score1": 1, "player2": "Angels",       "score2": 2 },
+            { "player1": "Flicker",    "score1": 2, "player2": "Toy Box",      "score2": 1 }
+          ]
+        },
+        {
+          "round": 3,
+          "name": "Semifinals",
+          "matches": [
+            { "player1": "Mono Green", "score1": 0, "player2": "Mario Draghi", "score2": 2 },
+            { "player1": "Angels",     "score1": 2, "player2": "Flicker",      "score2": 0 }
+          ]
+        },
+        {
+          "round": 4,
+          "name": "Final",
+          "matches": [
+            { "player1": "Mario Draghi", "score1": 0, "player2": "Angels", "score2": 2 }
           ]
         }
       ]
