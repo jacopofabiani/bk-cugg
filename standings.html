@@ -338,7 +338,7 @@
       if (matchData) {
         // A multi-series edition keeps its extra brackets in seriesB/C/D; those
         // are real games played and score points, so they belong in the tally too.
-        const rounds = ['seriesB', 'seriesC', 'seriesD'].reduce(
+        const rounds = ['seriesB', 'seriesC', 'seriesD', 'seriesE'].reduce(
           (acc, key) => acc.concat(matchData[key]?.rounds || []), matchData.rounds);
         for (const round of rounds) {
           for (const match of round.matches) {

@@ -305,5 +305,17 @@
       "deck": "Reanimate",
       "image": "images/scarpa/dark-ritual.png"
     }
+  },
+  {
+    "tournamentId": 33,
+    "tournamentName": "XXXIII° Torneo Bob Kelzor",
+    "card": "Emrakul, the Aeons Torn",
+    "deck": "Flying",
+    "image": "images/mvp/emrakul-the-aeons-torn.png",
+    "scarpa": {
+      "card": "Seething Song",
+      "deck": "Flying",
+      "image": "images/scarpa/seething-song.png"
+    }
   }
 ]

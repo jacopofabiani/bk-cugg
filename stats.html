@@ -322,7 +322,7 @@
     // Multi-series editions play extra brackets under seriesB/C/D. Those
     // matches count towards records and streaks; only their titles do not
     // (see below).
-    const bracketsOf = t => ['seriesB', 'seriesC', 'seriesD'].reduce(
+    const bracketsOf = t => ['seriesB', 'seriesC', 'seriesD', 'seriesE'].reduce(
       (acc, key) => acc.concat(t[key]?.rounds || []), t.rounds);
     const ko = [];
     for (const t of tournaments) {

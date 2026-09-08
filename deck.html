@@ -126,6 +126,24 @@
       </div>
     ` : '';
 
+    // A retired deck carries the edition it bowed out in and the points it
+    // collected over its whole career; live decks carry neither.
+    const lastTournament = tournaments.find(t => t.id === deck.last_edition);
+    const lastTournamentSection = lastTournament ? `
+      <div class="section">
+        <div class="section-title">Last Tournament</div>
+        <div style="font-weight:bold;font-size:1rem">${lastTournament.name}</div>
+        <div style="color:#555;font-size:0.85rem;margin-top:4px">${formatDate(lastTournament.endDate)}</div>
+      </div>
+    ` : '';
+
+    const totalPointsSection = deck.total_points != null ? `
+      <div class="section">
+        <div class="section-title">Total Points</div>
+        <div style="font-weight:bold;font-size:1rem">${deck.total_points}</div>
+      </div>
+    ` : '';
+
     document.getElementById('content').innerHTML = `
       <h1>${deck.name}</h1>
       <div class="section">
@@ -136,6 +154,8 @@
         </div>
       </div>
       ${firstTournamentSection}
+      ${lastTournamentSection}
+      ${totalPointsSection}
       ${moxfieldSection}
     `;
   }
