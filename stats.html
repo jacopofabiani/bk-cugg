@@ -390,6 +390,7 @@
     const worstStreak = Object.entries(worst).sort((a, b) => b[1] - a[1])[0];
     const bestRate = deckRows.filter(r => r.played >= 8).sort((a, b) => b.winPct - a.winPct)[0];
     const topPair = Object.values(pairs).sort((a, b) => b.n - a.n)[0];
+    const mostLost = [...deckRows].sort((a, b) => b.ga - a.ga || b.l - a.l)[0];
     const champ = deckRows.filter(r => r.titles).sort((a, b) => b.titles - a.titles)[0];
     const nearly = deckRows.filter(r => !r.titles).sort((a, b) => b.finals - a.finals || b.points - a.points)[0];
 
@@ -442,7 +443,9 @@
         { label: 'Longest title drought', value: drought ? `${drought.deck} · ${drought.gap} editions` : '–',
           detail: drought ? `between ${toRoman(drought.from)} and ${toRoman(drought.to)}` : '' },
         { label: 'Most points in one edition', value: `${bigScore.deck} · ${bigScore.total}`,
-          detail: `at ${toRoman(bigScore.id)}` }
+          detail: `at ${toRoman(bigScore.id)}` },
+        { label: 'Most games lost', value: `${mostLost.deck} · ${mostLost.ga}`,
+          detail: `${mostLost.l} matches lost of ${mostLost.played} · ${mostLost.gf} games won` }
       ])}
 
       <h2>Finals</h2>
