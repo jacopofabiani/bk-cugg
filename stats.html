@@ -127,20 +127,6 @@
     tbody tr:hover td { background: #fafafa; }
 
     .num { text-align: right; font-variant-numeric: tabular-nums; }
-    .fmt-title {
-      font-size: 0.95rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin: 24px 0 4px;
-    }
-
-    .fmt-meta {
-      color: #555;
-      font-size: 0.8rem;
-      margin-bottom: 10px;
-    }
-
     .deck-cell { font-weight: bold; }
     .muted { color: #888; }
 
@@ -192,34 +178,6 @@
     .color-R { background: #ef4444; }
     .color-G { background: #22c55e; }
     .color-C { background: #9ca3af; }
-
-    /* --- finals list --- */
-    .finals {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 10px;
-    }
-
-    .final-row {
-      border: 1.5px solid #000;
-      border-radius: 10px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.85rem;
-    }
-
-    .final-num {
-      font-weight: bold;
-      min-width: 34px;
-      color: #555;
-      font-size: 0.8rem;
-    }
-
-    .final-body { display: flex; flex-direction: column; gap: 2px; }
-    .final-win { font-weight: bold; }
-    .final-lose { color: #555; font-size: 0.8rem; }
 
     #error { color: red; margin-top: 20px; }
 
@@ -294,7 +252,6 @@
     const items = [
       [stats.editions, 'Editions'],
       [stats.decks, 'Decks'],
-      [stats.matches, 'Knockout matches'],
       [stats.games, 'Games played'],
       [stats.champions, 'Different champions']
     ];
@@ -427,14 +384,11 @@
     const topPair = Object.values(pairs).sort((a, b) => b.n - a.n)[0];
     const champ = deckRows.filter(r => r.titles).sort((a, b) => b.titles - a.titles)[0];
     const nearly = deckRows.filter(r => !r.titles).sort((a, b) => b.finals - a.finals || b.points - a.points)[0];
-    const sweeps = ko.filter(m => Math.min(m.score1, m.score2) === 0 && Math.max(m.score1, m.score2) === 2).length;
-    const bo3 = ko.filter(m => m.score1 + m.score2 > 1).length;
 
     document.getElementById('content').innerHTML = `
       ${kpis({
         editions: tournaments.length,
         decks: decks.length,
-        matches: ko.length,
         games: ko.reduce((a, m) => a + m.score1 + m.score2, 0),
         champions: Object.keys(titles).length
       })}
@@ -448,8 +402,7 @@
         { label: 'Fiercest rivalry', value: `${topPair.a} v ${topPair.b}`,
           detail: `${topPair.n} meetings · ${Object.entries(topPair.wins).map(([d, n]) => `${d} ${n}`).join(', ')}` },
         { label: 'Best without a title', value: nearly ? nearly.deck : '–',
-          detail: nearly ? `${nearly.finals} final${nearly.finals === 1 ? '' : 's'} lost · ${nearly.points} points` : '' },
-        { label: 'Clean sweeps', value: `${pct(sweeps, bo3)}%`, detail: `${sweeps} of ${bo3} best-of-three matches ended 2–0` }
+          detail: nearly ? `${nearly.finals} final${nearly.finals === 1 ? '' : 's'} lost · ${nearly.points} points` : '' }
       ])}
 
       <h2>Finals</h2>
@@ -499,27 +452,14 @@
       })()}
 
       <h2>Formats</h2>
-      <div class="section-note">Every edition runs under one of a handful of formats. Match records below cover the knockout stage of that format only.</div>
+      <div class="section-note">Every edition runs under one of a handful of formats.</div>
       ${(() => {
-        const typeOf = Object.fromEntries(tournaments.map(t => [t.id, t.type]));
         const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
         const agg = {};
         for (const t of tournaments) {
-          const a = agg[t.type] ||= { eds: [], matches: 0, titles: {}, rec: {}, pts: {} };
+          const a = agg[t.type] ||= { eds: [], titles: {} };
           a.eds.push(t.id);
           a.titles[t.winner] = (a.titles[t.winner] || 0) + 1;
-          for (const r of bracketsOf(t)) for (const m of r.matches) {
-            a.matches++;
-            for (const [d, gf, ga] of [[m.player1, m.score1, m.score2], [m.player2, m.score2, m.score1]]) {
-              const x = a.rec[d] ||= { w: 0, l: 0 };
-              gf > ga ? x.w++ : x.l++;
-            }
-          }
-        }
-        for (const p of points) {
-          const a = agg[typeOf[p.tournamentId]];
-          if (!a) continue;
-          for (const sc of p.scores) a.pts[sc.deck] = (a.pts[sc.deck] || 0) + sc.total;
         }
         const fmts = Object.keys(agg).sort((a, b) => agg[b].eds.length - agg[a].eds.length);
 
@@ -535,50 +475,8 @@
             ];
           }), ['left', 'left', 'left']);
 
-        const blocks = fmts.map(f => {
-          const a = agg[f];
-          const rows = Object.keys(a.rec).map(d => {
-            const r = a.rec[d], played = r.w + r.l;
-            return { d, w: r.w, l: r.l, played, rate: pct(r.w, played),
-                     titles: a.titles[d] || 0, pts: a.pts[d] || 0 };
-          }).sort((x, y) => y.pts - x.pts || y.titles - x.titles || y.rate - x.rate).slice(0, 6);
-          const maxPts = Math.max(...rows.map(r => r.pts), 1);
-          return `
-            <div class="fmt-title">${esc(cap(f))}</div>
-            <div class="fmt-meta">${a.eds.length} edition${a.eds.length === 1 ? '' : 's'} ·
-              ${a.matches} knockout matches · leaders by points earned in this format.</div>
-            ${simpleTable(['Deck', 'Titles', 'W–L', 'Win rate', 'Points'], rows.map(r => [
-              `<span class="deck-cell">${esc(r.d)}</span>`,
-              r.titles || '<span class="muted">–</span>',
-              `${r.w}–${r.l}`,
-              r.rate + '%',
-              `<div class="bar-cell">${bar(r.pts, maxPts, String(r.pts))}</div>`
-            ]), ['left', 'num', 'num', 'num', 'left'])}
-          `;
-        }).join('');
-
-        return summary + blocks;
+        return summary;
       })()}
-
-      <h2>Every final</h2>
-      <div class="section-note">The last match of each edition.</div>
-      <div class="finals">
-        ${tournaments.map(t => {
-          const f = t.rounds[t.rounds.length - 1].matches[0];
-          const winner = f.score1 > f.score2 ? f.player1 : f.player2;
-          const loser = f.score1 > f.score2 ? f.player2 : f.player1;
-          const score = `${Math.max(f.score1, f.score2)}–${Math.min(f.score1, f.score2)}`;
-          return `
-            <div class="final-row">
-              <div class="final-num">${toRoman(t.id)}</div>
-              <div class="final-body">
-                <div class="final-win">${esc(winner)} <span class="muted">${score}</span></div>
-                <div class="final-lose">beat ${esc(loser)}</div>
-              </div>
-            </div>
-          `;
-        }).join('')}
-      </div>
     `;
   }
 
