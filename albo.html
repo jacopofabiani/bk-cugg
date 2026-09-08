@@ -177,7 +177,7 @@
     return countCardsHtml(counts, decksByName, '🥈');
   }
 
-  // An A/B (or A/B/C) edition crowns more than one winner, but only Serie A's
+  // A multi-series edition crowns more than one winner, but only Serie A's
   // counts as a Bob Kelzor title -- so Titles and Runner-ups above ignore the
   // lower series entirely and each one gets its own roll of honour below.
   function lowerSerieHtml(tournaments, decksByName, key, label) {
@@ -278,6 +278,7 @@
       ${scarpaCardsHtml(mvps, decksByName)}
       ${lowerSerieHtml(tournaments, decksByName, 'seriesB', 'Serie B')}
       ${lowerSerieHtml(tournaments, decksByName, 'seriesC', 'Serie C')}
+      ${lowerSerieHtml(tournaments, decksByName, 'seriesD', 'Serie D')}
     `;
   }
 

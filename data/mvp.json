@@ -293,5 +293,17 @@
       "deck": "Discard",
       "image": "images/scarpa/hymn-to-tourach.png"
     }
+  },
+  {
+    "tournamentId": 32,
+    "tournamentName": "XXXII° Torneo Bob Kelzor",
+    "card": "Tyrranax Rex",
+    "deck": "Reanimate",
+    "image": "images/mvp/tyrranax-rex.png",
+    "scarpa": {
+      "card": "Dark Ritual",
+      "deck": "Reanimate",
+      "image": "images/scarpa/dark-ritual.png"
+    }
   }
 ]

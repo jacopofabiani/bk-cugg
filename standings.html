@@ -336,12 +336,10 @@
       const tournament = allTournaments[i];
       const matchData = allMatches.find(m => m.id === tournament.tournamentId);
       if (matchData) {
-        // An A/B edition keeps its second bracket in seriesB (an A/B/C one a
-        // third in seriesC); those are real games played and score points, so
-        // they belong in the tally too.
-        const rounds = matchData.rounds
-          .concat(matchData.seriesB?.rounds || [])
-          .concat(matchData.seriesC?.rounds || []);
+        // A multi-series edition keeps its extra brackets in seriesB/C/D; those
+        // are real games played and score points, so they belong in the tally too.
+        const rounds = ['seriesB', 'seriesC', 'seriesD'].reduce(
+          (acc, key) => acc.concat(matchData[key]?.rounds || []), matchData.rounds);
         for (const round of rounds) {
           for (const match of round.matches) {
             const games = match.score1 + match.score2;

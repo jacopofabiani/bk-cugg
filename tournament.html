@@ -525,9 +525,8 @@
   }
 
   // Renders one bracket end to end: rounds, trophy and awards. A normal edition
-  // calls this once; an A/B edition calls it again for Serie B and an A/B/C one
-  // once more for Serie C, each carrying its own winner and awards on the
-  // tournament object.
+  // calls this once; a multi-series edition calls it again for each of Serie B,
+  // C and D, which carry their own winner and awards on the tournament object.
   function seriesHtml(s) {
     let html = s.label ? `<h2 class="series-title">${s.label}</h2>` : '';
     html += '<div class="bracket">\n';
@@ -615,8 +614,9 @@
       scarpaImage: mvpData?.scarpa?.image
     });
 
-    if (t.seriesB) html += seriesHtml(t.seriesB);
-    if (t.seriesC) html += seriesHtml(t.seriesC);
+    for (const key of ['seriesB', 'seriesC', 'seriesD']) {
+      if (t[key]) html += seriesHtml(t[key]);
+    }
 
     html += `
       <br>

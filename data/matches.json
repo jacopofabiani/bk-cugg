@@ -2106,5 +2106,177 @@
         ]
       }
     ]
+  },
+  {
+    "id": 32,
+    "name": "XXXII° Torneo Bob Kelzor",
+    "type": "A/B/C/D",
+    "startDate": "2026-01-30",
+    "endDate": "2026-02-20",
+    "winner": "Reanimate",
+    "mvp": "Tyrranax Rex",
+    "scarpa": "Dark Ritual",
+    "seriesLabel": "Serie A",
+    "rounds": [
+      {
+        "round": 1,
+        "name": "Play-in",
+        "matches": [
+          { "player1": "Flying", "score1": 0, "player2": "Mono Red", "score2": 2 },
+          { "player1": "Token",  "score1": 2, "player2": "Elves",    "score2": 0 }
+        ]
+      },
+      {
+        "round": 2,
+        "name": "Quarterfinals",
+        "stageBreak": true,
+        "matches": [
+          { "player1": "Mono Red",  "score1": 2, "player2": "Destroy",  "score2": 0 },
+          { "player1": "Discard",   "score1": 1, "player2": "Artifact", "score2": 2 },
+          { "player1": "Milling",   "score1": 0, "player2": "Burrow",   "score2": 2 },
+          { "player1": "Reanimate", "score1": 2, "player2": "Token",    "score2": 1 }
+        ]
+      },
+      {
+        "round": 3,
+        "name": "Semifinals",
+        "matches": [
+          { "player1": "Mono Red", "score1": 2, "player2": "Artifact",  "score2": 1 },
+          { "player1": "Burrow",   "score1": 0, "player2": "Reanimate", "score2": 2 }
+        ]
+      },
+      {
+        "round": 4,
+        "name": "Final",
+        "matches": [
+          { "player1": "Mono Red", "score1": 1, "player2": "Reanimate", "score2": 2 }
+        ]
+      }
+    ],
+    "seriesB": {
+      "label": "Serie B",
+      "winner": "Ugin",
+      "mvp": "Ugin, the Spirit Dragon",
+      "mvpImage": "images/mvp/ugin-the-spirit-dragon.png",
+      "scarpa": "Kozilek's Command",
+      "scarpaLabel": "Scarpa d'Argento",
+      "scarpaImage": "images/scarpa/kozileks-command.png",
+      "rounds": [
+        {
+          "round": 1,
+          "name": "Play-in",
+          "matches": [
+            { "player1": "Dino", "score1": 2, "player2": "Mono White", "score2": 0 },
+            { "player1": "Ugin", "score1": 2, "player2": "Vampiri",    "score2": 0 }
+          ]
+        },
+        {
+          "round": 2,
+          "name": "Quarterfinals",
+          "stageBreak": true,
+          "matches": [
+            { "player1": "Dino",       "score1": 0, "player2": "LoTR",      "score2": 2 },
+            { "player1": "Goblin",     "score1": 0, "player2": "Poison",    "score2": 2 },
+            { "player1": "Cycling",    "score1": 0, "player2": "Assassins", "score2": 2 },
+            { "player1": "Mono Black", "score1": 0, "player2": "Ugin",      "score2": 2 }
+          ]
+        },
+        {
+          "round": 3,
+          "name": "Semifinals",
+          "matches": [
+            { "player1": "LoTR",      "score1": 0, "player2": "Poison", "score2": 2 },
+            { "player1": "Assassins", "score1": 0, "player2": "Ugin",   "score2": 2 }
+          ]
+        },
+        {
+          "round": 4,
+          "name": "Final",
+          "matches": [
+            { "player1": "Poison", "score1": 0, "player2": "Ugin", "score2": 2 }
+          ]
+        }
+      ]
+    },
+    "seriesC": {
+      "label": "Serie C",
+      "winner": "Rampage",
+      "mvp": "Titan of Industry",
+      "mvpImage": "images/mvp/titan-of-industry.png",
+      "scarpa": "Brotherhood's End",
+      "scarpaLabel": "Scarpa di Bronzo",
+      "scarpaImage": "images/scarpa/brotherhoods-end.png",
+      "rounds": [
+        {
+          "round": 1,
+          "name": "Play-in",
+          "matches": [
+            { "player1": "Angels",  "score1": 2, "player2": "Planeswalker", "score2": 0 },
+            { "player1": "Equimen", "score1": 1, "player2": "Mario Draghi", "score2": 2 }
+          ]
+        },
+        {
+          "round": 2,
+          "name": "Quarterfinals",
+          "stageBreak": true,
+          "matches": [
+            { "player1": "Angels",     "score1": 2, "player2": "GainLife",     "score2": 0 },
+            { "player1": "Mordor",     "score1": 0, "player2": "Mono Blue",    "score2": 2 },
+            { "player1": "Flicker",    "score1": 0, "player2": "Rampage",      "score2": 2 },
+            { "player1": "Mono Green", "score1": 2, "player2": "Mario Draghi", "score2": 1 }
+          ]
+        },
+        {
+          "round": 3,
+          "name": "Semifinals",
+          "matches": [
+            { "player1": "Angels",  "score1": 2, "player2": "Mono Blue",  "score2": 0 },
+            { "player1": "Rampage", "score1": 2, "player2": "Mono Green", "score2": 0 }
+          ]
+        },
+        {
+          "round": 4,
+          "name": "Final",
+          "matches": [
+            { "player1": "Angels", "score1": 0, "player2": "Rampage", "score2": 2 }
+          ]
+        }
+      ]
+    },
+    "seriesD": {
+      "label": "Serie D",
+      "winner": "Flash",
+      "mvp": "Slitherwisp",
+      "mvpImage": "images/mvp/slitherwisp.png",
+      "scarpa": null,
+      "scarpaLabel": "Scarpa di Legno",
+      "rounds": [
+        {
+          "round": 1,
+          "name": "Quarterfinals",
+          "matches": [
+            { "player1": "Bugs",     "score1": 0, "player2": "Flash",   "score2": 2 },
+            { "player1": "Goading",  "score1": 1, "player2": "Toy Box", "score2": 2 },
+            { "player1": "Combo",    "score1": 1, "player2": "Skarty",  "score2": 2 },
+            { "player1": "Landfall", "score1": 1, "player2": "Rabbits", "score2": 2 }
+          ]
+        },
+        {
+          "round": 2,
+          "name": "Semifinals",
+          "matches": [
+            { "player1": "Flash",  "score1": 2, "player2": "Toy Box", "score2": 0 },
+            { "player1": "Skarty", "score1": 1, "player2": "Rabbits", "score2": 2 }
+          ]
+        },
+        {
+          "round": 3,
+          "name": "Final",
+          "matches": [
+            { "player1": "Flash", "score1": 2, "player2": "Rabbits", "score2": 1 }
+          ]
+        }
+      ]
+    }
   }
 ]
