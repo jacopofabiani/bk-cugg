@@ -281,5 +281,17 @@
       "deck": "Goblin",
       "image": "images/scarpa/impact-tremors.png"
     }
+  },
+  {
+    "tournamentId": 31,
+    "tournamentName": "XXXI° Torneo Bob Kelzor",
+    "card": "Bloodletter of Aclazotz",
+    "deck": "Discard",
+    "image": "images/mvp/bloodletter-of-aclazotz.png",
+    "scarpa": {
+      "card": "Hymn to Tourach",
+      "deck": "Discard",
+      "image": "images/scarpa/hymn-to-tourach.png"
+    }
   }
 ]
