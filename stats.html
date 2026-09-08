@@ -257,6 +257,29 @@
     return out + '°';
   }
 
+  // The finalist that isn't the winner. Nearly every edition closes on a
+  // single match, but XVIII ended in a group between the last three decks --
+  // there second place goes on wins inside that group.
+  function runnerUp(t) {
+    const last = t.rounds[t.rounds.length - 1];
+    if (!last || !last.matches.length) return null;
+
+    if (last.matches.length === 1) {
+      const m = last.matches[0];
+      return m.score1 > m.score2 ? m.player2 : m.player1;
+    }
+
+    const wins = {};
+    for (const m of last.matches) {
+      const won  = m.score1 > m.score2 ? m.player1 : m.player2;
+      const lost = m.score1 > m.score2 ? m.player2 : m.player1;
+      wins[won]  = (wins[won] || 0) + 1;
+      wins[lost] = wins[lost] || 0;
+    }
+    const ranked = Object.entries(wins).sort((a, b) => b[1] - a[1]);
+    return ranked.length > 1 ? ranked[1][0] : null;
+  }
+
   function bar(value, max, label) {
     const w = (max && value) ? Math.max(2, Math.round(100 * value / max)) : 0;
     return `
@@ -343,11 +366,15 @@
     }
 
     // ---- titles, finals, editions, points ----
-    const titles = {}, finals = {}, editions = {}, totalPoints = {};
+    const titles = {}, finals = {}, runnerUps = {}, editions = {}, totalPoints = {};
     for (const t of tournaments) {
       titles[t.winner] = (titles[t.winner] || 0) + 1;
-      const f = t.rounds[t.rounds.length - 1].matches[0];
-      for (const d of [f.player1, f.player2]) finals[d] = (finals[d] || 0) + 1;
+      const last = t.rounds[t.rounds.length - 1];
+      // A group final has each deck in several matches, so count decks, not slots.
+      const contested = new Set(last.matches.flatMap(m => [m.player1, m.player2]));
+      for (const d of contested) finals[d] = (finals[d] || 0) + 1;
+      const second = runnerUp(t);
+      if (second) runnerUps[second] = (runnerUps[second] || 0) + 1;
     }
     for (const p of points) {
       for (const s of p.scores) {
@@ -387,6 +414,7 @@
         editions: editions[deck] || 0,
         titles: titles[deck] || 0,
         finals: finals[deck] || 0,
+        runnerUps: runnerUps[deck] || 0,
         w: r.w, l: r.l, gf: r.gf, ga: r.ga, played,
         winPct: pct(r.w, played),
         points: totalPoints[deck] || 0
@@ -423,6 +451,19 @@
           detail: nearly ? `${nearly.finals} final${nearly.finals === 1 ? '' : 's'} lost · ${nearly.points} points` : '' },
         { label: 'Clean sweeps', value: `${pct(sweeps, bo3)}%`, detail: `${sweeps} of ${bo3} best-of-three matches ended 2–0` }
       ])}
+
+      <h2>Finals</h2>
+      <div class="section-note">Every edition ends in one final. Runner-up counts the finals a deck lost; XVIII closed on a three-deck group, so its third deck reached a final without being either.</div>
+      ${simpleTable(['Deck', 'Finals', 'Titles', 'Runner-ups', 'Conversion'],
+        deckRows.filter(r => r.finals)
+          .sort((a, b) => b.runnerUps - a.runnerUps || b.finals - a.finals || a.deck.localeCompare(b.deck))
+          .map(r => [
+            `<span class="deck-cell">${esc(r.deck)}</span>`,
+            r.finals,
+            r.titles || '<span class="muted">–</span>',
+            r.runnerUps || '<span class="muted">–</span>',
+            `${pct(r.titles, r.finals)}%`
+          ]), ['left', 'num', 'num', 'num', 'num'])}
 
       <h2>Rivalries</h2>
       <div class="section-note">Pairings that have met most often in the knockout stage.</div>
