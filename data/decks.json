@@ -39,5 +39,6 @@
   { "id": "landfall",      "name": "Landfall",      "colors": ["G", "B"], "anzianita": 38 },
   { "id": "eldrazi",       "name": "Eldrazi",       "colors": ["C", "B", "G"], "anzianita": 39 },
   { "id": "loselife",      "name": "Lose Life",     "colors": ["B", "R"], "anzianita": 40 },
-  { "id": "encanto",       "name": "Encanto",       "colors": ["W", "U"], "anzianita": 41 }
+  { "id": "encanto",       "name": "Encanto",       "colors": ["W", "U"], "anzianita": 41 },
+  { "id": "prevent",       "name": "Prevent",       "colors": ["W", "U"], "anzianita": 42 }
 ]

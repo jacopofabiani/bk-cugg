@@ -329,5 +329,17 @@
       "deck": "Reanimate",
       "image": "images/scarpa/dark-ritual.png"
     }
+  },
+  {
+    "tournamentId": 35,
+    "tournamentName": "XXXV° Torneo Bob Kelzor",
+    "card": "Jace, the Perfected Mind",
+    "deck": "Destroy",
+    "image": "images/mvp/jace-the-perfected-mind.png",
+    "scarpa": {
+      "card": "Sheoldred's Edict",
+      "deck": "Destroy",
+      "image": "images/scarpa/sheoldreds-edict.png"
+    }
   }
 ]
