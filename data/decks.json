@@ -1,6 +1,6 @@
 [
   { "id": "destroy",      "name": "Destroy",      "colors": ["B", "U"], "moxfield": "https://moxfield.com/decks/FJftU860B0G1U2oABC5w9g", "anzianita": 1 },
-  { "id": "vampiri",      "name": "Vampiri",      "colors": ["W", "B"], "anzianita": 2, "is_dead": true },
+  { "id": "vampiri",      "name": "Vampiri",      "colors": ["W", "B"], "anzianita": 2, "is_dead": true, "last_edition": 34, "total_points": 38 },
   { "id": "token",        "name": "Token",        "colors": ["W", "B"], "moxfield": "https://moxfield.com/decks/JJJZc0cir0awNjeANqXxVw", "anzianita": 3 },
   { "id": "goblin",       "name": "Goblin",       "colors": ["R"], "anzianita": 4 },
   { "id": "gainlife",     "name": "GainLife",     "colors": ["W", "G"], "anzianita": 5 },
@@ -38,5 +38,6 @@
   { "id": "rabbits",       "name": "Rabbits",       "colors": ["W", "R"], "anzianita": 37 },
   { "id": "landfall",      "name": "Landfall",      "colors": ["G", "B"], "anzianita": 38 },
   { "id": "eldrazi",       "name": "Eldrazi",       "colors": ["C", "B", "G"], "anzianita": 39 },
-  { "id": "loselife",      "name": "Lose Life",     "colors": ["B", "R"], "anzianita": 40 }
+  { "id": "loselife",      "name": "Lose Life",     "colors": ["B", "R"], "anzianita": 40 },
+  { "id": "encanto",       "name": "Encanto",       "colors": ["W", "U"], "anzianita": 41 }
 ]

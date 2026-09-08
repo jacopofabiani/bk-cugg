@@ -317,5 +317,17 @@
       "deck": "Flying",
       "image": "images/scarpa/seething-song.png"
     }
+  },
+  {
+    "tournamentId": 34,
+    "tournamentName": "XXXIV° Torneo Bob Kelzor",
+    "card": "Tyrranax Rex",
+    "deck": "Reanimate",
+    "image": "images/mvp/tyrranax-rex.png",
+    "scarpa": {
+      "card": "Dark Ritual",
+      "deck": "Reanimate",
+      "image": "images/scarpa/dark-ritual.png"
+    }
   }
 ]

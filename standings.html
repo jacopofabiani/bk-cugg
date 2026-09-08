@@ -166,6 +166,7 @@
 <script>
   let allTournaments = [];
   let allMatches = [];
+  let deadDecks = new Set();
   let chartInstance = null;
   let currentSorted = [];
   let sortKey = 'total';
@@ -180,17 +181,24 @@
   let deckColorMap = {};
 
   async function load() {
-    const [pointsRes, matchesRes] = await Promise.all([
+    const [pointsRes, matchesRes, decksRes] = await Promise.all([
       fetch('data/points.json'),
-      fetch('data/matches.json')
+      fetch('data/matches.json'),
+      fetch('data/decks.json')
     ]);
     allTournaments = await pointsRes.json();
     allMatches = await matchesRes.json();
+    const decks = await decksRes.json();
+
+    // A retired deck keeps its results in the data -- editions it played still
+    // show it -- but this page is about the decks still in the running, so it
+    // drops out of both the chart and the table.
+    deadDecks = new Set(decks.filter(d => d.is_dead).map(d => d.name));
 
     // Collect all decks across all tournaments
     const deckSet = new Set();
     for (const t of allTournaments) {
-      for (const s of t.scores) deckSet.add(s.deck);
+      for (const s of t.scores) if (!deadDecks.has(s.deck)) deckSet.add(s.deck);
     }
     const allDecks = [...deckSet].sort();
 
@@ -328,6 +336,7 @@
     const totals = {}, gameMap = {}, bonusMap = {}, gamesPlayedMap = {}, tournamentsMap = {};
     for (let i = 0; i <= upToIndex; i++) {
       for (const s of allTournaments[i].scores) {
+        if (deadDecks.has(s.deck)) continue;
         totals[s.deck]        = (totals[s.deck]        || 0) + s.total;
         gameMap[s.deck]       = (gameMap[s.deck]        || 0) + s.gamePoints;
         bonusMap[s.deck]      = (bonusMap[s.deck]       || 0) + s.bonusGroup + s.bonusFinalist + s.bonusWinner;
