@@ -269,5 +269,17 @@
       "deck": "Burrow",
       "image": "images/scarpa/sheltered-by-ghosts.png"
     }
+  },
+  {
+    "tournamentId": 30,
+    "tournamentName": "XXX° Torneo Bob Kelzor",
+    "card": "Muxus, Goblin Grandee",
+    "deck": "Goblin",
+    "image": "images/mvp/muxus-goblin-grandee.png",
+    "scarpa": {
+      "card": "Impact Tremors",
+      "deck": "Goblin",
+      "image": "images/scarpa/impact-tremors.png"
+    }
   }
 ]
