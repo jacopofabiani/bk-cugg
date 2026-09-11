@@ -339,6 +339,17 @@
     .trophy--c .trophy-stem,
     .trophy--c .trophy-base { display: none; }
 
+    /* Serie D's handshake and Serie E's thumbs up: drawn by hand, so they are
+       placed as images. Each is sized by eye to carry the same weight as a cup
+       next to it, and both are used at the angle they were drawn. */
+    .prize-sketch {
+      display: block;
+      margin: 18px 18px 0;
+    }
+
+    .prize-sketch--shake { width: 104px; }
+    .prize-sketch--thumb { width: 62px; }
+
     .winner-label {
       background: #000;
       color: #fff;
@@ -640,19 +651,50 @@
     `;
   }
 
-  // Prizes that differ from the Serie A cup: Serie B gets the tall slim shape
-  // and Serie C a ribboned medal. Both carry their letter under BOB; the other
-  // series fall back to the default cup.
+  // Cups that differ from the Serie A one: Serie B gets the tall slim shape and
+  // Serie C a ribboned medal. Both carry their letter under BOB; the series
+  // with no entry here fall back to the default cup.
   const TROPHY_VARIANT = { 'Serie B': 'trophy--b', 'Serie C': 'trophy--c' };
+
+  // Serie D is settled with a handshake and Serie E with a thumbs up. Both are
+  // the original pen drawings, thresholded to ink on a transparent background,
+  // so they sit on the page as line art like the cups beside them.
+  const HANDSHAKE = `
+    <img class="prize-sketch prize-sketch--shake" src="images/prize-handshake.png" alt="">
+  `;
+
+  const THUMBS_UP = `
+    <img class="prize-sketch prize-sketch--thumb" src="images/prize-thumbsup.png" alt="">
+  `;
+
+  // The prize that sits above the winner's name: the handshake for Serie D,
+  // the thumbs up for Serie E, otherwise a cup in this series' variant.
+  function prizeHtml(label) {
+    if (label === 'Serie D') return HANDSHAKE;
+    if (label === 'Serie E') return THUMBS_UP;
+
+    const variant = TROPHY_VARIANT[label] || '';
+    const text = variant
+      ? `<span>BOB</span><span>${label.replace('Serie ', '')}</span>`
+      : `<span>BOB</span>`;
+
+    return `
+      <div class="trophy ${variant}">
+        <div class="trophy-bowl">
+          <div class="trophy-handle-left"></div>
+          ${text}
+          <div class="trophy-handle-right"></div>
+        </div>
+        <div class="trophy-stem"></div>
+        <div class="trophy-base"></div>
+      </div>
+    `;
+  }
 
   // Renders one bracket end to end: rounds, trophy and awards. A normal edition
   // calls this once; a multi-series edition calls it again for each of Serie B,
   // C and D, which carry their own winner and awards on the tournament object.
   function seriesHtml(s) {
-    const trophyVariant = TROPHY_VARIANT[s.label] || '';
-    const trophyText = trophyVariant
-      ? `<span>BOB</span><span>${s.label.replace('Serie ', '')}</span>`
-      : `<span>BOB</span>`;
     let html = s.label ? `<h2 class="series-title">${s.label}</h2>` : '';
     html += '<div class="bracket">\n';
 
@@ -682,15 +724,7 @@
 
     html += `
         <div class="trophy-section">
-          <div class="trophy ${trophyVariant}">
-            <div class="trophy-bowl">
-              <div class="trophy-handle-left"></div>
-              ${trophyText}
-              <div class="trophy-handle-right"></div>
-            </div>
-            <div class="trophy-stem"></div>
-            <div class="trophy-base"></div>
-          </div>
+          ${prizeHtml(s.label)}
           <div class="winner-label">${s.winner}</div>
         </div>
       </div>
