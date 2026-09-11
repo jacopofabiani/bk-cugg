@@ -255,6 +255,90 @@
     .trophy--b .trophy-stem { width: 6px; height: 10px; }
     .trophy--b .trophy-base { width: 30px; height: 6px; }
 
+    /* Serie C's prize is a medal, not a cup: a ribboned disc built from the
+       same three pieces -- the bowl becomes the disc, the right handle becomes
+       the ribbon, and the stem and base drop out. The whole medal is turned a
+       quarter turn so the disc hangs under the ribbon, which also stands the
+       lettering back up; the top margin reserves the room the ribbon needs
+       once it has swung above the disc. */
+    .trophy--c {
+      width: 56px;
+      margin-top: 70px;
+    }
+
+    /* Clear of the ribbon, which now stands above the disc. */
+    .trophy--c::before { top: -66px; }
+
+    .trophy--c .trophy-bowl {
+      width: 56px;
+      height: 56px;
+      box-sizing: border-box;
+      transform: rotate(-90deg);
+      border: 4px solid #000;
+      border-radius: 50%;
+      background: #fff;
+      color: #000;
+      /* Written down the disc, so the quarter turn leaves it upright. */
+      writing-mode: vertical-rl;
+      gap: 3px;
+      font-size: 0.55rem;
+    }
+
+    .trophy--c .trophy-handle-left { display: none; }
+
+    /* Ribbon: a trapezoid flaring out from the disc, narrow edge flush against
+       it. The two pseudo-elements sit inside as white then black, so the shape
+       reads as nested folds rather than one solid block. */
+    .trophy--c .trophy-handle-right {
+      top: 50%;
+      right: -52px;
+      width: 52px;
+      height: 48px;
+      margin-top: -24px;
+      border: none;
+      border-radius: 0;
+      background: #000;
+      clip-path: polygon(0 26%, 100% 0, 100% 100%, 0 74%);
+    }
+
+    .trophy--c .trophy-handle-right::before,
+    .trophy--c .trophy-handle-right::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      clip-path: polygon(0 26%, 100% 0, 100% 100%, 0 74%);
+    }
+
+    .trophy--c .trophy-handle-right::before {
+      top: 4px;
+      bottom: 4px;
+      right: 4px;
+      background: #fff;
+    }
+
+    .trophy--c .trophy-handle-right::after {
+      top: 9px;
+      bottom: 9px;
+      right: 9px;
+      background: #000;
+    }
+
+    /* Both sparkles move to the free side, clear of the ribbon. */
+    .trophy--c .trophy-bowl::before {
+      top: -10px;
+      left: -18px;
+    }
+
+    .trophy--c .trophy-bowl::after {
+      top: auto;
+      right: auto;
+      bottom: -10px;
+      left: -18px;
+    }
+
+    .trophy--c .trophy-stem,
+    .trophy--c .trophy-base { display: none; }
+
     .winner-label {
       background: #000;
       color: #fff;
@@ -556,9 +640,10 @@
     `;
   }
 
-  // Cups that differ from the Serie A one. Serie B gets the tall slim shape and
-  // carries its letter under BOB; the other series fall back to the default.
-  const TROPHY_VARIANT = { 'Serie B': 'trophy--b' };
+  // Prizes that differ from the Serie A cup: Serie B gets the tall slim shape
+  // and Serie C a ribboned medal. Both carry their letter under BOB; the other
+  // series fall back to the default cup.
+  const TROPHY_VARIANT = { 'Serie B': 'trophy--b', 'Serie C': 'trophy--c' };
 
   // Renders one bracket end to end: rounds, trophy and awards. A normal edition
   // calls this once; a multi-series edition calls it again for each of Serie B,
