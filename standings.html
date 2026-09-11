@@ -70,7 +70,7 @@
       color: #555;
     }
 
-    .leaderboard { max-width: 800px; }
+    .leaderboard { max-width: 800px; overflow-x: auto; margin-bottom: 40px; }
 
     .leaderboard-title {
       font-size: 0.8rem;
@@ -81,13 +81,17 @@
       color: #555;
     }
 
+    /* Every figure here is one to five characters, so stretching the table to the
+       full 800px just strands the columns apart. Sizing it to its content keeps
+       the numbers close enough to read across a row. */
     table {
-      width: 100%;
+      width: auto;
       border-collapse: collapse;
       background: #fff;
       border-radius: 12px;
       overflow: hidden;
       border: 1.5px solid #000;
+      white-space: nowrap;
     }
 
     th {
@@ -96,7 +100,7 @@
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      padding: 8px 10px;
+      padding: 7px 9px;
       text-align: left;
     }
 
@@ -111,7 +115,7 @@
     th.sort-desc::after { content: ' ▼'; font-size: 0.65rem; }
 
     td {
-      padding: 6px 10px;
+      padding: 5px 9px;
       border-top: 1px solid #000;
       font-size: 0.95rem;
       color: #000;
@@ -122,10 +126,13 @@
     /* Heavier rule every 8 places, so the table reads in tiers. */
     tr.tier-start td { border-top-width: 3px; }
 
-    .rank { color: #555; font-size: 0.85rem; width: 32px; }
+    .rank { color: #555; font-size: 0.85rem; width: 28px; }
     .rank-1 { color: #000; font-weight: bold; }
     .rank-2 { color: #000; font-weight: bold; }
     .rank-3 { color: #000; font-weight: bold; }
+
+    /* The one column whose width varies, so it carries the gap to the figures. */
+    .deck-name { padding-right: 16px; }
 
     .total-pts { font-weight: bold; }
     .sub-pts { color: #555; font-size: 0.85rem; }
@@ -138,30 +145,30 @@
 
 <site-nav></site-nav>
 
-<div id="selector" class="selector"></div>
-
-<div class="chart-container">
-  <div class="chart-title"></div>
-  <canvas id="chart"></canvas>
-</div>
-
 <div class="leaderboard">
   <table id="table">
     <thead>
       <tr>
         <th>#</th>
         <th class="sortable" onclick="sortBy('deck')">Deck</th>
+        <th class="sortable" onclick="sortBy('total')">Total</th>
         <th class="sortable" onclick="sortBy('tournaments')">#T</th>
         <th class="sortable" onclick="sortBy('games')">Games</th>
         <th class="sortable" onclick="sortBy('game')">Wins</th>
         <th class="sortable" onclick="sortBy('bonus')">Bonus</th>
-        <th class="sortable" onclick="sortBy('total')">Total</th>
         <th class="sortable" onclick="sortBy('ppg')">PPG</th>
         <th class="sortable" onclick="sortBy('ppt')">PPT</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
   </table>
+</div>
+
+<div id="selector" class="selector"></div>
+
+<div class="chart-container">
+  <div class="chart-title"></div>
+  <canvas id="chart"></canvas>
 </div>
 
 <p id="error"></p>
@@ -389,12 +396,12 @@
       return `
         <tr class="${tierClass}">
           <td class="rank ${rankClass}">${i + 1}</td>
-          <td>${d.deck}</td>
+          <td class="deck-name">${d.deck}</td>
+          <td class="total-pts">${d.total}</td>
           <td class="sub-pts">${d.tournaments}</td>
           <td class="sub-pts">${d.games}</td>
           <td class="sub-pts">${d.game}</td>
           <td class="sub-pts">${d.bonus}</td>
-          <td class="total-pts">${d.total}</td>
           <td class="sub-pts">${d.ppg.toFixed(2)}</td>
           <td class="sub-pts">${d.ppt.toFixed(2)}</td>
         </tr>
@@ -418,13 +425,14 @@
     renderTable(currentSorted);
   }
 
+  // Sortable headers in DOM order -- keep in step with the <thead> above, since
+  // the arrow is placed by position.
+  const SORTABLE_KEYS = ['deck', 'total', 'tournaments', 'games', 'game', 'bonus', 'ppg', 'ppt'];
+
   function updateSortHeaders() {
-    const keyToIndex = { deck: 1, tournaments: 2, games: 3, game: 4, bonus: 5, total: 6, ppg: 7, ppt: 8 };
-    document.querySelectorAll('th.sortable').forEach(th => {
-      th.classList.remove('sort-asc', 'sort-desc');
-    });
     const ths = document.querySelectorAll('th.sortable');
-    const idx = Object.keys(keyToIndex).indexOf(sortKey);
+    ths.forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+    const idx = SORTABLE_KEYS.indexOf(sortKey);
     if (idx !== -1 && ths[idx]) {
       ths[idx].classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
     }
