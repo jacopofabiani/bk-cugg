@@ -89,6 +89,18 @@
       margin-top: 2px;
     }
 
+    .albo-note {
+      font-size: 0.8rem;
+      color: #777;
+      margin: -8px 0 16px;
+    }
+
+    /* Marks where the lower-series roll of honour starts. */
+    .albo-sep {
+      border-top: 1px solid #ddd;
+      padding-top: 14px;
+    }
+
     .moxfield-link {
       display: inline-block;
       margin-top: 4px;
@@ -137,15 +149,18 @@
     return ranked.length > 1 ? ranked[1][0] : null;
   }
 
-  // This deck's roll of honour. Only Serie A counts as a Bob Kelzor title, the
-  // same rule albo.html applies, so lower-series brackets are ignored here.
-  function alboHtml(deck, tournaments) {
-    const titles    = tournaments.filter(t => t.winner === deck.name);
-    const runnerUps = tournaments.filter(t => runnerUp(t) === deck.name);
-    if (!titles.length && !runnerUps.length) return '';
+  // The lower brackets of a multi-series edition, in the order they are listed.
+  // A tournament only carries the ones it actually ran.
+  const LOWER_SERIES = [
+    ['seriesB', 'Serie B'],
+    ['seriesC', 'Serie C'],
+    ['seriesD', 'Serie D'],
+    ['seriesE', 'Serie E']
+  ];
 
-    const row = (list, label, medal) => list.length ? `
-      <div class="albo-row">
+  function alboRow(list, label, medal, cls = '') {
+    return list.length ? `
+      <div class="albo-row ${cls}">
         <div class="albo-count">${list.length}</div>
         <div>
           <div class="albo-label">${label}</div>
@@ -154,12 +169,43 @@
         </div>
       </div>
     ` : '';
+  }
+
+  // This deck's roll of honour. Only Serie A counts as a Bob Kelzor title, the
+  // same rule albo.html applies, so the lower brackets are kept below the
+  // Serie A rows and under their own medal.
+  function alboHtml(deck, tournaments) {
+    const titles    = tournaments.filter(t => t.winner === deck.name);
+    const runnerUps = tournaments.filter(t => runnerUp(t) === deck.name);
+
+    const serieARows = alboRow(titles, 'Titles', '\u{1f3c6}')
+                     + alboRow(runnerUps, 'Runner-ups', '\u{1f948}');
+
+    // The divider goes on whichever lower-series row comes first, so it only
+    // shows up when there is something above it to separate.
+    let lowerRows = '';
+    for (const [key, label] of LOWER_SERIES) {
+      const eds = tournaments.filter(t => t[key]);
+      const won  = eds.filter(t => t[key].winner === deck.name);
+      const lost = eds.filter(t => runnerUp(t[key]) === deck.name);
+      for (const [list, suffix, medal] of [[won, 'wins', '\u{1f3c5}'], [lost, 'runner-ups', '\u{1f948}']]) {
+        const sep = !lowerRows && serieARows ? 'albo-sep' : '';
+        lowerRows += alboRow(list, `${label} ${suffix}`, medal, sep);
+      }
+    }
+
+    if (!serieARows && !lowerRows) return '';
+
+    const note = lowerRows
+      ? `<p class="albo-note">Lower-series results do not count towards Bob Kelzor titles.</p>`
+      : '';
 
     return `
       <div class="section">
         <div class="section-title">Albo</div>
-        ${row(titles, 'Titles', '\u{1f3c6}')}
-        ${row(runnerUps, 'Runner-ups', '\u{1f948}')}
+        ${note}
+        ${serieARows}
+        ${lowerRows}
       </div>
     `;
   }
