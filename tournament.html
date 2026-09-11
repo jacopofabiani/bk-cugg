@@ -223,6 +223,38 @@
       border-radius: 3px;
     }
 
+    /* Serie B's cup: the same lines as the Serie A one, drawn tall and slim.
+       The elliptical bottom radius is what tapers the body down to the foot. */
+    .trophy--b { width: 46px; }
+
+    .trophy--b .trophy-bowl {
+      width: 36px;
+      height: 58px;
+      border-radius: 4px 4px 18px 18px / 4px 4px 46px 46px;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 9px;
+      font-size: 0.55rem;
+      line-height: 1.15;
+    }
+
+    .trophy--b .trophy-handle-left,
+    .trophy--b .trophy-handle-right {
+      top: 7px;
+      width: 13px;
+      height: 17px;
+    }
+
+    .trophy--b .trophy-handle-left  { left: -13px; }
+    .trophy--b .trophy-handle-right { right: -13px; }
+
+    /* Pushed out to clear the handles on the narrower bowl. */
+    .trophy--b .trophy-bowl::before { left: -20px; }
+    .trophy--b .trophy-bowl::after  { right: -20px; }
+
+    .trophy--b .trophy-stem { width: 6px; height: 10px; }
+    .trophy--b .trophy-base { width: 30px; height: 6px; }
+
     .winner-label {
       background: #000;
       color: #fff;
@@ -524,10 +556,18 @@
     `;
   }
 
+  // Cups that differ from the Serie A one. Serie B gets the tall slim shape and
+  // carries its letter under BOB; the other series fall back to the default.
+  const TROPHY_VARIANT = { 'Serie B': 'trophy--b' };
+
   // Renders one bracket end to end: rounds, trophy and awards. A normal edition
   // calls this once; a multi-series edition calls it again for each of Serie B,
   // C and D, which carry their own winner and awards on the tournament object.
   function seriesHtml(s) {
+    const trophyVariant = TROPHY_VARIANT[s.label] || '';
+    const trophyText = trophyVariant
+      ? `<span>BOB</span><span>${s.label.replace('Serie ', '')}</span>`
+      : `<span>BOB</span>`;
     let html = s.label ? `<h2 class="series-title">${s.label}</h2>` : '';
     html += '<div class="bracket">\n';
 
@@ -557,10 +597,10 @@
 
     html += `
         <div class="trophy-section">
-          <div class="trophy">
+          <div class="trophy ${trophyVariant}">
             <div class="trophy-bowl">
               <div class="trophy-handle-left"></div>
-              BOB
+              ${trophyText}
               <div class="trophy-handle-right"></div>
             </div>
             <div class="trophy-stem"></div>
