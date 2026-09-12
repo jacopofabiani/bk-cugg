@@ -235,9 +235,6 @@
     document.title = `${deck.name} - Bobby Kelzor`;
 
     const colorPips = deck.colors.map(c => `<div class="color-pip color-${c}"></div>`).join('');
-    const oldColorPips = deck.oldColors
-      ? `<span style="color:#aaa;font-size:0.85rem;align-self:center">(</span>${deck.oldColors.map(c => `<div class="color-pip color-${c}"></div>`).join('')}<span style="color:#aaa;font-size:0.85rem;align-self:center">)</span>`
-      : '';
 
     const moxfieldSection = deck.moxfield ? `
       <div class="section">
@@ -278,7 +275,6 @@
         <div class="section-title">Colors</div>
         <div class="colors">
           ${colorPips}
-          ${oldColorPips}
         </div>
       </div>
       ${alboHtml(deck, tournaments)}

@@ -3,14 +3,14 @@
   { "id": "vampiri",      "name": "Vampiri",      "colors": ["W", "B"], "anzianita": 2, "is_dead": true, "last_edition": 34, "total_points": 38 },
   { "id": "token",        "name": "Token",        "colors": ["W", "B"], "moxfield": "https://moxfield.com/decks/JJJZc0cir0awNjeANqXxVw", "anzianita": 3 },
   { "id": "goblin",       "name": "Goblin",       "colors": ["R"], "anzianita": 4 },
-  { "id": "gainlife",     "name": "GainLife",     "colors": ["W"], "oldColors": ["G"], "anzianita": 5 },
+  { "id": "gainlife",     "name": "GainLife",     "colors": ["W"], "anzianita": 5 },
   { "id": "goading",      "name": "Goading",      "colors": ["U", "R"], "anzianita": 6, "is_dead": true, "last_edition": 33, "total_points": 11 },
-  { "id": "lotr",         "name": "LoTR",         "colors": ["B", "G"], "oldColors": ["U"], "anzianita": 7 },
+  { "id": "lotr",         "name": "LoTR",         "colors": ["B", "G"], "anzianita": 7 },
   { "id": "dino",         "name": "Dino",         "colors": ["R", "G"], "anzianita": 8 },
   { "id": "poison",       "name": "Poison",       "colors": ["B", "G"], "anzianita": 9 },
   { "id": "mordor",       "name": "Mordor",       "colors": ["B", "R"], "anzianita": 10 },
   { "id": "elves",        "name": "Elves",        "colors": ["G"], "anzianita": 11 },
-  { "id": "flying",       "name": "Flying",       "colors": ["U", "R"], "oldColors": ["W", "B"], "anzianita": 12 },
+  { "id": "flying",       "name": "Flying",       "colors": ["U", "R"], "anzianita": 12 },
   { "id": "cycling",      "name": "Cycling",      "colors": ["R", "W"], "anzianita": 13 },
   { "id": "assassins",    "name": "Assassins",    "colors": ["B", "U"], "anzianita": 14 },
   { "id": "artifact",     "name": "Artifact",     "colors": ["W", "U", "B"], "anzianita": 15 },
@@ -40,5 +40,5 @@
   { "id": "eldrazi",       "name": "Eldrazi",       "colors": ["R", "G"], "anzianita": 39 },
   { "id": "loselife",      "name": "Lose Life",     "colors": ["B", "R"], "anzianita": 40 },
   { "id": "encanto",       "name": "Encanto",       "colors": ["W", "U"], "anzianita": 41 },
-  { "id": "prevent",       "name": "Prevent",       "colors": ["W"], "anzianita": 42 }
+  { "id": "prevent",       "name": "Prevent",       "colors": ["W", "G", "B", "U"], "anzianita": 42 }
 ]
