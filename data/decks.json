@@ -3,7 +3,7 @@
   { "id": "vampiri",      "name": "Vampiri",      "colors": ["W", "B"], "anzianita": 2, "is_dead": true, "last_edition": 34, "total_points": 38 },
   { "id": "token",        "name": "Token",        "colors": ["W", "B"], "moxfield": "https://moxfield.com/decks/JJJZc0cir0awNjeANqXxVw", "anzianita": 3 },
   { "id": "goblin",       "name": "Goblin",       "colors": ["R"], "moxfield": "https://moxfield.com/decks/hPhhvv9XqUa14FqlMgX7vA", "anzianita": 4 },
-  { "id": "gainlife",     "name": "GainLife",     "colors": ["W"], "moxfield": "https://moxfield.com/decks/tY7PzSNPHUSAL_XGMs4s7g", "anzianita": 5 },
+  { "id": "gainlife",     "name": "GainLife",     "colors": ["W"], "moxfield": "https://moxfield.com/decks/QUXQiYD5S0CXVMWNpQTM-A", "anzianita": 5 },
   { "id": "goading",      "name": "Goading",      "colors": ["U", "R"], "anzianita": 6, "is_dead": true, "last_edition": 33, "total_points": 11 },
   { "id": "lotr",         "name": "LoTR",         "colors": ["B", "G"], "moxfield": "https://moxfield.com/decks/qz-BpZ6In0G5ktMwzW_hMQ", "anzianita": 7 },
   { "id": "dino",         "name": "Dino",         "colors": ["R", "G"], "moxfield": "https://moxfield.com/decks/aBDasMD_PEqja0hSoRd1eA", "anzianita": 8 },
@@ -34,11 +34,11 @@
   { "id": "ugin",          "name": "Ugin",          "colors": ["C"], "moxfield": "https://moxfield.com/decks/0Mfhv_URkE6wDPb86Xa1Ew", "anzianita": 33 },
   { "id": "angels",        "name": "Angels",        "colors": ["W", "R"], "moxfield": "https://moxfield.com/decks/XLC_YSCPNEqR9E17GJ6yRQ", "anzianita": 34 },
   { "id": "bugs",          "name": "Bugs",          "colors": ["B", "G"], "moxfield": "https://moxfield.com/decks/QaLjjZ4BCEGMi5qbHitL1A", "anzianita": 35 },
-  { "id": "toybox",        "name": "Toy Box",       "colors": ["R", "W"], "anzianita": 36 },
+  { "id": "toybox",        "name": "Toy Box",       "colors": ["R", "W"], "moxfield": "https://moxfield.com/decks/oRjkHgTAy0KCCo_bBPI7Ag", "anzianita": 36 },
   { "id": "rabbits",       "name": "Rabbits",       "colors": ["W", "R"], "moxfield": "https://moxfield.com/decks/rb3UaPAJckq68UTT2fDhuQ", "anzianita": 37 },
   { "id": "landfall",      "name": "Landfall",      "colors": ["G", "B"], "moxfield": "https://moxfield.com/decks/lkK8qjGHJkCgIjOHPY-kfA", "anzianita": 38 },
-  { "id": "eldrazi",       "name": "Eldrazi",       "colors": ["R", "G"], "anzianita": 39 },
-  { "id": "loselife",      "name": "Lose Life",     "colors": ["B", "R"], "anzianita": 40 },
-  { "id": "encanto",       "name": "Encanto",       "colors": ["W", "U"], "anzianita": 41 },
-  { "id": "prevent",       "name": "Prevent",       "colors": ["W", "G", "B", "U"], "anzianita": 42 }
+  { "id": "eldrazi",       "name": "Eldrazi",       "colors": ["R", "G"], "moxfield": "https://moxfield.com/decks/1Ln4dQ8VsEWg8S8ChrvSEg", "anzianita": 39 },
+  { "id": "loselife",      "name": "Lose Life",     "colors": ["B", "R"], "moxfield": "https://moxfield.com/decks/pwG-uqLwh0yinE8UXjOjuw", "anzianita": 40 },
+  { "id": "encanto",       "name": "Encanto",       "colors": ["W", "U"], "moxfield": "https://moxfield.com/decks/p9jE0FMMik2K6We-c5z3yQ", "anzianita": 41 },
+  { "id": "prevent",       "name": "Prevent",       "colors": ["W", "G", "B", "U"], "moxfield": "https://moxfield.com/decks/Jq7JV9hgbkWAvgx2saeRvw", "anzianita": 42 }
 ]

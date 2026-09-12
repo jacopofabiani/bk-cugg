@@ -470,6 +470,28 @@
           Object.entries(p.wins).sort((x, y) => y[1] - x[1]).map(([d, n]) => `${esc(d)} ${n}`).join(' · ')
         ]))}
 
+      <h2>Favourite victims &amp; nemeses</h2>
+      <div class="section-note">The opponent each deck has beaten most and lost to most in the knockout stage, shown from 2 matches up.</div>
+      ${(() => {
+        const beat = {}, lostTo = {};
+        for (const p of Object.values(pairs)) {
+          for (const [d, o] of [[p.a, p.b], [p.b, p.a]]) {
+            (beat[d] ||= {})[o] = p.wins[d] || 0;
+            (lostTo[d] ||= {})[o] = p.wins[o] || 0;
+          }
+        }
+        const maxOf = opp => Math.max(0, ...Object.values(opp || {}));
+        const top = opp => {
+          const max = maxOf(opp);
+          if (max < 2) return '<span class="muted">–</span>';
+          return `${max} ${Object.keys(opp).filter(o => opp[o] === max).sort().map(esc).join('/')}`;
+        };
+        return simpleTable(['Deck', 'Most beaten', 'Most lost to'],
+          decks.filter(d => maxOf(beat[d.name]) >= 2 || maxOf(lostTo[d.name]) >= 2)
+            .map(d => [`<span class="deck-cell">${esc(d.name)}</span>`, top(beat[d.name]), top(lostTo[d.name])]),
+          ['left', 'left', 'left']);
+      })()}
+
       <h2>Colors</h2>
       <div class="section-note">Every knockout match counts towards each colour in the deck's identity, so multicolour decks appear more than once.</div>
       ${(() => {
