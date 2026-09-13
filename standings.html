@@ -299,7 +299,14 @@
         fill: false,
       }));
 
-    if (chartInstance) chartInstance.destroy();
+    // Update in place rather than destroy and rebuild: tearing the chart down
+    // collapses the canvas for a frame, and since it sits at the bottom of the
+    // page the browser scrolls up to fit the shorter document.
+    if (chartInstance) {
+      chartInstance.data.datasets = datasets;
+      chartInstance.update();
+      return;
+    }
     chartInstance = new Chart(document.getElementById('chart'), {
       type: 'line',
       data: { labels, datasets },
