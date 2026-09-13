@@ -516,6 +516,33 @@
         ]), ['left', 'num', 'left', 'num']);
       })()}
 
+      <h2>Colour identities</h2>
+      <div class="section-note">How many decks fall under each colour combination, dead decks included.</div>
+      ${(() => {
+        // keyed by the colours in WUBRG order, so ["R", "W"] and ["W", "R"] meet
+        const identities = {
+          W: 'Mono White', U: 'Mono Blue', B: 'Mono Black', R: 'Mono Red', G: 'Mono Green', C: 'Colorless',
+          WU: 'Azorius', WR: 'Boros', UB: 'Dimir', BG: 'Golgari', RG: 'Gruul',
+          UR: 'Izzet', WB: 'Orzhov', BR: 'Rakdos', WG: 'Selesnya', UG: 'Simic',
+          WBG: 'Abzan', WUG: 'Bant', WUB: 'Esper', UBR: 'Grixis', WUR: 'Jeskai',
+          BRG: 'Jund', WBR: 'Mardu', WRG: 'Naya', UBG: 'Sultai', URG: 'Temur',
+          UBRG: 'Glint', WBRG: 'Dune', WURG: 'Ink', WUBG: 'Witch', WUBR: 'Yore',
+          WUBRG: 'Five-colour'
+        };
+        const keyOf = colors => 'WUBRGC'.split('').filter(c => colors.includes(c)).join('');
+        const groups = {};
+        for (const d of decks) (groups[keyOf(d.colors)] ||= []).push(d.name);
+        for (const k of Object.keys(identities)) groups[k] ||= [];
+        const keys = Object.keys(groups)
+          .sort((a, b) => groups[b].length - groups[a].length || (identities[a] || a).localeCompare(identities[b] || b));
+        const max = Math.max(...keys.map(k => groups[k].length));
+        return simpleTable(['Identity', 'Decks', 'Count'], keys.map(k => [
+          `${k.split('').map(c => `<span class="color-pip color-${c}"></span>`).join('')}<span class="deck-cell">${esc(identities[k] || k)}</span>`,
+          groups[k].length ? groups[k].sort().map(esc).join(' · ') : '<span class="muted">–</span>',
+          `<div class="bar-cell">${bar(groups[k].length, max, groups[k].length)}</div>`
+        ]), ['left', 'left', 'left']);
+      })()}
+
       <h2>Formats</h2>
       <div class="section-note">Every edition runs under one of a handful of formats.</div>
       ${(() => {
