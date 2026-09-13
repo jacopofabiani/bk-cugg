@@ -183,12 +183,15 @@
   let sortDir = -1; // -1 = desc, 1 = asc
   let selectedDecks = new Set();
 
-  // 10 distinct colors for deck lines
-  const DECK_COLORS = [
-    '#e6194b','#3cb44b','#4363d8','#f58231','#911eb4',
-    '#42d4f4','#f032e6','#bfef45','#fabed4','#469990'
-  ];
-  let deckColorMap = {};
+  // Same mana palette as the color pips on the deck pages.
+  const MANA_COLORS = {
+    W: '#f9fafb', U: '#3b82f6', B: '#1f2937', R: '#ef4444', G: '#22c55e', C: '#9ca3af'
+  };
+  // White is invisible as a line on the white chart, so a white deck's line takes
+  // its next color, and a mono-white line falls back to a light grey. The dots
+  // keep true white, outlined like the pips.
+  const WHITE_LINE = '#d4d4d8';
+  let deckColorMap = {}; // deck -> array of hex colors, in the deck's color order
 
   async function load() {
     const [pointsRes, matchesRes, decksRes] = await Promise.all([
@@ -212,9 +215,10 @@
     }
     const allDecks = [...deckSet].sort();
 
-    // Assign colors
-    allDecks.forEach((deck, i) => {
-      deckColorMap[deck] = DECK_COLORS[i % DECK_COLORS.length];
+    const colorsByName = Object.fromEntries(decks.map(d => [d.name, d.colors || []]));
+    allDecks.forEach(deck => {
+      const colors = (colorsByName[deck] || []).map(c => MANA_COLORS[c]).filter(Boolean);
+      deckColorMap[deck] = colors.length ? colors : [MANA_COLORS.C];
     });
 
     // Default: select all decks
@@ -287,17 +291,30 @@
 
     const datasets = Object.keys(deckColorMap)
       .filter(deck => selectedDecks.has(deck))
-      .map(deck => ({
-        label: deck,
-        data: deckTotals[deck],
-        borderColor: deckColorMap[deck],
-        backgroundColor: deckColorMap[deck],
-        borderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        tension: 0.3,
-        fill: false,
-      }));
+      .map(deck => {
+        const colors = deckColorMap[deck];
+        const lineColor = colors.find(c => c !== MANA_COLORS.W) || WHITE_LINE;
+        // Multicolor decks cycle their colors dot by dot, counting from the
+        // deck's first edition so its first dot is always its first color.
+        const firstIndex = deckTotals[deck].findIndex(v => v !== null);
+        const pointColors = deckTotals[deck].map((_, i) => colors[Math.max(0, i - firstIndex) % colors.length]);
+        return {
+          label: deck,
+          data: deckTotals[deck],
+          borderColor: lineColor,
+          backgroundColor: colors[0],
+          // Legend box: filled with the first color, outlined in the second.
+          legendBorderColor: colors.length > 1 ? colors[1] : lineColor,
+          pointBackgroundColor: pointColors,
+          pointBorderColor: '#000',
+          pointBorderWidth: 1,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          tension: 0.3,
+          fill: false,
+        };
+      });
 
     // Update in place rather than destroy and rebuild: tearing the chart down
     // collapses the canvas for a frame, and since it sits at the bottom of the
@@ -314,7 +331,15 @@
         responsive: true,
         plugins: {
           legend: {
-            labels: { color: '#000', font: { size: 12 }, boxWidth: 16 }
+            labels: {
+              color: '#000', font: { size: 12 }, boxWidth: 16,
+              generateLabels: (chart) =>
+                Chart.defaults.plugins.legend.labels.generateLabels(chart).map(item => ({
+                  ...item,
+                  strokeStyle: chart.data.datasets[item.datasetIndex].legendBorderColor,
+                  lineWidth: 3,
+                })),
+            }
           },
           tooltip: {
             mode: 'nearest',
