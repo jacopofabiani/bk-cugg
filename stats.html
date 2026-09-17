@@ -179,6 +179,16 @@
     .color-G { background: #22c55e; }
     .color-C { background: #9ca3af; }
 
+    /* --- compact table (colour identities) --- */
+    .compact table { font-size: 0.78rem; }
+    .compact th { padding: 5px 10px; }
+    .compact td { padding: 3px 10px; }
+    .compact td:first-child { width: 1%; }
+    .compact td:nth-child(2) { width: 1%; }
+    .compact td:last-child { white-space: normal; color: #555; }
+    .compact .pips { display: inline-block; min-width: 55px; }
+    .compact .color-pip { width: 10px; height: 10px; margin-right: 1px; vertical-align: -1px; }
+
     #error { color: red; margin-top: 20px; }
 
     @media (max-width: 600px) {
@@ -535,12 +545,11 @@
         for (const k of Object.keys(identities)) groups[k] ||= [];
         const keys = Object.keys(groups)
           .sort((a, b) => groups[b].length - groups[a].length || (identities[a] || a).localeCompare(identities[b] || b));
-        const max = Math.max(...keys.map(k => groups[k].length));
-        return simpleTable(['Identity', 'Decks', 'Count'], keys.map(k => [
-          `${k.split('').map(c => `<span class="color-pip color-${c}"></span>`).join('')}<span class="deck-cell">${esc(identities[k] || k)}</span>`,
-          groups[k].length ? groups[k].sort().map(esc).join(' · ') : '<span class="muted">–</span>',
-          `<div class="bar-cell">${bar(groups[k].length, max, groups[k].length)}</div>`
-        ]), ['left', 'left', 'left']);
+        return `<div class="compact">${simpleTable(['Identity', '#', 'Decks'], keys.map(k => [
+          `<span class="pips">${k.split('').map(c => `<span class="color-pip color-${c}"></span>`).join('')}</span><span class="deck-cell">${esc(identities[k] || k)}</span>`,
+          groups[k].length || '<span class="muted">0</span>',
+          groups[k].length ? groups[k].sort().map(esc).join(' · ') : '<span class="muted">–</span>'
+        ]), ['left', 'num', 'left'])}</div>`;
       })()}
 
       <h2>Formats</h2>
