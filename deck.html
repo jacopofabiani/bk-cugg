@@ -114,9 +114,28 @@
 
     .moxfield-link:hover { opacity: 0.6; }
 
+    .top-card {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 6px 0;
+      border-top: 1px solid #ddd;
+      font-size: 0.95rem;
+    }
+
+    .deck-value + .top-card { border-top: none; padding-top: 0; }
+
+    .top-card-price { font-weight: bold; white-space: nowrap; }
+
+    .deck-value {
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 14px;
+    }
+
     #error { color: red; margin-top: 20px; }
   </style>
-  <script src="nav.js?v=2" defer></script>
+  <script src="nav.js?v=3" defer></script>
 </head>
 <body>
 
@@ -243,6 +262,22 @@
       </div>
     ` : '';
 
+    const usd = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    // Cardtrader prices from Moxfield, stored in decks.json; see value.html.
+    const valueSection = deck.top_cards ? `
+      <div class="section">
+        <div class="section-title">Most Expensive Cards</div>
+        <div class="deck-value">Deck value: ${usd(deck.value_usd)}</div>
+        ${deck.top_cards.map(c => `
+          <div class="top-card">
+            <span>${c.name}</span>
+            <span class="top-card-price">${usd(c.price)}</span>
+          </div>
+        `).join('')}
+      </div>
+    ` : '';
+
     const firstTournamentSection = firstTournament ? `
       <div class="section">
         <div class="section-title">First Tournament</div>
@@ -282,6 +317,7 @@
       ${lastTournamentSection}
       ${totalPointsSection}
       ${moxfieldSection}
+      ${valueSection}
     `;
   }
 

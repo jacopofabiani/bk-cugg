@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BK Value - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 { font-size: 1.6rem; margin-bottom: 8px; }
+
+    .note {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: auto;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1.5px solid #000;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #000;
+      color: #fff;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 7px 9px;
+      text-align: left;
+    }
+
+    td {
+      padding: 5px 9px;
+      border-top: 1px solid #000;
+      font-size: 0.95rem;
+      color: #000;
+    }
+
+    tr:first-child td { border-top: none; }
+
+    .rank { color: #555; font-size: 0.85rem; width: 28px; }
+    .rank-1, .rank-2, .rank-3 { color: #000; font-weight: bold; }
+
+    .deck-name { padding-right: 16px; }
+    .deck-name a { color: #000; text-decoration: none; }
+    .deck-name a:hover { text-decoration: underline; }
+
+    th.value, td.value { text-align: right; }
+    td.value { font-weight: bold; }
+
+    tfoot td {
+      border-top: 3px solid #000;
+      font-weight: bold;
+    }
+
+    #error { color: red; margin-top: 20px; }
+  </style>
+  <script src="nav.js?v=3" defer></script>
+</head>
+<body>
+
+<site-nav></site-nav>
+
+<h1>💰 BK Value</h1>
+<p class="note">Deck value in USD from Cardtrader prices on Moxfield (mainboard + sideboard).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Deck</th>
+      <th class="value">Value</th>
+    </tr>
+  </thead>
+  <tbody id="rows">
+    <tr><td colspan="3" style="color:#888">Loading...</td></tr>
+  </tbody>
+  <tfoot id="total"></tfoot>
+</table>
+<p id="error"></p>
+
+<script>
+  const usd = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  async function load() {
+    const decks = await (await fetch('data/decks.json')).json();
+
+    // Retired decks have no Moxfield list, so they carry no value.
+    const priced = decks
+      .filter(d => d.value_usd != null)
+      .sort((a, b) => b.value_usd - a.value_usd);
+
+    document.getElementById('rows').innerHTML = priced.map((d, i) => `
+      <tr>
+        <td class="rank rank-${i + 1}">${i + 1}</td>
+        <td class="deck-name"><a href="deck.html?id=${d.id}">${d.name}</a></td>
+        <td class="value">${usd(d.value_usd)}</td>
+      </tr>
+    `).join('');
+
+    const total = priced.reduce((s, d) => s + d.value_usd, 0);
+    document.getElementById('total').innerHTML = `
+      <tr>
+        <td></td>
+        <td class="deck-name">Total</td>
+        <td class="value">${usd(total)}</td>
+      </tr>
+    `;
+  }
+
+  load().catch(e => {
+    document.getElementById('error').textContent = 'Error loading data: ' + e.message;
+  });
+</script>
+</body>
+</html>
