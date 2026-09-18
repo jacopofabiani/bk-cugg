@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mosaico - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    /* The arts are all roughly 4:3, so every cell keeps that ratio and a
+       card awarded more than once takes a 2x2 block. "dense" backfills the
+       holes the big tiles leave behind. */
+    .mosaic {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-auto-flow: dense;
+      gap: 6px;
+    }
+
+    .tile {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      padding: 0;
+      border: 1.5px solid #000;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f5f5f5;
+      cursor: pointer;
+    }
+
+    .tile--big {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .tile img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .tile:hover img { transform: scale(1.06); }
+    .tile:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+
+    .tile-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 18px 8px 6px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-align: left;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .tile:hover .tile-caption,
+    .tile:focus-visible .tile-caption { opacity: 1; }
+
+    .tile-count {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #000;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-radius: 10px;
+      padding: 2px 7px;
+    }
+
+    /* --- Lightbox --- */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .lightbox[hidden] { display: none; }
+
+    .lightbox-card {
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      padding: 16px;
+      max-width: 520px;
+      width: 100%;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .lightbox-card img {
+      display: block;
+      width: 100%;
+      border: 1px solid #000;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    .lightbox-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .lightbox-awards { list-style: none; }
+
+    .lightbox-awards li {
+      font-size: 0.85rem;
+      padding: 6px 0;
+      border-top: 1px solid #ddd;
+    }
+
+    .award-tournament { font-weight: bold; }
+    .award-deck { color: #555; }
+
+    .lightbox-close {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px;
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .lightbox-close:hover { background: #f5f5f5; }
+
+    /* Phones: three small tiles per row; big tiles still span two. */
+    @media (max-width: 600px) {
+      body { padding: 16px 10px; }
+
+      .mosaic {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+      }
+
+      .tile { border-radius: 4px; }
+      .tile-caption { display: none; }
+      .lightbox { padding: 12px; }
+    }
+
+    #error { color: red; margin-top: 20px; }
+  </style>
+  <script src="nav.js?v=4" defer></script>
+</head>
+<body>
+
+<site-nav></site-nav>
+
+<h1>Mosaico</h1>
+<p class="subtitle" id="subtitle">Every MVP and Scarpa of the Bobby Kelzor</p>
+
+<div id="mosaic" class="mosaic">
+  <p style="color:#888">Loading...</p>
+</div>
+<p id="error"></p>
+
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lightbox-name">
+    <img id="lightbox-img" src="" alt="">
+    <div class="lightbox-name" id="lightbox-name"></div>
+    <ul class="lightbox-awards" id="lightbox-awards"></ul>
+    <button class="lightbox-close" type="button" id="lightbox-close">Close</button>
+  </div>
+</div>
+
+<script>
+  function toRoman(n) {
+    const vals = [10,9,5,4,1];
+    const syms = ['X','IX','V','IV','I'];
+    let result = '';
+    for (let i = 0; i < vals.length; i++) {
+      while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
+    }
+    return result + '°';
+  }
+
+  // One entry per card, carrying every award it won. A card can have more than
+  // one image file (Jace has two), so group by name and show the newest image.
+  // The main bracket lives in mvp.json; the lower series (B, C, ...) only in
+  // matches.json.
+  function collectPictures(mvps, tournaments) {
+    const byCard = new Map();
+    const add = (image, card, award) => {
+      if (!image) return;
+      if (!byCard.has(card)) byCard.set(card, { image, card, awards: [], newest: award.id });
+      const p = byCard.get(card);
+      if (award.id > p.newest) { p.image = image; p.newest = award.id; }
+      p.awards.push(award);
+    };
+
+    for (const m of mvps) {
+      add(m.image, m.card, { id: m.tournamentId, label: 'MVP', deck: m.deck });
+      if (m.scarpa) add(m.scarpa.image, m.scarpa.card, { id: m.tournamentId, label: "Scarpa d'Oro", deck: m.scarpa.deck });
+    }
+
+    for (const t of tournaments) {
+      for (const series of Object.values(t)) {
+        if (!series || typeof series !== 'object' || !('mvpImage' in series)) continue;
+        add(series.mvpImage, series.mvp, { id: t.id, label: `MVP ${series.label}`, deck: series.winner });
+        add(series.scarpaImage, series.scarpa, { id: t.id, label: series.scarpaLabel, deck: series.winner });
+      }
+    }
+
+    // Newest first, so the latest editions open the page.
+    const pictures = [...byCard.values()];
+    pictures.forEach(p => p.awards.sort((a, b) => b.id - a.id));
+    return pictures.sort((a, b) => b.awards[0].id - a.awards[0].id);
+  }
+
+  const lightbox = document.getElementById('lightbox');
+  let lastTile = null;
+
+  function openLightbox(p, tile) {
+    lastTile = tile;
+    document.getElementById('lightbox-img').src = p.image;
+    document.getElementById('lightbox-img').alt = p.card;
+    document.getElementById('lightbox-name').textContent = p.card;
+    document.getElementById('lightbox-awards').innerHTML = p.awards.map(a => `
+      <li>
+        <span class="award-tournament">${toRoman(a.id)}</span> ${a.label}
+        <span class="award-deck">· ${a.deck}</span>
+      </li>
+    `).join('');
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lightbox-close').focus();
+  }
+
+  function closeLightbox() {
+    lightbox.hidden = true;
+    document.body.style.overflow = '';
+    if (lastTile) lastTile.focus();
+  }
+
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !lightbox.hidden) closeLightbox(); });
+
+  async function load() {
+    const [mvps, tournaments] = await Promise.all([
+      fetch('data/mvp.json').then(r => r.json()),
+      fetch('data/matches.json').then(r => r.json()),
+    ]);
+
+    const pictures = collectPictures(mvps, tournaments);
+    document.getElementById('subtitle').textContent =
+      `${pictures.length} cards from every MVP and Scarpa of the Bobby Kelzor`;
+
+    const mosaic = document.getElementById('mosaic');
+    mosaic.innerHTML = pictures.map((p, i) => `
+      <button class="tile${p.awards.length > 1 ? ' tile--big' : ''}" type="button" data-index="${i}" aria-label="${p.card}">
+        <img src="${p.image}" alt="" loading="lazy">
+        ${p.awards.length > 1 ? `<span class="tile-count">×${p.awards.length}</span>` : ''}
+        <span class="tile-caption">${p.card}</span>
+      </button>
+    `).join('');
+
+    mosaic.addEventListener('click', e => {
+      const tile = e.target.closest('.tile');
+      if (tile) openLightbox(pictures[tile.dataset.index], tile);
+    });
+  }
+
+  load().catch(e => {
+    document.getElementById('error').textContent = 'Error loading data: ' + e.message;
+  });
+</script>
+</body>
+</html>
