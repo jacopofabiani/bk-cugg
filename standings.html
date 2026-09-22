@@ -133,6 +133,8 @@
 
     /* The one column whose width varies, so it carries the gap to the figures. */
     .deck-name { padding-right: 16px; }
+    .deck-name a { color: #000; text-decoration: none; }
+    .deck-name a:hover { text-decoration: underline; }
 
     .total-pts { font-weight: bold; }
     .sub-pts { color: #555; font-size: 0.85rem; }
@@ -177,6 +179,7 @@
   let allTournaments = [];
   let allMatches = [];
   let deadDecks = new Set();
+  let deckIds = {}; // deck name -> id, for the link to its deck page
   let chartInstance = null;
   let currentSorted = [];
   let sortKey = 'total';
@@ -207,6 +210,7 @@
     // show it -- but this page is about the decks still in the running, so it
     // drops out of both the chart and the table.
     deadDecks = new Set(decks.filter(d => d.is_dead).map(d => d.name));
+    deckIds = Object.fromEntries(decks.map(d => [d.name, d.id]));
 
     // Collect all decks across all tournaments
     const deckSet = new Set();
@@ -428,7 +432,7 @@
       return `
         <tr class="${tierClass}">
           <td class="rank ${rankClass}">${i + 1}</td>
-          <td class="deck-name">${d.deck}</td>
+          <td class="deck-name">${deckIds[d.deck] != null ? `<a href="deck.html?id=${deckIds[d.deck]}">${d.deck}</a>` : d.deck}</td>
           <td class="total-pts">${d.total}</td>
           <td class="sub-pts">${d.tournaments}</td>
           <td class="sub-pts">${d.games}</td>
