@@ -329,12 +329,19 @@
       </div>
     ` : '';
 
-    const totalPointsBlock = deck.total_points != null ? `
+    // Career points across every edition, summed the same way as standings.html.
+    // Retired decks also store this as total_points; the sum matches it.
+    const totalPoints = points
+      .flatMap(p => p.scores)
+      .filter(s => s.deck === deck.name)
+      .reduce((sum, s) => sum + s.total, 0);
+
+    const totalPointsBlock = `
       <div>
         <div class="section-title">Total Points</div>
-        <div class="identity-value">${deck.total_points}</div>
+        <div class="identity-value">${totalPoints}</div>
       </div>
-    ` : '';
+    `;
 
     const anzianitaBlock = deck.anzianita != null ? `
       <div class="anzianita">
