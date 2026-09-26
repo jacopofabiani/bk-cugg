@@ -86,6 +86,13 @@
     }
 
     #error { color: red; margin-top: 20px; }
+
+    .dead-cross {
+      width: 0.6em;
+      height: 0.85em;
+      fill: currentColor;
+      vertical-align: baseline;
+    }
   </style>
   <script src="nav.js?v=4" defer></script>
 </head>
@@ -103,12 +110,15 @@
     const res = await fetch('data/decks.json');
     const decks = await res.json();
 
+    // Drawn as SVG, not the ✝ character: iOS renders that as a purple emoji tile.
+    const DEAD_CROSS = '<svg class="dead-cross" viewBox="0 0 10 14" aria-label="retired"><path d="M4 0h2v4h4v2H6v8H4V6H0V4h4z"/></svg>';
+
     decks.sort((a, b) => (a.anzianita ?? Infinity) - (b.anzianita ?? Infinity));
 
     const grid = document.getElementById('deck-grid');
     grid.innerHTML = decks.map(deck => `
       <a class="deck-card" href="deck.html?id=${deck.id}" style="text-decoration:none;color:inherit;cursor:pointer">
-        <div class="deck-name">${deck.name}${deck.is_dead ? ' <span style="font-size:1rem">✝</span>' : ''}</div>
+        <div class="deck-name">${deck.name}${deck.is_dead ? ' ' + DEAD_CROSS : ''}</div>
         <div class="colors">
           ${deck.colors.map(c => `<div class="color-pip color-${c}"></div>`).join('')}
         </div>
