@@ -57,6 +57,40 @@
     .color-G { background: #22c55e; }
     .color-C { background: #9ca3af; }
 
+    .tournament-line {
+      margin-top: 14px;
+      font-size: 0.85rem;
+    }
+
+    .tournament-label { color: #555; }
+
+    /* Colors box: identity on the left, career total points on the right. */
+    .identity {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    /* Right column spans the box height: total points top, anzianita bottom. */
+    .identity-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      text-align: right;
+    }
+
+    .anzianita { margin-top: auto; }
+
+    .identity-side .section-title { margin-bottom: 6px; }
+
+    .identity-value {
+      font-weight: bold;
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
     .albo-row {
       display: flex;
       align-items: baseline;
@@ -278,44 +312,54 @@
       </div>
     ` : '';
 
-    const firstTournamentSection = firstTournament ? `
-      <div class="section">
-        <div class="section-title">First Tournament</div>
-        <div style="font-weight:bold;font-size:1rem">${firstTournament.name}</div>
-        <div style="color:#555;font-size:0.85rem;margin-top:4px">${formatDate(firstTournament.startDate)}</div>
+    const firstTournamentLine = firstTournament ? `
+      <div class="tournament-line">
+        <div class="tournament-label">First Tournament:</div>
+        <div><strong>${firstTournament.name}</strong>, ${formatDate(firstTournament.startDate)}</div>
       </div>
     ` : '';
 
     // A retired deck carries the edition it bowed out in and the points it
     // collected over its whole career; live decks carry neither.
     const lastTournament = tournaments.find(t => t.id === deck.last_edition);
-    const lastTournamentSection = lastTournament ? `
-      <div class="section">
-        <div class="section-title">Last Tournament</div>
-        <div style="font-weight:bold;font-size:1rem">${lastTournament.name}</div>
-        <div style="color:#555;font-size:0.85rem;margin-top:4px">${formatDate(lastTournament.endDate)}</div>
+    const lastTournamentLine = lastTournament ? `
+      <div class="tournament-line">
+        <div class="tournament-label">Last Tournament:</div>
+        <div><strong>${lastTournament.name}</strong>, ${formatDate(lastTournament.endDate)}</div>
       </div>
     ` : '';
 
-    const totalPointsSection = deck.total_points != null ? `
-      <div class="section">
+    const totalPointsBlock = deck.total_points != null ? `
+      <div>
         <div class="section-title">Total Points</div>
-        <div style="font-weight:bold;font-size:1rem">${deck.total_points}</div>
+        <div class="identity-value">${deck.total_points}</div>
+      </div>
+    ` : '';
+
+    const anzianitaBlock = deck.anzianita != null ? `
+      <div class="anzianita">
+        <div class="section-title">Anzianità</div>
+        <div class="identity-value">${deck.anzianita}</div>
       </div>
     ` : '';
 
     document.getElementById('content').innerHTML = `
       <h1>${deck.name}</h1>
-      <div class="section">
-        <div class="section-title">Colors</div>
-        <div class="colors">
-          ${colorPips}
+      <div class="section identity">
+        <div>
+          <div class="section-title">Colors</div>
+          <div class="colors">
+            ${colorPips}
+          </div>
+          ${firstTournamentLine}
+          ${lastTournamentLine}
+        </div>
+        <div class="identity-side">
+          ${totalPointsBlock}
+          ${anzianitaBlock}
         </div>
       </div>
       ${alboHtml(deck, tournaments)}
-      ${firstTournamentSection}
-      ${lastTournamentSection}
-      ${totalPointsSection}
       ${moxfieldSection}
       ${valueSection}
     `;
