@@ -57,31 +57,33 @@
     .color-G { background: #22c55e; }
     .color-C { background: #9ca3af; }
 
-    .tournament-line {
-      margin-top: 14px;
-      font-size: 0.85rem;
-    }
+    .tournament-line { font-size: 0.85rem; }
+
+    .tournament-line + .tournament-line { margin-top: 10px; }
 
     .tournament-label { color: #555; }
 
-    /* Colors box: identity on the left, career total points on the right. */
+    /* Deck overview box: colors and tournaments on the left, numbers on the right. */
     .identity {
       display: flex;
       justify-content: space-between;
       gap: 16px;
     }
 
-    /* Right column spans the box height: total points top, anzianita bottom. */
+    /* Both columns span the box height: colors / total points on top,
+       tournaments / anzianita pinned to the bottom. */
+    .identity-main,
     .identity-side {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      align-items: flex-end;
       gap: 16px;
-      text-align: right;
     }
 
-    .anzianita { margin-top: auto; }
+    .identity-side {
+      align-items: flex-end;
+      text-align: right;
+    }
 
     .identity-side .section-title { margin-bottom: 6px; }
 
@@ -315,7 +317,7 @@
     const firstTournamentLine = firstTournament ? `
       <div class="tournament-line">
         <div class="tournament-label">First Tournament:</div>
-        <div><strong>${firstTournament.name}</strong>, ${formatDate(firstTournament.startDate)}</div>
+        <div>${firstTournament.name}, ${formatDate(firstTournament.startDate)}</div>
       </div>
     ` : '';
 
@@ -325,7 +327,7 @@
     const lastTournamentLine = lastTournament ? `
       <div class="tournament-line">
         <div class="tournament-label">Last Tournament:</div>
-        <div><strong>${lastTournament.name}</strong>, ${formatDate(lastTournament.endDate)}</div>
+        <div>${lastTournament.name}, ${formatDate(lastTournament.endDate)}</div>
       </div>
     ` : '';
 
@@ -344,7 +346,7 @@
     `;
 
     const anzianitaBlock = deck.anzianita != null ? `
-      <div class="anzianita">
+      <div>
         <div class="section-title">Anzianità</div>
         <div class="identity-value">${deck.anzianita}</div>
       </div>
@@ -353,17 +355,18 @@
     document.getElementById('content').innerHTML = `
       <h1>${deck.name}</h1>
       <div class="section identity">
-        <div>
-          <div class="section-title">Colors</div>
+        <div class="identity-main">
           <div class="colors">
             ${colorPips}
           </div>
-          ${firstTournamentLine}
-          ${lastTournamentLine}
+          <div class="tournaments">
+            ${firstTournamentLine}
+            ${lastTournamentLine}
+          </div>
         </div>
         <div class="identity-side">
           ${totalPointsBlock}
-          ${anzianitaBlock}
+          ${anzianitaBlock || '<div></div>'}
         </div>
       </div>
       ${alboHtml(deck, tournaments)}
