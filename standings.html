@@ -57,9 +57,11 @@
       border: 1.5px solid #000;
       border-radius: 12px;
       padding: 24px;
-      max-width: 900px;
       margin-bottom: 40px;
     }
+
+    /* Height is set from script so the filters and the chart fit one screen. */
+    .chart-box { position: relative; height: 400px; }
 
     .chart-title {
       font-size: 0.8rem;
@@ -204,7 +206,7 @@
 
 <div class="chart-container">
   <div class="chart-title"></div>
-  <canvas id="chart"></canvas>
+  <div class="chart-box" id="chart-box"><canvas id="chart"></canvas></div>
 </div>
 
 <p id="error"></p>
@@ -275,8 +277,24 @@
         </button>
       `).join('');
 
+    fitChart();
+    window.addEventListener('resize', fitChart);
     renderChart();
     showStandings();
+  }
+
+  // Size the chart to whatever the viewport has left below the deck filters, so
+  // scrolling to the filters shows both at once. The number of filter rows
+  // depends on the screen width, hence measuring rather than a fixed height.
+  const CHART_MIN_HEIGHT = 250;
+  function fitChart() {
+    const box = document.getElementById('chart-box');
+    const selector = document.getElementById('selector');
+    const container = box.parentElement;
+    const above = box.getBoundingClientRect().top - selector.getBoundingClientRect().top;
+    const below = parseFloat(getComputedStyle(container).paddingBottom) +
+                  parseFloat(getComputedStyle(container).borderBottomWidth) + 8;
+    box.style.height = Math.max(CHART_MIN_HEIGHT, window.innerHeight - above - below) + 'px';
   }
 
   function toggleAll() {
@@ -367,6 +385,7 @@
       data: { labels, datasets },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             labels: {
