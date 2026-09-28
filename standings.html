@@ -156,6 +156,22 @@
     .total-pts { font-weight: bold; }
     .sub-pts { color: #555; font-size: 0.85rem; }
 
+    /* Last five matches, oldest to newest, one pill each. */
+    .form { display: flex; gap: 4px; }
+    .form-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+    .form-w { background: #16a34a; }
+    .form-l { background: #dc2626; }
+
     #error { color: red; margin-top: 20px; }
   </style>
   <script src="nav.js?v=4" defer></script>
@@ -177,6 +193,7 @@
         <th class="sortable" onclick="sortBy('bonus')" title="Bonus">B</th>
         <th class="sortable" onclick="sortBy('ppg')">PPG</th>
         <th class="sortable" onclick="sortBy('ppt')">PPT</th>
+        <th title="Last 5 matches, most recent on the right"></th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -397,6 +414,7 @@
     const upToIndex = allTournaments.length - 1;
 
     const totals = {}, gameMap = {}, bonusMap = {}, gamesPlayedMap = {}, tournamentsMap = {};
+    const formMap = {}; // deck -> every match result, oldest first
     for (let i = 0; i <= upToIndex; i++) {
       for (const s of allTournaments[i].scores) {
         if (deadDecks.has(s.deck)) continue;
@@ -417,6 +435,17 @@
             const games = match.score1 + match.score2;
             gamesPlayedMap[match.player1] = (gamesPlayedMap[match.player1] || 0) + games;
             gamesPlayedMap[match.player2] = (gamesPlayedMap[match.player2] || 0) + games;
+            // Tournaments and rounds are stored in the order they were played, and a
+            // deck plays in only one series per edition, so this is chronological.
+            const where = `${round.name} · ${tournament.tournamentName}`;
+            (formMap[match.player1] ||= []).push({
+              win: match.score1 > match.score2,
+              title: `vs ${match.player2} ${match.score1}-${match.score2} · ${where}`
+            });
+            (formMap[match.player2] ||= []).push({
+              win: match.score2 > match.score1,
+              title: `vs ${match.player1} ${match.score2}-${match.score1} · ${where}`
+            });
           }
         }
       }
@@ -431,7 +460,8 @@
         games: gamesPlayedMap[deck] || 0,
         ppg: gamesPlayedMap[deck] ? (totals[deck] / gamesPlayedMap[deck]) : 0,
         tournaments: tournamentsMap[deck] || 0,
-        ppt: tournamentsMap[deck] ? (totals[deck] / tournamentsMap[deck]) : 0
+        ppt: tournamentsMap[deck] ? (totals[deck] / tournamentsMap[deck]) : 0,
+        form: (formMap[deck] || []).slice(-5)
       }))
       .sort((a, b) => b.total - a.total);
 
@@ -457,6 +487,9 @@
           <td class="sub-pts">${d.bonus}</td>
           <td class="sub-pts">${d.ppg.toFixed(2)}</td>
           <td class="sub-pts">${d.ppt.toFixed(2)}</td>
+          <td><div class="form">${d.form.map(f =>
+            `<span class="form-pill ${f.win ? 'form-w' : 'form-l'}" title="${f.title}">${f.win ? 'W' : 'L'}</span>`
+          ).join('')}</div></td>
         </tr>
       `;
     }).join('');
