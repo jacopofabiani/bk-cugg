@@ -3,7 +3,7 @@
 // pages don't each carry a copy.
 const NAV_LINKS = [
   ['index.html',      'Home',       '\u{1F3E0}'],
-  ['tournament.html', 'Tournament', '\u{1F3C6}'],
+  ['tournament.html', 'Editions',   '\u{1F3C6}'],
   ['albo.html',       'Albo',       '\u{1F947}'],
   ['decks.html',      'Decks',      '\u{1F0CF}'],
   ['standings.html',  'Standings',  '\u{1F4CA}'],
