@@ -70,7 +70,17 @@
       color: #555;
     }
 
-    .leaderboard { max-width: 800px; overflow-x: auto; margin-bottom: 40px; }
+    /* The wrapper is the scroll box, so it carries the frame: a border or
+       overflow on the table itself would scroll away with the columns, and
+       overflow there would also stop the pinned columns from sticking. */
+    .leaderboard {
+      width: fit-content;
+      max-width: min(800px, 100%);
+      overflow-x: auto;
+      margin-bottom: 40px;
+      border: 1.5px solid #000;
+      border-radius: 12px;
+    }
 
     .leaderboard-title {
       font-size: 0.8rem;
@@ -84,13 +94,12 @@
     /* Every figure here is one to five characters, so stretching the table to the
        full 800px just strands the columns apart. Sizing it to its content keeps
        the numbers close enough to read across a row. */
+    /* Separate borders, because collapsed ones stay behind when a sticky cell moves. */
     table {
       width: auto;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1.5px solid #000;
       white-space: nowrap;
     }
 
@@ -126,7 +135,7 @@
     /* Heavier rule every 8 places, so the table reads in tiers. */
     tr.tier-start td { border-top-width: 3px; }
 
-    .rank { color: #555; font-size: 0.85rem; width: 28px; }
+    .rank { color: #555; font-size: 0.85rem; }
     .rank-1 { color: #000; font-weight: bold; }
     .rank-2 { color: #000; font-weight: bold; }
     .rank-3 { color: #000; font-weight: bold; }
@@ -135,6 +144,14 @@
     .deck-name { padding-right: 16px; }
     .deck-name a { color: #000; text-decoration: none; }
     .deck-name a:hover { text-decoration: underline; }
+
+    /* Rank and deck stay pinned while the figures scroll under them on a narrow
+       screen. The rank column has a fixed width so the deck column knows where
+       to stick; the rule on the deck's right edge marks where scrolling starts. */
+    .pin-rank, .pin-deck { position: sticky; z-index: 1; }
+    td.pin-rank, td.pin-deck { background: #fff; }
+    .pin-rank { left: 0; width: 40px; min-width: 40px; max-width: 40px; }
+    .pin-deck { left: 40px; border-right: 1.5px solid #000; }
 
     .total-pts { font-weight: bold; }
     .sub-pts { color: #555; font-size: 0.85rem; }
@@ -151,8 +168,8 @@
   <table id="table">
     <thead>
       <tr>
-        <th>#</th>
-        <th class="sortable" onclick="sortBy('deck')">Deck</th>
+        <th class="pin-rank">#</th>
+        <th class="sortable pin-deck" onclick="sortBy('deck')">Deck</th>
         <th class="sortable" onclick="sortBy('total')" title="Total points">PTS</th>
         <th class="sortable" onclick="sortBy('tournaments')" title="Tournaments">T</th>
         <th class="sortable" onclick="sortBy('games')" title="Games">G</th>
@@ -431,8 +448,8 @@
       const tierClass = i > 0 && i % 8 === 0 ? 'tier-start' : '';
       return `
         <tr class="${tierClass}">
-          <td class="rank ${rankClass}">${i + 1}</td>
-          <td class="deck-name">${deckIds[d.deck] != null ? `<a href="deck.html?id=${deckIds[d.deck]}">${d.deck}</a>` : d.deck}</td>
+          <td class="rank pin-rank ${rankClass}">${i + 1}</td>
+          <td class="deck-name pin-deck">${deckIds[d.deck] != null ? `<a href="deck.html?id=${deckIds[d.deck]}">${d.deck}</a>` : d.deck}</td>
           <td class="total-pts">${d.total}</td>
           <td class="sub-pts">${d.tournaments}</td>
           <td class="sub-pts">${d.games}</td>
