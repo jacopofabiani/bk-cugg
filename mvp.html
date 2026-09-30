@@ -46,22 +46,16 @@
       border: 1px solid #000;
     }
 
-    .mvp-card-info {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      text-align: center;
-    }
-
     .mvp-card-name {
       font-size: 0.9rem;
       font-weight: bold;
+      text-align: center;
     }
 
     .mvp-deck {
       font-size: 0.8rem;
       color: #555;
+      text-align: center;
     }
 
     /* Scarpa d'Oro: same card, half the art -- it ranks below the MVP. */
@@ -74,13 +68,6 @@
       align-items: center;
       gap: 6px;
       width: 100%;
-    }
-
-    .scarpa-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #555;
     }
 
     .scarpa-img {
@@ -141,13 +128,11 @@
 
   // Scarpa d'Oro arrived with the XXI edition -- earlier ones carry a null.
   function scarpaHtml(s) {
-    if (!s) return '';
+    if (!s || !s.image) return '';
     return `
       <div class="scarpa">
-        <div class="scarpa-label">Scarpa d'Oro</div>
-        ${s.image ? `<img class="scarpa-img" src="${s.image}" alt="${s.card}">` : ''}
+        <img class="scarpa-img" src="${s.image}" alt="${s.card}">
         <div class="scarpa-name">${s.card}</div>
-        <div class="mvp-deck">${s.deck}</div>
       </div>
     `;
   }
@@ -160,11 +145,9 @@
     list.innerHTML = mvps.map(m => `
       <div class="mvp-card">
         <div class="mvp-tournament">${toRoman(m.tournamentId)}</div>
+        <div class="mvp-deck">${m.deck}</div>
         ${m.image ? `<img class="mvp-card-img" src="${m.image}" alt="${m.card}">` : ''}
-        <div class="mvp-card-info">
-          <div class="mvp-card-name">${m.card}</div>
-          <div class="mvp-deck">${m.deck}</div>
-        </div>
+        <div class="mvp-card-name">${m.card}</div>
         ${scarpaHtml(m.scarpa)}
       </div>
     `).join('');
