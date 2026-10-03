@@ -541,6 +541,82 @@
     .points-table tr:last-child td { border-bottom: none; }
 
     .points-table .center { text-align: center; }
+
+    /* Phones in portrait: rounds stack top to bottom instead of scrolling
+       sideways, and each round lays its matches out two to a row. */
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+
+      h1 { font-size: 1.25rem; }
+
+      .meta { margin-bottom: 16px; }
+
+      .selector { margin-bottom: 16px; gap: 6px; }
+
+      .selector-btn { font-size: 0.75rem; padding: 4px 10px; }
+
+      .bracket {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+        overflow-x: visible;
+        padding-bottom: 8px;
+      }
+
+      .round,
+      .round--r16 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .round-title {
+        grid-column: 1 / -1;
+        margin-bottom: 0;
+        font-size: 0.7rem;
+      }
+
+      .round--r16 .match { width: auto; }
+
+      /* A round with a single match (the final) spans the full width. */
+      .round .match:nth-child(2):last-child {
+        grid-column: 1 / -1;
+        width: 60%;
+        justify-self: center;
+      }
+
+      .match { border-radius: 6px; }
+
+      .match-row {
+        padding: 4px 6px;
+        font-size: 0.75rem;
+        gap: 4px;
+        line-height: 1.2;
+      }
+
+      .match-row span:first-child {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .score {
+        padding: 0 4px;
+        min-width: 18px;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+      }
+
+      .trophy-section { min-width: 0; }
+
+      .winner-label { font-size: 0.9rem; padding: 6px 12px; }
+
+      .series-title { font-size: 1rem; margin-bottom: 12px; }
+
+      .awards { margin-top: 20px; gap: 10px; }
+
+      .mvp-section { padding: 10px 14px; }
+    }
   </style>
   <script src="nav.js?v=4" defer></script>
 </head>
