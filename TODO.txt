@@ -1,0 +1,4 @@
+add current ongoing edition page
+re-compute prices cardmarket vs cardtrader
+fix layout of tournament page
+add last_updated_prices vs last_changed_moxfield for each deck
