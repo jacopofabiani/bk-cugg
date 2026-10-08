@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bacheca - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      margin: 32px 0 14px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .count { color: #555; font-size: 0.85rem; font-weight: normal; }
+
+    /* ---- One shelf per series: the drawings side by side, bottoms aligned
+       so the cups stand on the same line like on a real shelf. ---- */
+    .shelf {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 18px 10px;
+      padding-bottom: 14px;
+      border-bottom: 3px solid #000;
+    }
+
+    .prize {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: #000;
+      text-decoration: none;
+      width: 84px;
+    }
+
+    /* Each drawing is cropped tight, so a fixed height keeps the shelf even
+       while every cup keeps its own drawn proportions. */
+    .prize img {
+      display: block;
+      height: 84px;
+      max-width: 100%;
+      object-fit: contain;
+      transition: transform 0.15s;
+    }
+
+    .prize:hover img { transform: scale(1.12) rotate(-3deg); }
+    .prize:focus-visible { outline: 2px solid #000; outline-offset: 4px; border-radius: 6px; }
+
+    .prize-edition {
+      font-size: 0.7rem;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+    }
+
+    #error { color: red; margin-top: 20px; }
+
+    /* ---- Phones ---- */
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      h1 { font-size: 1.3rem; }
+      .shelf { gap: 14px 6px; }
+      .prize { width: 68px; }
+      .prize img { height: 68px; }
+    }
+  </style>
+  <script src="nav.js?v=5" defer></script>
+</head>
+<body>
+
+<site-nav></site-nav>
+
+<h1>Bacheca</h1>
+<p class="subtitle">Every prize, as it was drawn in the notebook on the night it was won.</p>
+
+<div id="content">
+  <p style="color:#888">Loading...</p>
+</div>
+<p id="error"></p>
+
+<script>
+  // The drawings live in images/bacheca as <letter>-<edition>.png, cut out of
+  // the notebook pages: a cup for Serie A and B, a medal for C, a handshake
+  // for D and a thumbs up for E.
+  const SERIES = [
+    { key: null,      letter: 'a', title: 'Serie A' },
+    { key: 'seriesB', letter: 'b', title: 'Serie B' },
+    { key: 'seriesC', letter: 'c', title: 'Serie C' },
+    { key: 'seriesD', letter: 'd', title: 'Serie D' },
+    { key: 'seriesE', letter: 'e', title: 'Serie E' },
+  ];
+
+  // "XXV° Torneo Bob Kelzor" -> "XXV"
+  function editionNumeral(t) {
+    return t.name.split('°')[0];
+  }
+
+  function prizeHtml(t, letter) {
+    const file = `images/bacheca/${letter}-${String(t.id).padStart(2, '0')}.png`;
+    return `
+      <a class="prize" href="tournament.html#${t.id}" title="${t.name}">
+        <img src="${file}" alt="" loading="lazy">
+        <span class="prize-edition">${editionNumeral(t)}</span>
+      </a>
+    `;
+  }
+
+  function shelfHtml(tournaments, { key, letter, title }) {
+    const won = tournaments
+      .map(t => ({ t, winner: key ? t[key]?.winner : t.winner }))
+      .filter(p => p.winner);
+    if (!won.length) return '';
+
+    return `
+      <h2>${title} <span class="count">${won.length}</span></h2>
+      <div class="shelf">
+        ${won.map(p => prizeHtml(p.t, letter)).join('')}
+      </div>
+    `;
+  }
+
+  async function load() {
+    const tournaments = await (await fetch('data/matches.json')).json();
+    tournaments.sort((a, b) => a.id - b.id);
+    document.getElementById('content').innerHTML =
+      SERIES.map(s => shelfHtml(tournaments, s)).join('');
+  }
+
+  load().catch(e => {
+    document.getElementById('error').textContent = 'Error loading data: ' + e.message;
+  });
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@ const NAV_LINKS = [
   ['stats.html',      'Stats',      '\u{1F4C8}'],
   ['mvp.html',        'MVP',        '⭐'],
   ['mosaico.html',    'Mosaico',    '\u{1F5BC}️'],
+  ['bacheca.html',    'Bacheca',    '\u{1F3C5}'],
   ['value.html',      'BK Value',   '\u{1F4B0}'],
   ['rules.html',      'Rules',      '\u{1F4CB}'],
   ['scandals.html',   'Scandals',   '\u{1F5DE}️'],
