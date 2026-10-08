@@ -7,6 +7,17 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --line: #000;
+      --muted: #666;
+      --soft: #f3f3f3;
+      /* Bracket geometry: column width, the gutter the connectors are drawn in,
+         and the room each first-round match gets. */
+      --col-w: 156px;
+      --gap: 36px;
+      --slot-h: 70px;
+    }
+
     body {
       font-family: Arial, sans-serif;
       background: #fff;
@@ -15,55 +26,200 @@
       padding: 20px;
     }
 
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ---- Edition picker: one scrolling row of pills between prev/next ---- */
+
+    .picker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .picker-arrow {
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid #000;
+      border-radius: 50%;
+      background: #fff;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .picker-arrow:hover:not(:disabled) { background: var(--soft); }
+    .picker-arrow:disabled { opacity: 0.3; cursor: default; }
+
+    .picker-strip {
+      flex: 1;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      padding: 2px;
+      /* Fades the pills out at both ends so it reads as scrollable. */
+      mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+    }
+
+    .picker-strip::-webkit-scrollbar { display: none; }
+
+    .selector-btn {
+      flex: 0 0 auto;
+      background: #fff;
+      border: 1.5px solid #000;
+      color: #000;
+      font-size: 0.85rem;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .selector-btn:first-child { margin-left: 12px; }
+    .selector-btn:last-child { margin-right: 12px; }
+    .selector-btn:hover { background: var(--soft); }
+
+    .selector-btn.active {
+      background: #000;
+      color: #fff;
+    }
+
+    /* ---- Edition header ---- */
+
     h1 {
       font-size: 1.6rem;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .meta {
-      color: #555;
-      font-size: 0.9rem;
-      margin-bottom: 28px;
-    }
-
-    .bracket {
       display: flex;
-      gap: 40px;
-      align-items: center;
-      overflow-x: auto;
-      padding-bottom: 16px;
-    }
-
-    .round {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      min-width: 160px;
-    }
-
-    .round--r16 {
-      flex-direction: row;
       flex-wrap: wrap;
-      min-width: unset;
-      max-width: 100%;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
     }
 
-    .round--r16 .round-title {
-      width: 100%;
-      flex-shrink: 0;
-    }
-
-    .round--r16 .match {
-      width: 200px;
-    }
-
-    .round-title {
-      font-size: 0.8rem;
+    .badge {
+      border: 1px solid #000;
+      color: #000;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.75rem;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 8px;
-      color: #555;
+    }
+
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    /* ---- Series tabs (A/B/C... editions) ---- */
+
+    .series-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 20px;
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      overflow: hidden;
+      width: fit-content;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .series-tab {
+      flex: 0 0 auto;
+      background: #fff;
+      border: none;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: bold;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .series-tab + .series-tab { border-left: 1.5px solid #000; }
+    .series-tab:hover { background: var(--soft); }
+    .series-tab.active { background: #000; color: #fff; }
+
+    .series[hidden] { display: none; }
+
+    /* ---- Summary strip: who won, who lost the final, the awards ---- */
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .sum-item {
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      padding: 10px 14px;
+      min-width: 0;
+    }
+
+    .sum-item--win {
+      background: #000;
+      color: #fff;
+    }
+
+    .sum-k {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .sum-item--win .sum-k { color: #bbb; }
+
+    .sum-v {
+      display: block;
+      font-weight: bold;
+      font-size: 1.05rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ---- Stages ---- */
+
+    .stage { margin-bottom: 32px; }
+
+    .stage-hint {
+      display: none;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin: -4px 0 8px;
+    }
+
+    .stage.overflows .stage-hint { display: block; }
+
+    /* A stage that does not feed the next one match-for-match (play-ins with
+       byes, the Round of 28, a round-robin final) is shown as a card grid. */
+    .match-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
     }
 
     .match {
@@ -71,20 +227,28 @@
       border-radius: 8px;
       overflow: hidden;
       border: 1.5px solid #000;
+      width: 100%;
     }
 
     .match-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 12px;
-      font-size: 0.9rem;
-      gap: 8px;
-      color: #000;
+      padding: 6px 6px 6px 10px;
+      font-size: 0.85rem;
+      gap: 6px;
+      color: var(--muted);
     }
 
     .match-row + .match-row {
-      border-top: 1.5px solid #000;
+      border-top: 1px solid #000;
+    }
+
+    .match-row .name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
     }
 
     .match-row.winner {
@@ -94,14 +258,15 @@
     }
 
     .score {
-      background: #fff;
-      color: #000;
+      flex: 0 0 auto;
       font-weight: bold;
+      color: #000;
       border-radius: 4px;
       border: 1px solid #000;
-      padding: 2px 8px;
-      min-width: 24px;
+      padding: 1px 0;
+      width: 24px;
       text-align: center;
+      font-size: 0.8rem;
     }
 
     .winner .score {
@@ -110,13 +275,91 @@
       border-color: #fff;
     }
 
-    .trophy-section {
+    /* ---- Connected bracket ----
+       Every column is as tall as the first one. A column's matches sit in equal
+       slots, and the slots of a column that feeds the next are grouped in pairs,
+       so each pair lines up with exactly one slot to its right. The connectors
+       are drawn in the gutter: a stub out of each match, a vertical joining the
+       pair's two centres, and a stub into the next match. */
+    .tree {
+      display: flex;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .col {
+      flex: 0 0 var(--col-w);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .col + .col { margin-left: var(--gap); }
+
+    .col-title {
+      font-size: 0.72rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      height: 22px;
+      white-space: nowrap;
+    }
+
+    .col-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pair {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .slot {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      position: relative;
+      min-height: var(--slot-h);
+      padding: 4px 0;
+    }
+
+    .col--feeds .slot::after,
+    .col--fed .slot::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: calc(var(--gap) / 2);
+      border-top: 1.5px solid var(--line);
+    }
+
+    .col--feeds .slot::after { left: 100%; }
+    .col--fed .slot::before { right: 100%; }
+
+    .col--feeds .pair::after {
+      content: '';
+      position: absolute;
+      left: calc(100% + var(--gap) / 2 - 1.5px);
+      top: 25%;
+      bottom: 25%;
+      border-left: 1.5px solid var(--line);
+    }
+
+    .col--champ { flex-basis: auto; min-width: 130px; }
+    .col--champ .slot { justify-content: center; }
+
+    .champion {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 10px;
-      min-width: 120px;
     }
+
+    .champion--standalone { margin-top: 20px; align-items: flex-start; }
 
     .trophy {
       position: relative;
@@ -360,39 +603,40 @@
       text-align: center;
     }
 
-    /* A/B editions stack two brackets on one page; each gets a heading. */
-    .series-title {
-      font-size: 1.15rem;
-      margin: 4px 0 16px;
-      padding-bottom: 6px;
-      border-bottom: 1.5px solid #000;
-    }
-
-    .series-title + .bracket { margin-top: 0; }
+    /* ---- Award cards ---- */
 
     .awards {
       display: flex;
       flex-wrap: wrap;
-      align-items: flex-start;
-      gap: 16px;
-      margin-top: 36px;
+      align-items: stretch;
+      gap: 12px;
+      margin-bottom: 36px;
     }
 
     .mvp-section {
       background: #fff;
       border: 1.5px solid #000;
       border-radius: 10px;
-      padding: 16px 24px;
-      display: inline-block;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .mvp-section img {
+      width: 96px;
+      border-radius: 4px;
+      border: 1px solid #000;
+      display: block;
     }
 
     /* Scarpa d'Oro is the secondary title, so it gets a smaller card and art. */
     .mvp-section--scarpa .mvp-name { font-size: 1rem; }
-    .mvp-section--scarpa img { width: 80px; }
+    .mvp-section--scarpa img { width: 76px; }
 
     .mvp-label {
-      color: #555;
-      font-size: 0.8rem;
+      color: var(--muted);
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 4px;
@@ -400,48 +644,29 @@
 
     .mvp-name {
       color: #000;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: bold;
     }
 
-    .selector {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-
-    .selector-btn {
-      background: #fff;
-      border: 1.5px solid #000;
-      color: #000;
+    .mvp-deck {
+      color: var(--muted);
       font-size: 0.85rem;
-      font-weight: bold;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background 0.15s;
+      margin-top: 2px;
     }
 
-    .selector-btn:hover { background: #f5f5f5; }
-
-    .selector-btn.active {
-      background: #000;
-      color: #fff;
-    }
+    /* ---- Group tables ---- */
 
     .groups-section {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      margin-bottom: 36px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 32px;
     }
 
     .group-table {
       border: 1.5px solid #000;
       border-radius: 10px;
       overflow: hidden;
-      min-width: 220px;
     }
 
     .group-table-title {
@@ -460,87 +685,88 @@
       font-size: 0.85rem;
     }
 
-    .group-table th {
-      text-align: left;
-      padding: 6px 14px;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #555;
-      border-bottom: 1.5px solid #000;
-    }
-
-    .group-table th.center,
-    .group-table td.center {
-      text-align: center;
-    }
-
     .group-table td {
       padding: 6px 14px;
       border-bottom: 1px solid #eee;
     }
 
+    .group-table td:first-child { width: 28px; color: var(--muted); }
     .group-table tr:last-child td { border-bottom: none; }
-
     .group-table tr.qualified td { font-weight: bold; }
+    .group-table tr.qualified td:first-child { color: #000; }
 
-    .group-table tr.qualified td:first-child::after {
+    .group-table tr.qualified td:last-child::after {
       content: ' ↑';
       font-size: 0.7rem;
-      color: #555;
+      color: var(--muted);
     }
+
+    /* ---- Points ---- */
+
+    .points-section { margin-bottom: 20px; }
+
+    .points-table-wrapper {
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      overflow-x: auto;
+      max-width: 520px;
+    }
+
+    .points-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .points-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      border-bottom: 1.5px solid #000;
+      white-space: nowrap;
+    }
+
+    .points-table td {
+      padding: 6px 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .points-table tr:last-child td { border-bottom: none; }
+    .points-table tr:first-child td { font-weight: bold; }
+    .points-table td:first-child { color: var(--muted); width: 32px; }
+    .points-table .center { text-align: center; }
 
     #error {
       color: red;
       margin-top: 20px;
     }
 
-    .points-section {
-      margin-top: 36px;
-      display: inline-block;
+    /* ---- Phones ---- */
+    @media (max-width: 600px) {
+      :root {
+        --col-w: 128px;
+        --gap: 22px;
+        --slot-h: 64px;
+      }
+
+      body { padding: 12px; }
+      h1 { font-size: 1.3rem; }
+      .meta { margin-bottom: 18px; }
+      .picker { margin-bottom: 18px; }
+      .picker-arrow { width: 32px; height: 32px; }
+      .match-row { font-size: 0.8rem; padding-left: 8px; }
+      .match-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+      .summary { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .sum-item { padding: 8px 12px; }
+      .sum-v { font-size: 0.95rem; }
+      .mvp-section { flex: 1 1 100%; padding: 12px 14px; }
+      .mvp-section img { width: 72px; }
+      .mvp-section--scarpa img { width: 60px; }
+      .series-tab { padding: 8px 12px; }
     }
-
-    .points-title {
-      font-size: 0.8rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #555;
-      margin-bottom: 8px;
-    }
-
-    .points-table-wrapper {
-      border: 2px solid #000;
-      border-radius: 10px;
-      overflow: hidden;
-      display: inline-block;
-    }
-
-    .points-table {
-      border-collapse: collapse;
-      font-size: 0.85rem;
-      min-width: 280px;
-    }
-
-    .points-table th {
-      text-align: left;
-      padding: 6px 14px;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #555;
-      border-bottom: 1.5px solid #000;
-      background: #fff;
-    }
-
-    .points-table td {
-      padding: 6px 14px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .points-table tr:last-child td { border-bottom: none; }
-
-    .points-table .center { text-align: center; }
   </style>
   <script src="nav.js?v=4" defer></script>
 </head>
@@ -548,16 +774,23 @@
 
 <site-nav></site-nav>
 
-<div id="selector" class="selector"></div>
-<div id="content">
-  <p style="color:#888">Loading...</p>
+<div class="page">
+  <div class="picker">
+    <button class="picker-arrow" id="prev" type="button" aria-label="Previous edition">‹</button>
+    <div class="picker-strip" id="selector"></div>
+    <button class="picker-arrow" id="next" type="button" aria-label="Next edition">›</button>
+  </div>
+  <div id="content">
+    <p style="color:#888">Loading...</p>
+  </div>
+  <p id="error"></p>
 </div>
-<p id="error"></p>
 
 <script>
   let allTournaments = [];
   let allMvps = [];
   let allPoints = [];
+  let current = -1;
 
   async function load() {
     const [matchRes, mvpRes, pointsRes] = await Promise.all([
@@ -569,50 +802,50 @@
     allMvps = await mvpRes.json();
     allPoints = await pointsRes.json();
 
-    // Build selector buttons
     const selector = document.getElementById('selector');
     selector.innerHTML = allTournaments.map((t, i) => `
-      <button class="selector-btn ${i === allTournaments.length - 1 ? 'active' : ''}"
-              onclick="showTournament(${i})"
-              id="btn-${i}">
-        ${t.name.split('°')[0]}°
+      <button class="selector-btn" type="button" onclick="showTournament(${i})" id="btn-${i}">
+        ${t.name.split('°')[0]}
       </button>
     `).join('');
 
-    showTournament(allTournaments.length - 1);
+    document.getElementById('prev').onclick = () => showTournament(current - 1);
+    document.getElementById('next').onclick = () => showTournament(current + 1);
+    document.addEventListener('keydown', e => {
+      if (e.target.closest('input, textarea, select')) return;
+      if (e.key === 'ArrowLeft') showTournament(current - 1);
+      if (e.key === 'ArrowRight') showTournament(current + 1);
+    });
+    window.addEventListener('resize', markOverflow);
+
+    // #12 opens the edition with id 12, so an edition can be linked to.
+    const fromHash = allTournaments.findIndex(t => `#${t.id}` === location.hash);
+    showTournament(fromHash >= 0 ? fromHash : allTournaments.length - 1);
   }
 
   function buildGroupsHtml(t) {
     if (!t.groups || t.groups.length === 0) return '';
 
-    let html = '<div class="groups-section">';
-
-    for (const g of t.groups) {
-      html += `
-        <div class="group-table">
-          <div class="group-table-title">Group ${g.name}</div>
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Deck</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${g.standings.map((deck, i) => `
-                <tr class="${i < g.qualified ? 'qualified' : ''}">
-                  <td>${i + 1}</td>
-                  <td>${deck}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    html += '</div>';
-    return html;
+    return `
+      <div class="section-title">Groups</div>
+      <div class="groups-section">
+        ${t.groups.map(g => `
+          <div class="group-table">
+            <div class="group-table-title">Group ${g.name}</div>
+            <table>
+              <tbody>
+                ${g.standings.map((deck, i) => `
+                  <tr class="${i < g.qualified ? 'qualified' : ''}">
+                    <td>${i + 1}</td>
+                    <td>${deck}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `).join('')}
+      </div>
+    `;
   }
 
   function buildPointsHtml(tournamentId) {
@@ -622,7 +855,7 @@
     if (rows.length === 0) return '';
     return `
       <div class="points-section">
-        <div class="points-title">Points</div>
+        <div class="section-title">Points</div>
         <div class="points-table-wrapper">
         <table class="points-table">
           <thead>
@@ -691,98 +924,238 @@
     `;
   }
 
-  // Renders one bracket end to end: rounds, trophy and awards. A normal edition
-  // calls this once; a multi-series edition calls it again for each of Serie B,
-  // C and D, which carry their own winner and awards on the tournament object.
-  function seriesHtml(s) {
-    let html = s.label ? `<h2 class="series-title">${s.label}</h2>` : '';
-    html += '<div class="bracket">\n';
+  function championHtml(s, extraClass = '') {
+    return `
+      <div class="champion ${extraClass}">
+        ${prizeHtml(s.label)}
+        <div class="winner-label">${s.winner}</div>
+      </div>
+    `;
+  }
 
-    for (const round of s.rounds) {
-      if (round.stageBreak) html += `</div><div class="bracket">`;
-      const isWide = ['Round of 32', 'Round of 16', 'Round of 24', 'Round of 28', 'Round of 12', 'Play-in'].includes(round.name);
-      html += `<div class="round${isWide ? ' round--r16' : ''}">`;
-      html += `<div class="round-title">${round.name}</div>`;
-      for (const m of round.matches) {
-        const w1 = m.score1 > m.score2;
-        const w2 = m.score2 > m.score1;
-        html += `
-          <div class="match">
-            <div class="match-row ${w1 ? 'winner' : ''}">
-              <span>${m.player1}</span>
-              <span class="score">${m.score1}</span>
-            </div>
-            <div class="match-row ${w2 ? 'winner' : ''}">
-              <span>${m.player2}</span>
-              <span class="score">${m.score2}</span>
-            </div>
-          </div>
-        `;
-      }
-      html += `</div>`;
-    }
+  const winnerOf = m => m.score1 > m.score2 ? m.player1 : m.score2 > m.score1 ? m.player2 : null;
+  const loserOf = m => m.score1 > m.score2 ? m.player2 : m.score2 > m.score1 ? m.player1 : null;
 
-    html += `
-        <div class="trophy-section">
-          ${prizeHtml(s.label)}
-          <div class="winner-label">${s.winner}</div>
+  // True when `next` is built from `prev` match-for-match: the winners of
+  // prev's matches 2i and 2i+1 meet in next's match i. Only then can the two
+  // rounds be joined by bracket lines; anything else (byes, re-seeding, a
+  // round-robin) is drawn as its own stage.
+  function feeds(prev, next) {
+    const a = prev.matches, b = next.matches;
+    if (a.length !== 2 * b.length) return false;
+    return b.every((m, i) => {
+      const players = [m.player1, m.player2];
+      const w1 = winnerOf(a[2 * i]), w2 = winnerOf(a[2 * i + 1]);
+      return w1 !== w2 && players.includes(w1) && players.includes(w2);
+    });
+  }
+
+  // Splits the rounds into stages: runs of rounds that feed each other.
+  function stagesOf(rounds) {
+    const stages = [];
+    rounds.forEach((r, i) => {
+      if (i > 0 && feeds(rounds[i - 1], r)) stages[stages.length - 1].push(r);
+      else stages.push([r]);
+    });
+    return stages;
+  }
+
+  function matchHtml(m) {
+    const w1 = m.score1 > m.score2;
+    const w2 = m.score2 > m.score1;
+    return `
+      <div class="match">
+        <div class="match-row ${w1 ? 'winner' : ''}">
+          <span class="name" title="${m.player1}">${m.player1}</span>
+          <span class="score">${m.score1}</span>
+        </div>
+        <div class="match-row ${w2 ? 'winner' : ''}">
+          <span class="name" title="${m.player2}">${m.player2}</span>
+          <span class="score">${m.score2}</span>
         </div>
       </div>
+    `;
+  }
+
+  // One column of a connected bracket. A column that feeds the next round
+  // groups its matches in pairs so the connector can join each pair; the final
+  // only runs a straight line out to the champion.
+  function columnHtml(round, paired, feedsNext, isFed) {
+    const slot = m => `<div class="slot">${matchHtml(m)}</div>`;
+    let body = '';
+    if (paired) {
+      for (let i = 0; i < round.matches.length; i += 2) {
+        body += `<div class="pair">${slot(round.matches[i])}${slot(round.matches[i + 1])}</div>`;
+      }
+    } else {
+      body = round.matches.map(slot).join('');
+    }
+    const cls = `col${feedsNext ? ' col--feeds' : ''}${isFed ? ' col--fed' : ''}`;
+    return `
+      <div class="${cls}">
+        <div class="col-title">${round.name}</div>
+        <div class="col-body">${body}</div>
+      </div>
+    `;
+  }
+
+  // A stage of two or more rounds becomes a bracket tree; a lone round becomes
+  // a grid of cards. The last stage carries the prize: as one more column on
+  // the tree, joined to the final, or under the grid.
+  function stageHtml(rounds, s, isLast) {
+    if (rounds.length === 1 && !(isLast && rounds[0].matches.length === 1)) {
+      return `
+        <div class="stage">
+          <div class="section-title">${rounds[0].name}</div>
+          <div class="match-grid">${rounds[0].matches.map(matchHtml).join('')}</div>
+          ${isLast ? championHtml(s, 'champion--standalone') : ''}
+        </div>
+      `;
+    }
+
+    let cols = rounds.map((r, i) => {
+      const paired = i < rounds.length - 1;
+      return columnHtml(r, paired, paired || isLast, i > 0);
+    }).join('');
+    if (isLast) {
+      cols += `
+        <div class="col col--fed col--champ">
+          <div class="col-title">Champion</div>
+          <div class="col-body"><div class="slot">${championHtml(s)}</div></div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="stage">
+        <div class="stage-hint">Swipe to see the later rounds →</div>
+        <div class="tree">${cols}</div>
+      </div>
+    `;
+  }
+
+  function summaryHtml(s) {
+    const last = s.rounds[s.rounds.length - 1];
+    const runnerUp = last.matches.length === 1 ? loserOf(last.matches[0]) : null;
+    const item = (k, v, cls = '') => v
+      ? `<div class="sum-item ${cls}"><span class="sum-k">${k}</span><span class="sum-v" title="${v}">${v}</span></div>`
+      : '';
+    return `
+      <div class="summary">
+        ${item('Winner', s.winner, 'sum-item--win')}
+        ${item('Runner-up', runnerUp)}
+        ${item('MVP', s.mvp)}
+        ${item(s.scarpaLabel || "Scarpa d'Oro", s.scarpa)}
+      </div>
+    `;
+  }
+
+  function awardsHtml(s) {
+    return `
       <div class="awards">
         <div class="mvp-section">
-          <div class="mvp-label">MVP</div>
-          ${s.mvpImage ? `<img src="${s.mvpImage}" alt="${s.mvp}" style="width:120px;border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
-          <div class="mvp-name">${s.mvp}</div>
+          ${s.mvpImage ? `<img src="${s.mvpImage}" alt="${s.mvp}">` : ''}
+          <div>
+            <div class="mvp-label">MVP</div>
+            <div class="mvp-name">${s.mvp}</div>
+            ${s.mvpDeck ? `<div class="mvp-deck">${s.mvpDeck}</div>` : ''}
+          </div>
         </div>
         ${s.scarpa ? `
         <div class="mvp-section mvp-section--scarpa">
-          <div class="mvp-label">${s.scarpaLabel || "Scarpa d'Oro"}</div>
-          ${s.scarpaImage ? `<img src="${s.scarpaImage}" alt="${s.scarpa}" style="border-radius:4px;border:1px solid #000;margin-bottom:8px;display:block">` : ''}
-          <div class="mvp-name">${s.scarpa}</div>
+          ${s.scarpaImage ? `<img src="${s.scarpaImage}" alt="${s.scarpa}">` : ''}
+          <div>
+            <div class="mvp-label">${s.scarpaLabel || "Scarpa d'Oro"}</div>
+            <div class="mvp-name">${s.scarpa}</div>
+            ${s.scarpaDeck ? `<div class="mvp-deck">${s.scarpaDeck}</div>` : ''}
+          </div>
         </div>` : ''}
       </div>
     `;
-    return html;
+  }
+
+  // Renders one series end to end: summary, stages, prize and awards. A normal
+  // edition has one; a multi-series edition adds Serie B, C, D and E, which
+  // carry their own winner and awards on the tournament object.
+  function seriesHtml(s, i, hidden) {
+    const stages = stagesOf(s.rounds);
+    return `
+      <section class="series" id="series-${i}" ${hidden ? 'hidden' : ''}>
+        ${summaryHtml(s)}
+        ${stages.map((rounds, j) => stageHtml(rounds, s, j === stages.length - 1)).join('')}
+        ${awardsHtml(s)}
+      </section>
+    `;
+  }
+
+  function showSeries(i) {
+    document.querySelectorAll('.series').forEach((el, j) => { el.hidden = j !== i; });
+    document.querySelectorAll('.series-tab').forEach((el, j) => el.classList.toggle('active', j === i));
+    markOverflow();
+  }
+
+  // Shows the swipe hint only on brackets that are wider than the screen.
+  function markOverflow() {
+    document.querySelectorAll('.stage').forEach(stage => {
+      const tree = stage.querySelector('.tree');
+      stage.classList.toggle('overflows', !!tree && tree.scrollWidth > tree.clientWidth + 1);
+    });
   }
 
   function showTournament(index) {
-    // Update active button
+    if (index < 0 || index >= allTournaments.length || index === current) return;
+    current = index;
+
     allTournaments.forEach((_, i) => {
       document.getElementById(`btn-${i}`).classList.toggle('active', i === index);
     });
+    document.getElementById('btn-' + index).scrollIntoView({ block: 'nearest', inline: 'center' });
+    document.getElementById('prev').disabled = index === 0;
+    document.getElementById('next').disabled = index === allTournaments.length - 1;
 
     const t = allTournaments[index];
+    history.replaceState(null, '', `#${t.id}`);
     const mvpData = allMvps.find(m => m.tournamentId === t.id);
-    const content = document.getElementById('content');
-
-    let html = `
-      <h1>${t.name}</h1>
-      <div class="meta">${formatDateRange(t.startDate, t.endDate)}${t.type ? ` · ${t.type}` : ''}</div>
-      ${t.type === 'groups' ? buildGroupsHtml(t) : ''}
-    `;
 
     // Scarpa d'Oro arrived with the XXI edition -- earlier ones carry a null,
-    // so seriesHtml drops the block when there is no card.
-    html += seriesHtml({
+    // so awardsHtml drops the card when there is none.
+    const series = [{
       label: t.seriesLabel,
       rounds: t.rounds,
       winner: t.winner,
       mvp: t.mvp,
       mvpImage: mvpData?.image,
+      mvpDeck: mvpData?.deck,
       scarpa: t.scarpa || mvpData?.scarpa?.card,
-      scarpaImage: mvpData?.scarpa?.image
-    });
-
+      scarpaImage: mvpData?.scarpa?.image,
+      scarpaDeck: mvpData?.scarpa?.deck
+    }];
     for (const key of ['seriesB', 'seriesC', 'seriesD', 'seriesE']) {
-      if (t[key]) html += seriesHtml(t[key]);
+      if (t[key]) series.push(t[key]);
     }
 
-    html += `
-      <br>
+    const tabs = series.length > 1 ? `
+      <div class="series-tabs" role="tablist">
+        ${series.map((s, i) => `
+          <button class="series-tab ${i === 0 ? 'active' : ''}" type="button" role="tab"
+                  onclick="showSeries(${i})">${s.label}</button>
+        `).join('')}
+      </div>
+    ` : '';
+
+    document.getElementById('content').innerHTML = `
+      <h1>${t.name}</h1>
+      <div class="meta">
+        <span>${formatDateRange(t.startDate, t.endDate)}</span>
+        ${t.type ? `<span class="badge">${t.type}</span>` : ''}
+      </div>
+      ${t.type === 'groups' ? buildGroupsHtml(t) : ''}
+      ${tabs}
+      ${series.map((s, i) => seriesHtml(s, i, i > 0)).join('')}
       ${buildPointsHtml(t.id)}
     `;
 
-    content.innerHTML = html;
+    markOverflow();
   }
 
   function formatDate(str) {
