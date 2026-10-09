@@ -363,19 +363,19 @@
 
     .champion--standalone { margin-top: 20px; align-items: flex-start; }
 
-    /* Every series' prize is a pen drawing placed as an image. Each is sized
-       by eye against the others -- Serie A's cup a little larger as the top
-       prize -- and all are used at the angle they were drawn. */
+    /* Every series' prize is the pen drawing from that edition's notebook
+       page, the same one shown in the Bacheca. Each edition's drawing has its
+       own proportions, so they are sized by height -- the handshake a little
+       shorter since it is drawn wide -- and used at the angle they were drawn. */
     .prize-sketch {
       display: block;
+      height: 96px;
+      max-width: 150px;
+      object-fit: contain;
       margin: 18px 18px 0;
     }
 
-    .prize-sketch--cup-a { width: 80px; }
-    .prize-sketch--cup-b { width: 64px; }
-    .prize-sketch--medal { width: 66px; }
-    .prize-sketch--shake { width: 104px; }
-    .prize-sketch--thumb { width: 62px; }
+    .prize-sketch--d { height: 76px; }
 
     .winner-label {
       background: #000;
@@ -670,36 +670,24 @@
 
   // Each series is settled with one of the original pen drawings -- a cup for
   // Serie A, a tall slim cup for Serie B, a medal for Serie C, a handshake for
-  // Serie D and a thumbs up for Serie E -- thresholded to ink on a transparent
-  // background, so they sit on the page as line art. A single-series edition
-  // has no Serie B-E, so anything not listed gets the Serie A cup.
-  const PRIZE_SKETCH = {
-    'Serie B': 'cup-b',
-    'Serie C': 'medal',
-    'Serie D': 'shake',
-    'Serie E': 'thumb',
-  };
-
-  const SKETCH_FILE = {
-    'cup-a': 'prize-cup-a.png',
-    'cup-b': 'prize-cup-b.png',
-    'medal': 'prize-medal.png',
-    'shake': 'prize-handshake.png',
-    'thumb': 'prize-thumbsup.png',
-  };
+  // Serie D and a thumbs up for Serie E. Every edition has its own, cut out of
+  // its notebook page into images/bacheca as <letter>-<edition>.png, the same
+  // files the Bacheca shows.
+  function prizeImage(letter, id) {
+    return `images/bacheca/${letter}-${String(id).padStart(2, '0')}.png`;
+  }
 
   // The prize that sits above the winner's name.
-  function prizeHtml(label) {
-    const sketch = PRIZE_SKETCH[label] || 'cup-a';
+  function prizeHtml(s) {
     return `
-      <img class="prize-sketch prize-sketch--${sketch}" src="images/${SKETCH_FILE[sketch]}" alt="">
+      <img class="prize-sketch prize-sketch--${s.prizeLetter}" src="${prizeImage(s.prizeLetter, s.tournamentId)}" alt="">
     `;
   }
 
   function championHtml(s, extraClass = '') {
     return `
       <div class="champion ${extraClass}">
-        ${prizeHtml(s.label)}
+        ${prizeHtml(s)}
         <div class="winner-label">${s.winner}</div>
       </div>
     `;
@@ -900,10 +888,12 @@
       mvpDeck: mvpData?.deck,
       scarpa: t.scarpa || mvpData?.scarpa?.card,
       scarpaImage: mvpData?.scarpa?.image,
-      scarpaDeck: mvpData?.scarpa?.deck
+      scarpaDeck: mvpData?.scarpa?.deck,
+      tournamentId: t.id,
+      prizeLetter: 'a'
     }];
     for (const key of ['seriesB', 'seriesC', 'seriesD', 'seriesE']) {
-      if (t[key]) series.push(t[key]);
+      if (t[key]) series.push({ ...t[key], tournamentId: t.id, prizeLetter: key.at(-1).toLowerCase() });
     }
 
     const tabs = series.length > 1 ? `
