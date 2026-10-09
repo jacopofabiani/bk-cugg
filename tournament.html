@@ -671,16 +671,16 @@
   // Each series is settled with one of the original pen drawings -- a cup for
   // Serie A, a tall slim cup for Serie B, a medal for Serie C, a handshake for
   // Serie D and a thumbs up for Serie E. Every edition has its own, cut out of
-  // its notebook page into images/bacheca as <letter>-<edition>.png, the same
-  // files the Bacheca shows.
-  function prizeImage(letter, id) {
-    return `images/bacheca/${letter}-${String(id).padStart(2, '0')}.png`;
+  // its notebook page into images/bacheca as <prefix>-<edition>.png ('title'
+  // for Serie A, the series letter otherwise), the same files the Bacheca shows.
+  function prizeImage(prefix, id) {
+    return `images/bacheca/${prefix}-${String(id).padStart(2, '0')}.png`;
   }
 
   // The prize that sits above the winner's name.
   function prizeHtml(s) {
     return `
-      <img class="prize-sketch prize-sketch--${s.prizeLetter}" src="${prizeImage(s.prizeLetter, s.tournamentId)}" alt="">
+      <img class="prize-sketch prize-sketch--${s.prizePrefix}" src="${prizeImage(s.prizePrefix, s.tournamentId)}" alt="">
     `;
   }
 
@@ -890,10 +890,10 @@
       scarpaImage: mvpData?.scarpa?.image,
       scarpaDeck: mvpData?.scarpa?.deck,
       tournamentId: t.id,
-      prizeLetter: 'a'
+      prizePrefix: 'title'
     }];
     for (const key of ['seriesB', 'seriesC', 'seriesD', 'seriesE']) {
-      if (t[key]) series.push({ ...t[key], tournamentId: t.id, prizeLetter: key.at(-1).toLowerCase() });
+      if (t[key]) series.push({ ...t[key], tournamentId: t.id, prizePrefix: key.at(-1).toLowerCase() });
     }
 
     const tabs = series.length > 1 ? `
