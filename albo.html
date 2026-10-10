@@ -50,6 +50,17 @@
       min-width: 150px;
     }
 
+    /* Single-deck boxes link to the deck page. */
+    a.title-card {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    a.title-card:hover { background: #f3f4f6; }
+
+    .mvp-deck a { color: inherit; }
+
     .title-count {
       font-size: 1.5rem;
       font-weight: bold;
@@ -141,20 +152,30 @@
     return `<span class="colors">${deck.colors.map(c => `<span class="color-pip color-${c}"></span>`).join('')}</span>`;
   }
 
+  // Link to a deck's page, or null for a name missing from decks.json.
+  function deckHref(deckName, decksByName) {
+    const deck = decksByName[deckName];
+    return deck ? `deck.html?id=${deck.id}` : null;
+  }
+
   function countCardsHtml(counts, decksByName, medal) {
     const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
     return `
       <div class="titles">
-        ${ranked.map(([deck, count]) => `
-          <div class="title-card">
+        ${ranked.map(([deck, count]) => {
+          const href = deckHref(deck, decksByName);
+          const tag = href ? 'a' : 'div';
+          return `
+          <${tag} class="title-card"${href ? ` href="${href}"` : ''}>
             <div class="title-count">${count}</div>
             <div class="title-deck">
               <div class="title-name">${deck} ${colorsHtml(deck, decksByName)}</div>
               <div class="title-stars">${medal.repeat(count)}</div>
             </div>
-          </div>
-        `).join('')}
+          </${tag}>
+        `;
+        }).join('')}
       </div>
     `;
   }
@@ -210,8 +231,11 @@
               ${byCount[n].sort((a, b) => a.card.localeCompare(b.card)).map(a => `
                 <div class="mvp-entry">
                   <span class="mvp-card">${a.card}</span>
-                  <span class="mvp-deck">- ${[...a.decks].map(d =>
-                    `${d} ${colorsHtml(d, decksByName)}`).join(' \u00b7 ')}</span>
+                  <span class="mvp-deck">- ${[...a.decks].map(d => {
+                    const href = deckHref(d, decksByName);
+                    const name = href ? `<a href="${href}">${d}</a>` : d;
+                    return `${name} ${colorsHtml(d, decksByName)}`;
+                  }).join(' \u00b7 ')}</span>
                 </div>
               `).join('')}
               <div class="title-stars">${medal.repeat(n)}</div>
