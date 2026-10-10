@@ -137,6 +137,8 @@
       padding-top: 14px;
     }
 
+    .best-card-name { font-weight: bold; font-size: 0.95rem; }
+
     .moxfield-link {
       display: inline-block;
       margin-top: 4px;
@@ -215,6 +217,12 @@
     ['seriesE', 'Serie E']
   ];
 
+  // "XXI° Torneo Bob Kelzor" -> "XXI°": on a deck's page the rest is a given.
+  // The first editions spell it "Bobby", hence the optional suffix.
+  function editionLabel(name) {
+    return name.replace(/ Torneo Bob(by)? Kelzor$/, '');
+  }
+
   function alboRow(list, label, medal, cls = '') {
     return list.length ? `
       <div class="albo-row ${cls}">
@@ -222,7 +230,7 @@
         <div>
           <div class="albo-label">${label}</div>
           <div class="albo-medals">${medal.repeat(list.length)}</div>
-          <div class="albo-editions">${list.map(t => t.name).join(' · ')}</div>
+          <div class="albo-editions">${list.map(t => editionLabel(t.name)).join(' · ')}</div>
         </div>
       </div>
     ` : '';
@@ -267,19 +275,67 @@
     `;
   }
 
+  // Every MVP and Scarpa this deck has won, one row per card so a card that
+  // won more than once lists all its awards. Edition awards come from mvp.json
+  // (Scarpa d'Oro only from XXI, null before); each series bracket also hands
+  // out an MVP and its own Scarpa to the series winner, as mosaico.html lists.
+  function bestCardsHtml(deck, mvps, tournaments) {
+    const names = Object.fromEntries(tournaments.map(t => [t.id, t.name]));
+    const awards = [];
+    for (const m of mvps) {
+      awards.push({ id: m.tournamentId, prize: 'MVP', card: m.card, deck: m.deck });
+      if (m.scarpa) awards.push({ id: m.tournamentId, prize: "Scarpa d'Oro", ...m.scarpa });
+    }
+    for (const t of tournaments) {
+      for (const [key] of LOWER_SERIES) {
+        const sr = t[key];
+        if (!sr) continue;
+        awards.push({ id: t.id, prize: `MVP ${sr.label}`, card: sr.mvp, deck: sr.winner });
+        if (sr.scarpa) awards.push({ id: t.id, prize: sr.scarpaLabel, card: sr.scarpa, deck: sr.winner });
+      }
+    }
+
+    const byCard = {};
+    for (const a of awards.sort((a, b) => a.id - b.id)) {
+      if (a.deck !== deck.name) continue;
+      (byCard[a.card] ||= []).push(`${a.prize} (${editionLabel(names[a.id])})`);
+    }
+
+    const cards = Object.entries(byCard)
+      .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+    if (!cards.length) return '';
+
+    return `
+      <div class="section">
+        <div class="section-title">Individual Honours</div>
+        ${cards.map(([card, wins]) => `
+          <div class="albo-row best-card">
+            <div class="albo-count">${wins.length}</div>
+            <div>
+              <div class="best-card-name">${card}</div>
+              <div class="albo-editions">${wins.join(' · ')}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
   async function load() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
     if (!id) { window.location.href = 'decks.html'; return; }
 
-    const [decksRes, matchesRes, pointsRes] = await Promise.all([
+    const [decksRes, matchesRes, pointsRes, mvpRes] = await Promise.all([
       fetch('data/decks.json'),
       fetch('data/matches.json'),
-      fetch('data/points.json')
+      fetch('data/points.json'),
+      fetch('data/mvp.json')
     ]);
     const decks = await decksRes.json();
     const tournaments = await matchesRes.json();
     const points = await pointsRes.json();
+    const mvps = await mvpRes.json();
     const deck = decks.find(d => d.id === id);
 
     if (!deck) { window.location.href = 'decks.html'; return; }
@@ -372,6 +428,7 @@
         </div>
       </div>
       ${alboHtml(deck, tournaments)}
+      ${bestCardsHtml(deck, mvps, tournaments)}
       ${moxfieldSection}
       ${valueSection}
     `;
