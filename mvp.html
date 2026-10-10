@@ -40,6 +40,14 @@
       text-align: center;
     }
 
+    /* Most art crops are Scryfall's 626x457; a fixed ratio keeps
+       every picture the same size, trimming the edges of the odd ones out. */
+    .mvp-card-img,
+    .scarpa-img {
+      aspect-ratio: 626 / 457;
+      object-fit: cover;
+    }
+
     .mvp-card-img {
       width: 118px;
       border-radius: 4px;
@@ -58,11 +66,13 @@
       text-align: center;
     }
 
-    /* Scarpa d'Oro: same card, half the art -- it ranks below the MVP. */
+    /* Scarpa d'Oro: same card, half the art -- it ranks below the MVP.
+       Pinned to the bottom of the card so its divider lines up across a row
+       even when one MVP name wraps onto more lines than its neighbour's. */
     .scarpa {
       border-top: 1px solid #000;
       padding-top: 10px;
-      margin-top: 2px;
+      margin-top: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -76,10 +86,14 @@
       border: 1px solid #000;
     }
 
+    /* Always two lines tall, so a one-line name doesn't lift its divider
+       above a two-line neighbour's. */
     .scarpa-name {
       font-size: 0.8rem;
       font-weight: bold;
       text-align: center;
+      line-height: 1.2;
+      min-height: 2.4em;
     }
 
     /* Phones: two cards per row whatever the width -- an iPhone SE is 320px. */
