@@ -18,31 +18,28 @@
     .sponsor-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px;
+      align-items: center;
+      gap: 40px;
       max-width: 900px;
     }
 
     .sponsor-card {
-      background: #fff;
-      border: 1.5px solid #000;
-      border-radius: 12px;
-      padding: 24px;
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 220px;
     }
 
+    /* The wordmarks are wide and flat, so they fill a width; the round
+       CC Taste badge is held to a height instead. */
     .sponsor-card img {
       display: block;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
+      width: 85%;
+      max-width: 280px;
     }
 
-    /* The wordmarks are wide and flat, so they get a width to fill rather
-       than the full card height the round CC Taste badge takes. */
-    .sponsor-card img.wordmark { width: 85%; }
+    .sponsor-card img.badge {
+      width: auto;
+      height: 200px;
+    }
   </style>
   <script src="nav.js?v=6" defer></script>
 </head>
@@ -52,13 +49,13 @@
 
 <div class="sponsor-list">
   <div class="sponsor-card">
-    <img class="wordmark" src="images/sponsors/maersk.svg" alt="Maersk">
+    <img src="images/sponsors/maersk.svg" alt="Maersk">
   </div>
   <div class="sponsor-card">
-    <img class="wordmark" src="images/sponsors/saxo.svg" alt="Saxo Bank">
+    <img src="images/sponsors/saxo.svg" alt="Saxo Bank">
   </div>
   <div class="sponsor-card">
-    <img src="images/sponsors/cctaste.png" alt="CC Taste">
+    <img class="badge" src="images/sponsors/cctaste.png" alt="CC Taste">
   </div>
 </div>
 
