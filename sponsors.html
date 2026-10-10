@@ -15,9 +15,12 @@
       padding: 20px;
     }
 
+    /* Wraps into as many rows as the screen needs, with every row centred,
+       so a lone logo on the last row still sits in the middle. */
     .sponsor-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       align-items: center;
       gap: 40px;
       max-width: 900px;
@@ -25,12 +28,13 @@
     }
 
     .sponsor-card {
+      flex: 0 1 280px;
       display: flex;
       justify-content: center;
     }
 
-    /* The wordmarks are wide and flat, so they fill a width; the round
-       CC Taste badge is held to a height instead. */
+    /* The wordmarks are wide and flat, so they fill a width; the CC Taste
+       and Lion Kebab badges are held to a height instead. */
     .sponsor-card img {
       display: block;
       width: 85%;
@@ -57,6 +61,9 @@
   </div>
   <div class="sponsor-card">
     <img class="badge" src="images/sponsors/cctaste.png" alt="CC Taste">
+  </div>
+  <div class="sponsor-card">
+    <img class="badge" src="images/sponsors/lionkebab.png" alt="Lion Kebab">
   </div>
 </div>
 
