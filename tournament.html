@@ -672,7 +672,9 @@
   // Serie A, a tall slim cup for Serie B, a medal for Serie C, a handshake for
   // Serie D and a thumbs up for Serie E. Every edition has its own, cut out of
   // its notebook page into images/bacheca as <prefix>-<edition>.png ('title'
-  // for Serie A, the series letter otherwise), the same files the Bacheca shows.
+  // for the bracket that awards the BK title, the series letter otherwise), the
+  // same files the Bacheca shows. From XXXVI the title goes to the Finals, so
+  // Serie A gets its own drawing under 'a'.
   function prizeImage(prefix, id) {
     return `images/bacheca/${prefix}-${String(id).padStart(2, '0')}.png`;
   }
@@ -892,9 +894,11 @@
       tournamentId: t.id,
       prizePrefix: 'title'
     }];
-    for (const key of ['seriesB', 'seriesC', 'seriesD', 'seriesE']) {
+    for (const key of ['seriesA', 'seriesB', 'seriesC', 'seriesD', 'seriesE']) {
       if (t[key]) series.push({ ...t[key], tournamentId: t.id, prizePrefix: key.at(-1).toLowerCase() });
     }
+    // An edition with Finals keeps them as its top-level bracket, since they
+    // award the title, so their tab comes first and opens.
 
     const tabs = series.length > 1 ? `
       <div class="series-tabs" role="tablist">

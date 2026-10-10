@@ -104,9 +104,12 @@
 <script>
   // The drawings live in images/bacheca as <prefix>-<edition>.png, cut out of
   // the notebook pages: a cup for the BK title ('title') and Serie B, a medal
-  // for C, a handshake for D and a thumbs up for E.
+  // for C, a handshake for D and a thumbs up for E. Serie A only has its own
+  // drawing ('a') from XXXVI, when the title moved to the Finals; before that
+  // its winner took the title.
   const SERIES = [
     { key: null,      prefix: 'title', title: 'BK Titles' },
+    { key: 'seriesA', prefix: 'a', title: 'Serie A' },
     { key: 'seriesB', prefix: 'b', title: 'Serie B' },
     { key: 'seriesC', prefix: 'c', title: 'Serie C' },
     { key: 'seriesD', prefix: 'd', title: 'Serie D' },

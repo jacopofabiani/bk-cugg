@@ -165,10 +165,12 @@
     return countCardsHtml(counts, decksByName, '🏆');
   }
 
-  // A multi-series edition crowns more than one winner, but only Serie A's
-  // counts as a Bob Kelzor title -- so Titles above ignores the lower series
-  // entirely and each one gets its own roll of honour below.
-  function lowerSerieHtml(tournaments, decksByName, key, label) {
+  // A multi-series edition crowns more than one winner, but only the edition's
+  // winner counts as a Bob Kelzor title: Serie A's, or from XXXVI the Finals'.
+  // Titles above ignores the other series entirely and each one gets its own
+  // roll of honour below. seriesA only exists once the Finals award the title.
+  function lowerSerieHtml(tournaments, decksByName, key, label,
+                          scope = `the ${label} bracket in multi-series editions`) {
     const eds = tournaments.filter(t => t[key]);
     if (!eds.length) return '';
 
@@ -177,7 +179,7 @@
 
     return `
       <h2>${label}</h2>
-      <p class="section-note">Winners of the ${label} bracket in multi-series editions.
+      <p class="section-note">Winners of ${scope}.
         These do not count towards the titles at the top of the page.</p>
       ${countCardsHtml(counts, decksByName, '\u{1f3c5}')}
     `;
@@ -250,6 +252,7 @@
       <h2>MVP awards</h2>
       ${awardCardsHtml(mvps, decksByName, '\u2b50')}
       ${scarpaCardsHtml(mvps, decksByName)}
+      ${lowerSerieHtml(tournaments, decksByName, 'seriesA', 'Serie A', 'Serie A in editions where the Finals award the title')}
       ${lowerSerieHtml(tournaments, decksByName, 'seriesB', 'Serie B')}
       ${lowerSerieHtml(tournaments, decksByName, 'seriesC', 'Serie C')}
       ${lowerSerieHtml(tournaments, decksByName, 'seriesD', 'Serie D')}

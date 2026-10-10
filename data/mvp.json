@@ -341,5 +341,17 @@
       "deck": "Destroy",
       "image": "images/scarpa/sheoldreds-edict.png"
     }
+  },
+  {
+    "tournamentId": 36,
+    "tournamentName": "XXXVI° Torneo Bob Kelzor",
+    "card": "Light-Paws, Emperor's Voice",
+    "deck": "Burrow",
+    "image": "images/mvp/light-paws.png",
+    "scarpa": {
+      "card": "Sheltered by Ghosts",
+      "deck": "Burrow",
+      "image": "images/scarpa/sheltered-by-ghosts.png"
+    }
   }
 ]

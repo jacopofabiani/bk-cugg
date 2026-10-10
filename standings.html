@@ -445,17 +445,20 @@
       const tournament = allTournaments[i];
       const matchData = allMatches.find(m => m.id === tournament.tournamentId);
       if (matchData) {
-        // A multi-series edition keeps its extra brackets in seriesB/C/D; those
+        // A multi-series edition keeps its extra brackets in seriesA..E; those
         // are real games played and score points, so they belong in the tally too.
-        const rounds = ['seriesB', 'seriesC', 'seriesD', 'seriesE'].reduce(
-          (acc, key) => acc.concat(matchData[key]?.rounds || []), matchData.rounds);
+        // The top-level rounds go last: from XXXVI they are the Finals, which
+        // the series winners play after their series.
+        const rounds = ['seriesA', 'seriesB', 'seriesC', 'seriesD', 'seriesE'].reduce(
+          (acc, key) => acc.concat(matchData[key]?.rounds || []), []).concat(matchData.rounds);
         for (const round of rounds) {
           for (const match of round.matches) {
             const games = match.score1 + match.score2;
             gamesPlayedMap[match.player1] = (gamesPlayedMap[match.player1] || 0) + games;
             gamesPlayedMap[match.player2] = (gamesPlayedMap[match.player2] || 0) + games;
-            // Tournaments and rounds are stored in the order they were played, and a
-            // deck plays in only one series per edition, so this is chronological.
+            // Tournaments and rounds are stored in the order they were played, a
+            // deck plays in only one series per edition and the Finals come after
+            // it, so this is chronological.
             const where = `${round.name} · ${tournament.tournamentName}`;
             (formMap[match.player1] ||= []).push({
               win: match.score1 > match.score2,

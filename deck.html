@@ -204,9 +204,11 @@
     return ranked.length > 1 ? ranked[1][0] : null;
   }
 
-  // The lower brackets of a multi-series edition, in the order they are listed.
-  // A tournament only carries the ones it actually ran.
+  // The brackets of a multi-series edition that do not award the title, in the
+  // order they are listed. A tournament only carries the ones it actually ran;
+  // seriesA only exists from XXXVI, when the title moved to the Finals.
   const LOWER_SERIES = [
+    ['seriesA', 'Serie A'],
     ['seriesB', 'Serie B'],
     ['seriesC', 'Serie C'],
     ['seriesD', 'Serie D'],
@@ -226,9 +228,9 @@
     ` : '';
   }
 
-  // This deck's roll of honour. Only Serie A counts as a Bob Kelzor title, the
-  // same rule albo.html applies, so the lower brackets are kept below the
-  // Serie A rows and under their own medal.
+  // This deck's roll of honour. Only the edition's winner (Serie A's, or the
+  // Finals' from XXXVI) counts as a Bob Kelzor title, the same rule albo.html
+  // applies, so the series brackets are kept below and under their own medal.
   function alboHtml(deck, tournaments) {
     const titles    = tournaments.filter(t => t.winner === deck.name);
     const runnerUps = tournaments.filter(t => runnerUp(t) === deck.name);
@@ -252,7 +254,7 @@
     if (!serieARows && !lowerRows) return '';
 
     const note = lowerRows
-      ? `<p class="albo-note">Lower-series results do not count towards Bob Kelzor titles.</p>`
+      ? `<p class="albo-note">Series results do not count towards Bob Kelzor titles.</p>`
       : '';
 
     return `
