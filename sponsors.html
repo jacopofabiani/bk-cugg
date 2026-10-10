@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sponsors - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .sponsor-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      max-width: 900px;
+    }
+
+    .sponsor-card {
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 220px;
+    }
+
+    .sponsor-card img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    /* The wordmarks are wide and flat, so they get a width to fill rather
+       than the full card height the round CC Taste badge takes. */
+    .sponsor-card img.wordmark { width: 85%; }
+  </style>
+  <script src="nav.js?v=6" defer></script>
+</head>
+<body>
+
+<site-nav></site-nav>
+
+<div class="sponsor-list">
+  <div class="sponsor-card">
+    <img class="wordmark" src="images/sponsors/maersk.svg" alt="Maersk">
+  </div>
+  <div class="sponsor-card">
+    <img class="wordmark" src="images/sponsors/saxo.svg" alt="Saxo Bank">
+  </div>
+  <div class="sponsor-card">
+    <img src="images/sponsors/cctaste.png" alt="CC Taste">
+  </div>
+</div>
+
+</body>
+</html>

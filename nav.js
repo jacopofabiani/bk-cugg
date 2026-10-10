@@ -14,6 +14,7 @@ const NAV_LINKS = [
   ['value.html',      'BK Value',   '\u{1F4B0}'],
   ['rules.html',      'Rules',      '\u{1F4CB}'],
   ['scandals.html',   'Scandals',   '\u{1F5DE}️'],
+  ['sponsors.html',   'Sponsors',   '\u{1F91D}'],
 ];
 
 const NAV_CSS = `
