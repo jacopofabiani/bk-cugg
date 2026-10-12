@@ -211,7 +211,8 @@
 
     let mvps;
     try {
-      const all = (await (await fetch('data/mvp.json')).json()).filter(m => m.image);
+      const editions = await (await fetch('data/mvp.json')).json();
+      const all = editions.flatMap(m => [m, m.scarpa]).filter(m => m && m.image);
       // several editions share a card (Jace won four), so rotate distinct images
       mvps = [...new Map(all.map(m => [m.image, m])).values()];
     } catch {
