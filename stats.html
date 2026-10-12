@@ -189,6 +189,13 @@
     .compact .pips { display: inline-block; min-width: 55px; }
     .compact .color-pip { width: 10px; height: 10px; margin-right: 1px; vertical-align: -1px; }
 
+    /* --- compact two-list table (victims & nemeses): same scale, both lists wrap --- */
+    .compact-pairs table { font-size: 0.78rem; }
+    .compact-pairs th { padding: 5px 10px; }
+    .compact-pairs td { padding: 3px 10px; }
+    .compact-pairs td:first-child { width: 1%; }
+    .compact-pairs td:not(:first-child) { white-space: normal; }
+
     #error { color: red; margin-top: 20px; }
 
     @media (max-width: 600px) {
@@ -495,12 +502,12 @@
         const top = opp => {
           const max = maxOf(opp);
           if (max < 2) return '<span class="muted">–</span>';
-          return `${max} ${Object.keys(opp).filter(o => opp[o] === max).sort().map(esc).join('/')}`;
+          return `${max} ${Object.keys(opp).filter(o => opp[o] === max).sort().map(esc).join('/<wbr>')}`;
         };
-        return simpleTable(['Deck', 'Most beaten', 'Most lost to'],
+        return `<div class="compact-pairs">${simpleTable(['Deck', 'Most beaten', 'Most lost to'],
           decks.filter(d => maxOf(beat[d.name]) >= 2 || maxOf(lostTo[d.name]) >= 2)
             .map(d => [`<span class="deck-cell">${esc(d.name)}</span>`, top(beat[d.name]), top(lostTo[d.name])]),
-          ['left', 'left', 'left']);
+          ['left', 'left', 'left'])}</div>`;
       })()}
 
       <h2>Colors</h2>
