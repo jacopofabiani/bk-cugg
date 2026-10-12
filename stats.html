@@ -489,7 +489,7 @@
         ]))}
 
       <h2>Favourite victims &amp; nemeses</h2>
-      <div class="section-note">The opponent each deck has beaten most and lost to most in the knockout stage, shown from 2 matches up.</div>
+      <div class="section-note">The opponent each deck has beaten most and lost to most in the knockout stage, shown from 2 matches up. Dead decks are left out.</div>
       ${(() => {
         const beat = {}, lostTo = {};
         for (const p of Object.values(pairs)) {
@@ -505,7 +505,7 @@
           return `${max} ${Object.keys(opp).filter(o => opp[o] === max).sort().map(esc).join('/<wbr>')}`;
         };
         return `<div class="compact-pairs">${simpleTable(['Deck', 'Most beaten', 'Most lost to'],
-          decks.filter(d => maxOf(beat[d.name]) >= 2 || maxOf(lostTo[d.name]) >= 2)
+          decks.filter(d => !d.is_dead && (maxOf(beat[d.name]) >= 2 || maxOf(lostTo[d.name]) >= 2))
             .map(d => [`<span class="deck-cell">${esc(d.name)}</span>`, top(beat[d.name]), top(lostTo[d.name])]),
           ['left', 'left', 'left'])}</div>`;
       })()}
