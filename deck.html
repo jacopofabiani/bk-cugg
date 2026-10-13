@@ -295,21 +295,28 @@
       }
     }
 
+    // MVPs (edition and series) before Scarpas, each in edition order.
+    const isScarpa = a => a.prize.startsWith('MVP') ? 0 : 1;
     const byCard = {};
-    for (const a of awards.sort((a, b) => a.id - b.id)) {
+    for (const a of awards.sort((a, b) => isScarpa(a) - isScarpa(b) || a.id - b.id)) {
       if (a.deck !== deck.name) continue;
       (byCard[a.card] ||= []).push(`${a.prize} (${editionLabel(names[a.id])})`);
     }
 
+    // Cards with at least one MVP come first, then Scarpa-only cards; each
+    // group by number of awards.
+    const scarpaOnly = wins => wins[0].startsWith('MVP') ? 0 : 1;
     const cards = Object.entries(byCard)
-      .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+      .sort((a, b) => scarpaOnly(a[1]) - scarpaOnly(b[1])
+        || b[1].length - a[1].length
+        || a[0].localeCompare(b[0]));
     if (!cards.length) return '';
 
     return `
       <div class="section">
         <div class="section-title">Individual Honours</div>
-        ${cards.map(([card, wins]) => `
-          <div class="albo-row best-card">
+        ${cards.map(([card, wins], i) => `
+          <div class="albo-row best-card ${i > 0 && scarpaOnly(wins) && !scarpaOnly(cards[i - 1][1]) ? 'albo-sep' : ''}">
             <div class="albo-count">${wins.length}</div>
             <div>
               <div class="best-card-name">${card}</div>
