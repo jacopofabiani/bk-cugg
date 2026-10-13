@@ -375,7 +375,7 @@
     const firstTournamentLine = firstTournament ? `
       <div class="tournament-line">
         <div class="tournament-label">First Tournament:</div>
-        <div>${firstTournament.name}, ${formatDate(firstTournament.startDate)}</div>
+        <div>${editionLabel(firstTournament.name)} - ${formatDate(firstTournament.startDate)}</div>
       </div>
     ` : '';
 
@@ -385,7 +385,7 @@
     const lastTournamentLine = lastTournament ? `
       <div class="tournament-line">
         <div class="tournament-label">Last Tournament:</div>
-        <div>${lastTournament.name}, ${formatDate(lastTournament.endDate)}</div>
+        <div>${editionLabel(lastTournament.name)} - ${formatDate(lastTournament.endDate)}</div>
       </div>
     ` : '';
 
