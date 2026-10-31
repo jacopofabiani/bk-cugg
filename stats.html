@@ -196,6 +196,15 @@
     .compact-pairs td:first-child { width: 1%; }
     .compact-pairs td:not(:first-child) { white-space: normal; }
 
+    /* --- formats: edition and champion lists wrap instead of scrolling --- */
+    .formats table { font-size: 0.78rem; }
+    .formats th { padding: 5px 10px; }
+    .formats td { padding: 5px 10px; vertical-align: top; }
+    .formats td:first-child { width: 1%; }
+    .formats td:not(:first-child) { white-space: normal; }
+    .formats .eds { display: block; color: #888; font-size: 0.72rem; }
+    .formats .champ { white-space: nowrap; }
+
     #error { color: red; margin-top: 20px; }
 
     @media (max-width: 600px) {
@@ -576,13 +585,13 @@
             const a = agg[f];
             return [
               `<span class="deck-cell">${esc(cap(f))}</span>`,
-              `${a.eds.length} <span class="muted">${a.eds.map(toRoman).join(', ')}</span>`,
+              `${a.eds.length}<span class="eds">${a.eds.map(toRoman).join(', ')}</span>`,
               Object.entries(a.titles).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))
-                .map(([d, n]) => `${esc(d)} ${n}`).join(' · ')
+                .map(([d, n]) => `<span class="champ">${esc(d)} ${n}</span>`).join(' · ')
             ];
           }), ['left', 'left', 'left']);
 
-        return summary;
+        return `<div class="formats">${summary}</div>`;
       })()}
     `;
   }
