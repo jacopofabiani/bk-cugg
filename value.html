@@ -78,6 +78,8 @@
       font-weight: bold;
     }
 
+    .priced-on { margin-top: 16px; }
+
     #error { color: red; margin-top: 20px; }
   </style>
   <script src="nav.js?v=6" defer></script>
@@ -104,6 +106,7 @@
   <tfoot id="total"></tfoot>
 </table>
 <p id="error"></p>
+<p class="note priced-on">Prices calculated on 31/10/2026.</p>
 
 <script>
   const usd = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
