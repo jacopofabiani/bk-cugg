@@ -121,10 +121,13 @@
     return t.name.split('°')[0];
   }
 
+  // A series prize links straight to that series' tab (#36-b); a BK title
+  // opens the edition on its first tab.
   function prizeHtml(t, prefix) {
     const file = `images/bacheca/${prefix}-${String(t.id).padStart(2, '0')}.png`;
+    const hash = prefix === 'title' ? t.id : `${t.id}-${prefix}`;
     return `
-      <a class="prize" href="tournament.html#${t.id}" title="${t.name}">
+      <a class="prize" href="tournament.html#${hash}" title="${t.name}">
         <img src="${file}" alt="" loading="lazy">
         <span class="prize-edition">${editionNumeral(t)}</span>
       </a>

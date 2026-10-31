@@ -575,6 +575,8 @@
   let allMvps = [];
   let allPoints = [];
   let current = -1;
+  // Prize prefix of each tab in the edition on screen ('title', 'a'...'e').
+  let seriesPrefixes = [];
 
   async function load() {
     const [matchRes, mvpRes, pointsRes] = await Promise.all([
@@ -602,9 +604,13 @@
     });
     window.addEventListener('resize', markOverflow);
 
-    // #12 opens the edition with id 12, so an edition can be linked to.
-    const fromHash = allTournaments.findIndex(t => `#${t.id}` === location.hash);
+    // #12 opens the edition with id 12, and #12-b its Serie B tab, so an
+    // edition or one of its series can be linked to.
+    const [, hashId, hashSeries] = location.hash.match(/^#(\d+)(?:-([a-e]))?$/) || [];
+    const fromHash = allTournaments.findIndex(t => String(t.id) === hashId);
     showTournament(fromHash >= 0 ? fromHash : allTournaments.length - 1);
+    const seriesIndex = fromHash >= 0 && hashSeries ? seriesPrefixes.indexOf(hashSeries) : -1;
+    if (seriesIndex > 0) showSeries(seriesIndex);
   }
 
   function buildGroupsHtml(t) {
@@ -851,6 +857,8 @@
   }
 
   function showSeries(i) {
+    const id = allTournaments[current].id;
+    history.replaceState(null, '', i > 0 ? `#${id}-${seriesPrefixes[i]}` : `#${id}`);
     document.querySelectorAll('.series').forEach((el, j) => { el.hidden = j !== i; });
     document.querySelectorAll('.series-tab').forEach((el, j) => el.classList.toggle('active', j === i));
     markOverflow();
@@ -899,6 +907,7 @@
     }
     // An edition with Finals keeps them as its top-level bracket, since they
     // award the title, so their tab comes first and opens.
+    seriesPrefixes = series.map(s => s.prizePrefix);
 
     const tabs = series.length > 1 ? `
       <div class="series-tabs" role="tablist">
