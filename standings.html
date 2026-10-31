@@ -147,6 +147,11 @@
     .deck-name a { color: #000; text-decoration: none; }
     .deck-name a:hover { text-decoration: underline; }
 
+    /* Series move since the previous edition: up a block of 8, or down one. */
+    .move { font-size: 0.7rem; margin-left: 4px; }
+    .move-up { color: #16a34a; }
+    .move-down { color: #dc2626; }
+
     /* Rank and deck stay pinned while the figures scroll under them on a narrow
        screen. The rank column has a fixed width so the deck column knows where
        to stick; the rule on the deck's right edge marks where scrolling starts. */
@@ -216,6 +221,7 @@
   let allMatches = [];
   let deadDecks = new Set();
   let deckIds = {}; // deck name -> id, for the link to its deck page
+  let anzianita = {}; // deck name -> anzianita, the tiebreak on equal points
   let chartInstance = null;
   let currentSorted = [];
   let sortKey = 'total';
@@ -247,6 +253,7 @@
     // drops out of both the chart and the table.
     deadDecks = new Set(decks.filter(d => d.is_dead).map(d => d.name));
     deckIds = Object.fromEntries(decks.map(d => [d.name, d.id]));
+    anzianita = Object.fromEntries(decks.map(d => [d.name, d.anzianita ?? Infinity]));
 
     // Collect all decks across all tournaments
     const deckSet = new Set();
@@ -429,8 +436,34 @@
     });
   }
 
+  // Series rule: rank by total points, ties to the lower anzianita (the older
+  // deck), then cut into blocks of 8 -- ranks 1-8 Serie A, 9-16 Serie B, ...
+  function byStanding(a, b) {
+    return (b.total - a.total) || (anzianita[a.deck] - anzianita[b.deck]);
+  }
+
+  // Series index (0 = A) of every live deck in the standings after the given
+  // edition.
+  function seriesAfter(upToIndex) {
+    const totals = {};
+    for (let i = 0; i <= upToIndex; i++) {
+      for (const s of allTournaments[i].scores) {
+        if (deadDecks.has(s.deck)) continue;
+        totals[s.deck] = (totals[s.deck] || 0) + s.total;
+      }
+    }
+    const series = {};
+    Object.keys(totals)
+      .map(deck => ({ deck, total: totals[deck] }))
+      .sort(byStanding)
+      .forEach((d, i) => { series[d.deck] = Math.floor(i / 8); });
+    return series;
+  }
+
   function showStandings() {
     const upToIndex = allTournaments.length - 1;
+    const seriesNow = seriesAfter(upToIndex);
+    const seriesBefore = upToIndex > 0 ? seriesAfter(upToIndex - 1) : {};
 
     const totals = {}, gameMap = {}, bonusMap = {}, gamesPlayedMap = {}, tournamentsMap = {};
     const formMap = {}; // deck -> every match result, oldest first
@@ -483,9 +516,12 @@
         ppg: gamesPlayedMap[deck] ? (totals[deck] / gamesPlayedMap[deck]) : 0,
         tournaments: tournamentsMap[deck] || 0,
         ppt: tournamentsMap[deck] ? (totals[deck] / tournamentsMap[deck]) : 0,
-        form: (formMap[deck] || []).slice(-5)
+        form: (formMap[deck] || []).slice(-5),
+        // Positive = promoted, negative = relegated. A deck new this edition has
+        // no previous series, so no arrow.
+        move: deck in seriesBefore ? seriesBefore[deck] - seriesNow[deck] : 0
       }))
-      .sort((a, b) => b.total - a.total);
+      .sort(byStanding);
 
     sortKey = 'total';
     sortDir = -1;
@@ -501,7 +537,7 @@
       return `
         <tr class="${tierClass}">
           <td class="rank pin-rank ${rankClass}">${i + 1}</td>
-          <td class="deck-name pin-deck">${deckIds[d.deck] != null ? `<a href="deck.html?id=${deckIds[d.deck]}">${d.deck}</a>` : d.deck}</td>
+          <td class="deck-name pin-deck">${deckIds[d.deck] != null ? `<a href="deck.html?id=${deckIds[d.deck]}">${d.deck}</a>` : d.deck}${moveArrow(d.move)}</td>
           <td class="total-pts">${d.total}</td>
           <td class="sub-pts">${d.tournaments}</td>
           <td class="sub-pts">${d.games}</td>
@@ -515,6 +551,14 @@
         </tr>
       `;
     }).join('');
+  }
+
+  function moveArrow(move) {
+    if (!move) return '';
+    const up = move > 0;
+    const n = Math.abs(move);
+    const title = `${up ? 'Promoted' : 'Relegated'} ${n} serie${n > 1 ? 's' : ''} since the previous edition`;
+    return `<span class="move ${up ? 'move-up' : 'move-down'}" title="${title}">${up ? '▲' : '▼'}</span>`;
   }
 
   function sortBy(key) {
