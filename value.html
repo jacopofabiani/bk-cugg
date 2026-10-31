@@ -81,6 +81,24 @@
     .priced-on { margin-top: 16px; }
 
     #error { color: red; margin-top: 20px; }
+
+    /* The table scrolls inside its own box if it ever gets wider than the
+       screen, so the page itself never scrolls sideways. */
+    .table-scroll { max-width: 100%; overflow-x: auto; }
+
+    @media (max-width: 600px) {
+      body { padding: 16px; }
+      h1 { font-size: 1.4rem; }
+
+      table { width: 100%; }
+      th { font-size: 0.7rem; letter-spacing: 0; padding: 8px 6px; }
+      td { font-size: 0.85rem; padding: 7px 6px; }
+      .rank { width: 22px; font-size: 0.8rem; }
+      .deck-name { padding-right: 6px; }
+
+      /* bigger tap area for the sort buttons */
+      th button { display: inline-block; padding: 4px 0; }
+    }
   </style>
   <script src="nav.js?v=6" defer></script>
 </head>
@@ -91,6 +109,7 @@
 <h1>💰 Value</h1>
 <p class="note">Deck value in USD from Cardtrader prices on Moxfield (mainboard + sideboard). Cardmarket: prices for the exact printing and finish, converted from EUR at the ECB rate of 30 Oct 2026 (€1 = $1.1172).</p>
 
+<div class="table-scroll">
 <table>
   <thead>
     <tr>
@@ -105,6 +124,7 @@
   </tbody>
   <tfoot id="total"></tfoot>
 </table>
+</div>
 <p id="error"></p>
 <p class="note priced-on">Prices calculated on 31/10/2026.</p>
 
