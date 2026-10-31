@@ -175,6 +175,8 @@
 
     .deck-value .top-card { border-top: none; padding: 3px 0; }
 
+    .last-update { font-size: 0.8rem; color: #555; margin-top: 8px; }
+
     #error { color: red; margin-top: 20px; }
   </style>
   <script src="nav.js?v=6" defer></script>
@@ -364,6 +366,7 @@
       <div class="section">
         <div class="section-title">Decklist</div>
         <a class="moxfield-link" href="${deck.moxfield}" target="_blank" rel="noopener">View on Moxfield &rarr;</a>
+        ${deck.moxfield_updated ? `<p class="last-update">Last update: ${formatDate(deck.moxfield_updated)}</p>` : ''}
       </div>
     ` : '';
 
