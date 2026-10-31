@@ -467,17 +467,16 @@
       ])}
 
       <h2>Finals</h2>
-      <div class="section-note">Runner-ups are the finals a deck lost; conversion is the share of its finals it won.</div>
-      ${simpleTable(['Deck', 'Finals', 'Titles', 'Runner-ups', 'Conversion'],
+      <div class="section-note">Runner-ups are the finals a deck lost.</div>
+      ${simpleTable(['Deck', 'Finals', 'Titles', 'Runner-ups'],
         deckRows.filter(r => r.finals)
-          .sort((a, b) => b.runnerUps - a.runnerUps || b.finals - a.finals || a.deck.localeCompare(b.deck))
+          .sort((a, b) => b.finals - a.finals || b.titles - a.titles || a.deck.localeCompare(b.deck))
           .map(r => [
             `<span class="deck-cell">${esc(r.deck)}</span>`,
             r.finals,
             r.titles || '<span class="muted">–</span>',
-            r.runnerUps || '<span class="muted">–</span>',
-            `${pct(r.titles, r.finals)}%`
-          ]), ['left', 'num', 'num', 'num', 'num'])}
+            r.runnerUps || '<span class="muted">–</span>'
+          ]), ['left', 'num', 'num', 'num'])}
 
       <h2>Rivalries</h2>
       <div class="section-note">Pairings that have met most often in the knockout stage.</div>
@@ -525,13 +524,12 @@
         for (const t of tournaments) for (const c of (colorsOf[t.winner] || [])) (col[c] ||= { w: 0, l: 0, titles: 0 }).titles++;
         const names = { W: 'White', U: 'Blue', B: 'Black', R: 'Red', G: 'Green' };
         const rows = 'WUBRG'.split('').filter(c => col[c]);
-        const maxRate = Math.max(...rows.map(c => pct(col[c].w, col[c].w + col[c].l)));
         return simpleTable(['Colour', 'W–L', 'Match win rate', 'Titles'], rows.map(c => [
           `<span class="color-pip color-${c}"></span><span class="deck-cell">${names[c]}</span>`,
           `${col[c].w}–${col[c].l}`,
-          `<div class="bar-cell">${bar(pct(col[c].w, col[c].w + col[c].l), maxRate, pct(col[c].w, col[c].w + col[c].l) + '%')}</div>`,
+          `${pct(col[c].w, col[c].w + col[c].l)}%`,
           col[c].titles
-        ]), ['left', 'num', 'left', 'num']);
+        ]), ['left', 'num', 'num', 'num']);
       })()}
 
       <h2>Colour identities</h2>
