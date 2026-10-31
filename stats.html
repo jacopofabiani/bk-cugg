@@ -205,6 +205,11 @@
     .formats .eds { display: block; color: #888; font-size: 0.72rem; }
     .formats .champ { white-space: nowrap; }
 
+    /* --- rivalries: the two decks stack so the row stays narrow --- */
+    .rivalries td { white-space: normal; vertical-align: top; }
+    .rivalries .vs { display: block; }
+    .rivalries td:not(:first-child) { width: 1%; white-space: nowrap; }
+
     #error { color: red; margin-top: 20px; }
 
     @media (max-width: 600px) {
@@ -489,12 +494,16 @@
 
       <h2>Rivalries</h2>
       <div class="section-note">Pairings that have met most often in the knockout stage.</div>
-      ${simpleTable(['Matchup', 'Meetings', 'Record'],
-        Object.values(pairs).sort((a, b) => b.n - a.n || a.a.localeCompare(b.a)).slice(0, 8).map(p => [
-          `<span class="deck-cell">${esc(p.a)}</span> v <span class="deck-cell">${esc(p.b)}</span>`,
-          p.n,
-          Object.entries(p.wins).sort((x, y) => y[1] - x[1]).map(([d, n]) => `${esc(d)} ${n}`).join(' · ')
-        ]))}
+      <div class="rivalries">${simpleTable(['Matchup', 'Met', 'Record'],
+        Object.values(pairs).sort((a, b) => b.n - a.n || a.a.localeCompare(b.a)).slice(0, 8).map(p => {
+          // the deck with more wins goes on top, so the record reads top–bottom
+          const [hi, lo] = (p.wins[p.b] || 0) > (p.wins[p.a] || 0) ? [p.b, p.a] : [p.a, p.b];
+          return [
+            `<span class="deck-cell">${esc(hi)}</span><span class="vs">v <span class="deck-cell">${esc(lo)}</span></span>`,
+            p.n,
+            `${p.wins[hi] || 0}–${p.wins[lo] || 0}`
+          ];
+        }))}</div>
 
       <h2>Favourite victims &amp; nemeses</h2>
       <div class="section-note">The opponent each deck has beaten most and lost to most in the knockout stage, shown from 2 matches up. Dead decks are left out.</div>
@@ -533,7 +542,7 @@
         for (const t of tournaments) for (const c of (colorsOf[t.winner] || [])) (col[c] ||= { w: 0, l: 0, titles: 0 }).titles++;
         const names = { W: 'White', U: 'Blue', B: 'Black', R: 'Red', G: 'Green' };
         const rows = 'WUBRG'.split('').filter(c => col[c]);
-        return simpleTable(['Colour', 'W–L', 'Match win rate', 'Titles'], rows.map(c => [
+        return simpleTable(['Colour', 'W–L', 'Win rate', 'Titles'], rows.map(c => [
           `<span class="color-pip color-${c}"></span><span class="deck-cell">${names[c]}</span>`,
           `${col[c].w}–${col[c].l}`,
           `${pct(col[c].w, col[c].w + col[c].l)}%`,
