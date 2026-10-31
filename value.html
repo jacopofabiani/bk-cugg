@@ -60,6 +60,17 @@
     .deck-name a:hover { text-decoration: underline; }
 
     th.value, td.value { text-align: right; }
+
+    th button {
+      all: unset;
+      cursor: pointer;
+      text-transform: inherit;
+      letter-spacing: inherit;
+    }
+    th button:hover { text-decoration: underline; }
+    th button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    th button::after { content: ' \2195'; opacity: 0.5; }
+    th[aria-sort="descending"] button::after { content: ' \25BC'; opacity: 1; }
     td.value { font-weight: bold; }
 
     tfoot td {
@@ -76,18 +87,19 @@
 <site-nav></site-nav>
 
 <h1>💰 Value</h1>
-<p class="note">Deck value in USD from Cardtrader prices on Moxfield (mainboard + sideboard).</p>
+<p class="note">Deck value in USD from Cardtrader prices on Moxfield (mainboard + sideboard). Cardmarket: prices for the exact printing and finish, converted from EUR at the ECB rate of 30 Oct 2026 (€1 = $1.1172).</p>
 
 <table>
   <thead>
     <tr>
       <th>#</th>
       <th>Deck</th>
-      <th class="value">Value</th>
+      <th class="value" data-key="value_usd" aria-sort="descending"><button type="button">Cardtrader</button></th>
+      <th class="value" data-key="value_cardmarket_usd"><button type="button">Cardmarket</button></th>
     </tr>
   </thead>
   <tbody id="rows">
-    <tr><td colspan="3" style="color:#888">Loading...</td></tr>
+    <tr><td colspan="4" style="color:#888">Loading...</td></tr>
   </tbody>
   <tfoot id="total"></tfoot>
 </table>
@@ -96,28 +108,49 @@
 <script>
   const usd = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  async function load() {
-    const decks = await (await fetch('data/decks.json')).json();
+  let priced = [];
+  let sortKey = 'value_usd';
 
-    // Retired decks have no Moxfield list, so they carry no value.
-    const priced = decks
-      .filter(d => d.value_usd != null)
-      .sort((a, b) => b.value_usd - a.value_usd);
+  // Highest first by the chosen price column; decks missing that price go last.
+  function renderRows() {
+    const sorted = [...priced].sort((a, b) => (b[sortKey] ?? -1) - (a[sortKey] ?? -1));
+    document.querySelectorAll('th[data-key]').forEach(th => {
+      if (th.dataset.key === sortKey) th.setAttribute('aria-sort', 'descending');
+      else th.removeAttribute('aria-sort');
+    });
 
-    document.getElementById('rows').innerHTML = priced.map((d, i) => `
+    document.getElementById('rows').innerHTML = sorted.map((d, i) => `
       <tr>
         <td class="rank rank-${i + 1}">${i + 1}</td>
         <td class="deck-name"><a href="deck.html?id=${d.id}">${d.name}</a></td>
         <td class="value">${usd(d.value_usd)}</td>
+        <td class="value">${d.value_cardmarket_usd != null ? usd(d.value_cardmarket_usd) : '—'}</td>
       </tr>
     `).join('');
+  }
+
+  document.querySelectorAll('th[data-key] button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sortKey = btn.parentElement.dataset.key;
+      renderRows();
+    });
+  });
+
+  async function load() {
+    const decks = await (await fetch('data/decks.json')).json();
+
+    // Retired decks have no Moxfield list, so they carry no value.
+    priced = decks.filter(d => d.value_usd != null);
+    renderRows();
 
     const total = priced.reduce((s, d) => s + d.value_usd, 0);
+    const totalCm = priced.reduce((s, d) => s + (d.value_cardmarket_usd || 0), 0);
     document.getElementById('total').innerHTML = `
       <tr>
         <td></td>
         <td class="deck-name">Total</td>
         <td class="value">${usd(total)}</td>
+        <td class="value">${usd(totalCm)}</td>
       </tr>
     `;
   }

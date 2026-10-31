@@ -161,15 +161,19 @@
       font-size: 0.95rem;
     }
 
-    .deck-value + .top-card { border-top: none; padding-top: 0; }
+    .section-title + .top-card { border-top: none; padding-top: 0; }
 
     .top-card-price { font-weight: bold; white-space: nowrap; }
 
     .deck-value {
-      font-weight: bold;
-      font-size: 1rem;
-      margin-bottom: 14px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 2px solid #000;
     }
+
+    .deck-value-title { font-weight: bold; margin-bottom: 4px; }
+
+    .deck-value .top-card { border-top: none; padding: 3px 0; }
 
     #error { color: red; margin-top: 20px; }
   </style>
@@ -365,17 +369,29 @@
 
     const usd = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-    // Cardtrader prices from Moxfield, stored in decks.json; see value.html.
+    // Cardtrader and Cardmarket totals from Moxfield, stored in decks.json; see value.html. Top cards use Cardtrader prices.
     const valueSection = deck.top_cards ? `
       <div class="section">
         <div class="section-title">Most Expensive Cards</div>
-        <div class="deck-value">Deck value: ${usd(deck.value_usd)}</div>
         ${deck.top_cards.map(c => `
           <div class="top-card">
             <span>${c.name}</span>
             <span class="top-card-price">${usd(c.price)}</span>
           </div>
         `).join('')}
+        <div class="deck-value">
+          <div class="deck-value-title">Total deck value (USD)</div>
+          <div class="top-card">
+            <span>Cardtrader</span>
+            <span class="top-card-price">${usd(deck.value_usd)}</span>
+          </div>
+          ${deck.value_cardmarket_usd != null ? `
+            <div class="top-card">
+              <span>Cardmarket</span>
+              <span class="top-card-price">${usd(deck.value_cardmarket_usd)}</span>
+            </div>
+          ` : ''}
+        </div>
       </div>
     ` : '';
 
