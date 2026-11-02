@@ -72,7 +72,7 @@
       font-weight: bold;
     }
 
-    td.priced-on { color: #555; font-size: 0.85rem; }
+    .priced-on { color: #555; font-size: 0.85rem; margin-top: 16px; }
 
     #error { color: red; margin-top: 20px; }
 
@@ -109,20 +109,20 @@
       <th>Deck</th>
       <th class="value" data-key="value_usd" aria-sort="descending"><button type="button">Cardtrader</button></th>
       <th class="value" data-key="value_cardmarket_usd"><button type="button">Cardmarket</button></th>
-      <th>Priced on</th>
     </tr>
   </thead>
   <tbody id="rows">
-    <tr><td colspan="5" style="color:#888">Loading...</td></tr>
+    <tr><td colspan="4" style="color:#888">Loading...</td></tr>
   </tbody>
   <tfoot id="total"></tfoot>
 </table>
 </div>
 <p id="error"></p>
+<p class="priced-on" id="priced-on"></p>
 
 <script>
   const usd = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const shortDate = iso => iso ? iso.split('-').reverse().join('/') : '—';
+  const shortDate = iso => iso.split('-').reverse().join('/');
 
   let priced = [];
   let sortKey = 'value_usd';
@@ -141,7 +141,6 @@
         <td class="deck-name"><a href="deck.html?id=${d.id}">${d.name}</a></td>
         <td class="value">${usd(d.value_usd)}</td>
         <td class="value">${d.value_cardmarket_usd != null ? usd(d.value_cardmarket_usd) : '—'}</td>
-        <td class="priced-on">${shortDate(d.value_priced_on)}</td>
       </tr>
     `).join('');
   }
@@ -168,9 +167,12 @@
         <td class="deck-name">Total</td>
         <td class="value">${usd(total)}</td>
         <td class="value">${usd(totalCm)}</td>
-        <td></td>
       </tr>
     `;
+
+    // ISO dates sort as strings, so the first one is the oldest: every price is at least this fresh.
+    const oldest = priced.map(d => d.value_priced_on).filter(Boolean).sort()[0];
+    if (oldest) document.getElementById('priced-on').textContent = `Prices updated on ${shortDate(oldest)}.`;
   }
 
   load().catch(e => {
