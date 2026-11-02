@@ -106,8 +106,9 @@
     }
 
     th {
-      background: #000;
-      color: #fff;
+      background: #fff;
+      color: #555;
+      border-bottom: 1px solid #000;
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -120,7 +121,7 @@
       user-select: none;
     }
 
-    th.sortable:hover { background: #222; }
+    th.sortable:hover { background: #eee; }
 
     th.sort-asc::after  { content: ' ▲'; font-size: 0.65rem; }
     th.sort-desc::after { content: ' ▼'; font-size: 0.65rem; }
@@ -163,21 +164,33 @@
     .total-pts { font-weight: bold; }
     .sub-pts { color: #555; font-size: 0.85rem; }
 
-    /* Last five matches, oldest to newest, one pill each. */
-    .form { display: flex; gap: 4px; }
+    /* Last five matches, oldest to newest: a tick or a cross in a dot, with the
+       most recent match larger and ringed. */
+    .form { display: flex; align-items: center; gap: 3px; }
     .form-pill {
       display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: bold;
     }
-    .form-w { background: #16a34a; }
-    .form-l { background: #dc2626; }
+    .form-pill svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .form-w { background: #16a34a; --ring: #16a34a; }
+    .form-l { background: #dc2626; --ring: #dc2626; }
+    /* The ring is a shadow, so it takes no layout: the margin makes room for it. */
+    .form-pill:last-child {
+      width: 17px;
+      height: 17px;
+      margin-left: 3px;
+      box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px var(--ring);
+    }
 
     #error { color: red; margin-top: 20px; }
   </style>
@@ -200,7 +213,7 @@
         <th class="sortable" onclick="sortBy('bonus')" title="Bonus">B</th>
         <th class="sortable" onclick="sortBy('ppg')">PPG</th>
         <th class="sortable" onclick="sortBy('ppt')">PPT</th>
-        <th title="Last 5 matches, most recent on the right"></th>
+        <th title="Last 5 matches, most recent on the right">Last 5</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -546,7 +559,7 @@
           <td class="sub-pts">${d.ppg.toFixed(2)}</td>
           <td class="sub-pts">${d.ppt.toFixed(2)}</td>
           <td><div class="form">${d.form.map(f =>
-            `<span class="form-pill ${f.win ? 'form-w' : 'form-l'}" title="${f.title}">${f.win ? 'W' : 'L'}</span>`
+            `<span class="form-pill ${f.win ? 'form-w' : 'form-l'}" title="${f.title}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="${f.win ? 'M4.5 8.5l2.5 2.5 4.5-5.5' : 'M5.5 5.5l5 5m0-5l-5 5'}"/></svg></span>`
           ).join('')}</div></td>
         </tr>
       `;
