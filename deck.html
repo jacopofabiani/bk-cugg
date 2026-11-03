@@ -117,18 +117,35 @@
       color: #555;
     }
 
-    .albo-medals { font-size: 0.95rem; }
+    /* The bacheca's drawings at palmares size; wide enough for "XXVIII°". */
+    .albo-prizes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .albo-prize {
+      width: 48px;
+      font-size: 0.65rem;
+      font-weight: bold;
+      text-align: center;
+      white-space: nowrap;
+      color: #555;
+    }
+
+    .albo-prize img {
+      display: block;
+      width: 100%;
+      height: 48px;
+      object-fit: contain;
+      margin-bottom: 3px;
+    }
 
     .albo-editions {
       font-size: 0.85rem;
       color: #555;
       margin-top: 2px;
-    }
-
-    .albo-note {
-      font-size: 0.8rem;
-      color: #777;
-      margin: -8px 0 16px;
     }
 
     /* Marks where the lower-series roll of honour starts. */
@@ -189,38 +206,16 @@
 <p id="error"></p>
 
 <script>
-  // The finalist that isn't the winner, matching albo.html: the closing round
-  // is usually one match, but an edition can end in a round robin between the
-  // last decks standing, where the runner-up places second on wins.
-  function runnerUp(t) {
-    const last = t.rounds[t.rounds.length - 1];
-    if (!last || !last.matches.length) return null;
-
-    if (last.matches.length === 1) {
-      const m = last.matches[0];
-      return m.score1 > m.score2 ? m.player2 : m.player1;
-    }
-
-    const wins = {};
-    for (const m of last.matches) {
-      const won  = m.score1 > m.score2 ? m.player1 : m.player2;
-      const lost = m.score1 > m.score2 ? m.player2 : m.player1;
-      wins[won]  = (wins[won] || 0) + 1;
-      wins[lost] = wins[lost] || 0;
-    }
-    const ranked = Object.entries(wins).sort((a, b) => b[1] - a[1]);
-    return ranked.length > 1 ? ranked[1][0] : null;
-  }
-
   // The brackets of a multi-series edition that do not award the title, in the
   // order they are listed. A tournament only carries the ones it actually ran;
-  // seriesA only exists from XXXVI, when the title moved to the Finals.
+  // seriesA only exists from XXXVI, when the title moved to the Finals. The
+  // last value is the prefix of the bracket's drawings in images/bacheca.
   const LOWER_SERIES = [
-    ['seriesA', 'Serie A'],
-    ['seriesB', 'Serie B'],
-    ['seriesC', 'Serie C'],
-    ['seriesD', 'Serie D'],
-    ['seriesE', 'Serie E']
+    ['seriesA', 'Serie A', 'a'],
+    ['seriesB', 'Serie B', 'b'],
+    ['seriesC', 'Serie C', 'c'],
+    ['seriesD', 'Serie D', 'd'],
+    ['seriesE', 'Serie E', 'e']
   ];
 
   // "XXI° Torneo Bob Kelzor" -> "XXI°": on a deck's page the rest is a given.
@@ -229,14 +224,24 @@
     return name.replace(/ Torneo Bob(by)? Kelzor$/, '');
   }
 
-  function alboRow(list, label, medal, cls = '') {
+  // One drawing per edition won, the same files bacheca.html shows.
+  function alboPrize(t, prefix) {
+    const file = `images/bacheca/${prefix}-${String(t.id).padStart(2, '0')}.png`;
+    return `
+      <div class="albo-prize">
+        <img src="${file}" alt="">
+        ${editionLabel(t.name)}
+      </div>
+    `;
+  }
+
+  function alboRow(list, label, prefix, cls = '') {
     return list.length ? `
       <div class="albo-row ${cls}">
         <div class="albo-count">${list.length}</div>
         <div>
           <div class="albo-label">${label}</div>
-          <div class="albo-medals">${medal.repeat(list.length)}</div>
-          <div class="albo-editions">${list.map(t => editionLabel(t.name)).join(' · ')}</div>
+          <div class="albo-prizes">${list.map(t => alboPrize(t, prefix)).join('')}</div>
         </div>
       </div>
     ` : '';
@@ -244,37 +249,26 @@
 
   // This deck's roll of honour. Only the edition's winner (Serie A's, or the
   // Finals' from XXXVI) counts as a Bob Kelzor title, the same rule albo.html
-  // applies, so the series brackets are kept below and under their own medal.
+  // applies, so the series brackets are kept below with their own drawings.
   function alboHtml(deck, tournaments) {
-    const titles    = tournaments.filter(t => t.winner === deck.name);
-    const runnerUps = tournaments.filter(t => runnerUp(t) === deck.name);
+    const titles = tournaments.filter(t => t.winner === deck.name);
 
-    const serieARows = alboRow(titles, 'Titles', '\u{1f3c6}')
-                     + alboRow(runnerUps, 'Runner-ups', '\u{1f948}');
+    const serieARows = alboRow(titles, 'Titles', 'title');
 
     // The divider goes on whichever lower-series row comes first, so it only
     // shows up when there is something above it to separate.
     let lowerRows = '';
-    for (const [key, label] of LOWER_SERIES) {
-      const eds = tournaments.filter(t => t[key]);
-      const won  = eds.filter(t => t[key].winner === deck.name);
-      const lost = eds.filter(t => runnerUp(t[key]) === deck.name);
-      for (const [list, suffix, medal] of [[won, 'wins', '\u{1f3c5}'], [lost, 'runner-ups', '\u{1f948}']]) {
-        const sep = !lowerRows && serieARows ? 'albo-sep' : '';
-        lowerRows += alboRow(list, `${label} ${suffix}`, medal, sep);
-      }
+    for (const [key, label, prefix] of LOWER_SERIES) {
+      const won = tournaments.filter(t => t[key] && t[key].winner === deck.name);
+      const sep = !lowerRows && serieARows ? 'albo-sep' : '';
+      lowerRows += alboRow(won, `${label} wins`, prefix, sep);
     }
 
     if (!serieARows && !lowerRows) return '';
 
-    const note = lowerRows
-      ? `<p class="albo-note">Series results do not count towards Bob Kelzor titles.</p>`
-      : '';
-
     return `
       <div class="section">
         <div class="section-title">Palmares</div>
-        ${note}
         ${serieARows}
         ${lowerRows}
       </div>
