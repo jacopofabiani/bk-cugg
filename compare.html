@@ -220,6 +220,51 @@
     .game-msg { min-height: 2.6em; text-align: center; font-size: 0.95rem; line-height: 1.3; margin-bottom: 12px; }
     .game-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; margin-bottom: 16px; }
     .game-actions a { color: #000; font-size: 0.85rem; }
+    /* Next card floats over the top of the two cards instead of taking a row. */
+    .trumps { position: relative; }
+    .pop {
+      position: absolute;
+      top: 48px; /* over the art, clear of the deck names */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
+      max-width: min(300px, 92%);
+      animation: next-pop 0.25s ease-out 0.4s backwards;
+    }
+    .pop-msg {
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      line-height: 1.3;
+      text-align: center;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 12px;
+      box-shadow: 3px 3px 0 #000;
+    }
+    .next-pop {
+      white-space: nowrap;
+      color: #fff;
+      background: #000;
+      border-color: #fff;
+      border-width: 2px;
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+    }
+    .next-pop:hover { background: #333; }
+
+    @keyframes next-pop {
+      from { transform: translateX(-50%) scale(0.4); opacity: 0; }
+      to   { transform: translateX(-50%) scale(1); opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pop { animation: none; }
+    }
+
     .game-start { text-align: center; padding: 8px 0; }
     .game-start p { color: #333; font-size: 0.9rem; line-height: 1.45; margin-bottom: 14px; }
     .game-over-title { font-size: 1.7rem; font-weight: bold; margin-bottom: 6px; }
@@ -664,8 +709,9 @@
       }
     }
     p.cards = cards.size;
-    // Card art: the image of the deck's most decorated card, if it has one.
-    p.art = Object.entries(images).sort((x, y) => y[1] - x[1])[0]?.[0] || null;
+    // Card art: the image of the deck's most decorated card, else the art
+    // picked from its list (decks.json), else none.
+    p.art = Object.entries(images).sort((x, y) => y[1] - x[1])[0]?.[0] || deck.art || null;
 
     // Points, same sums as standings.html: PPT per edition entered, PPG per
     // recorded knockout game (group games aren't kept).
@@ -1491,8 +1537,11 @@
     game.round++;
     game.statKey = null;
     game.faces = null;
+    // The computer's turn waits for a tap, so it's clear who is choosing.
     if (game.turn === 'cpu') {
-      playStat(cpuPick(game.cpu[0]));
+      game.phase = 'cpu';
+      game.message = "Computer's turn. It's choosing a stat from its card…";
+      renderGame();
       return;
     }
     game.phase = 'choose';
@@ -1546,18 +1595,20 @@
       return;
     }
 
-    if (game.phase === 'choose') {
+    if (game.phase === 'choose' || game.phase === 'cpu') {
       const mine = game.you[0];
+      const yours = game.phase === 'choose';
       const rows = TRUMPS.map(s => {
         const v = s.get(mine);
-        return { key: s.key, label: s.label, text: v == null ? '—' : (s.fmt || String)(v), enabled: true };
+        return { key: s.key, label: s.label, text: v == null ? '—' : (s.fmt || String)(v), enabled: yours };
       });
       box.innerHTML = `
         ${score}
-        <p class="game-msg">${esc(game.message)}</p>
+        <p class="game-msg">${yours ? '' : '🤖 '}${esc(game.message)}</p>
         <div class="trumps">
           ${trumpCard(mine, 'a', rows)}
           ${faceDownCard('b')}
+          ${yours ? '' : `<div class="pop"><button class="btn next-pop" data-act="cpu" type="button">🤖 Computer's choice →</button></div>`}
         </div>
       `;
       return;
@@ -1575,17 +1626,16 @@
         picked
       };
     });
-    const q = `a=${encodeURIComponent(mine.deck.id)}&b=${encodeURIComponent(theirs.deck.id)}`;
     box.innerHTML = `
       ${score}
-      <p class="game-msg">${esc(game.message)}</p>
+      <p class="game-msg" aria-hidden="true"></p>
       <div class="trumps">
         ${trumpCard(mine, 'a', rowsFor(mine, 'a'))}
         ${trumpCard(theirs, 'b', rowsFor(theirs, 'b'))}
-      </div>
-      <div class="game-actions">
-        <button class="btn" data-act="next" type="button">Next card →</button>
-        <a href="?${q}">Full comparison</a>
+        <div class="pop" role="status">
+          <button class="btn next-pop" data-act="next" type="button">Next card →</button>
+          <p class="pop-msg">${esc(game.message)}</p>
+        </div>
       </div>
     `;
   }
@@ -1728,6 +1778,7 @@
       if (act === 'quick') startGame(QUICK_HAND);
       else if (act === 'full') startGame(decks.length);
       else if (act === 'next') nextRound();
+      else if (act === 'cpu' && game?.phase === 'cpu') playStat(cpuPick(game.cpu[0]));
       const stat = e.target.closest('.stat');
       if (stat && !stat.disabled && game?.phase === 'choose') playStat(stat.dataset.stat);
     });
