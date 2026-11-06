@@ -82,8 +82,6 @@
       gap: 5px;
     }
 
-    .title-stars { font-size: 0.8rem; color: #555; letter-spacing: 1px; }
-
     /* A grouped box lists several cards, so the tally sits at the top rather
        than floating in the middle of a tall column. */
     .title-card--group { align-items: flex-start; }
@@ -158,7 +156,7 @@
     return deck ? `deck.html?id=${deck.id}` : null;
   }
 
-  function countCardsHtml(counts, decksByName, medal) {
+  function countCardsHtml(counts, decksByName) {
     const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
     return `
@@ -171,7 +169,6 @@
             <div class="title-count">${count}</div>
             <div class="title-deck">
               <div class="title-name">${deck} ${colorsHtml(deck, decksByName)}</div>
-              <div class="title-stars">${medal.repeat(count)}</div>
             </div>
           </${tag}>
         `;
@@ -183,7 +180,7 @@
   function titlesHtml(tournaments, decksByName) {
     const counts = {};
     for (const t of tournaments) counts[t.winner] = (counts[t.winner] || 0) + 1;
-    return countCardsHtml(counts, decksByName, '🏆');
+    return countCardsHtml(counts, decksByName);
   }
 
   // A multi-series edition crowns more than one winner, but only the edition's
@@ -202,7 +199,7 @@
       <h2>${label}</h2>
       <p class="section-note">Winners of ${scope}.
         These do not count towards the titles at the top of the page.</p>
-      ${countCardsHtml(counts, decksByName, '\u{1f3c5}')}
+      ${countCardsHtml(counts, decksByName)}
     `;
   }
 
@@ -210,7 +207,7 @@
   // winner has always come from the winning deck, so a per-deck tally would
   // just restate Titles. Cards that share a tally share a box, so each box
   // reads "these are the N-time winners".
-  function awardCardsHtml(entries, decksByName, medal) {
+  function awardCardsHtml(entries, decksByName) {
     const byCard = {};
     for (const e of entries) {
       const a = byCard[e.card] ||= { card: e.card, decks: new Set(), n: 0 };
@@ -238,7 +235,6 @@
                   }).join(' \u00b7 ')}</span>
                 </div>
               `).join('')}
-              <div class="title-stars">${medal.repeat(n)}</div>
             </div>
           </div>
         `).join('')}
@@ -254,7 +250,7 @@
 
     return `
       <h2>Scarpa d'Oro</h2>
-      ${awardCardsHtml(awarded, decksByName, '\u{1f45f}')}
+      ${awardCardsHtml(awarded, decksByName)}
     `;
   }
 
@@ -274,7 +270,7 @@
       <h2>Titles</h2>
       ${titlesHtml(tournaments, decksByName)}
       <h2>MVP awards</h2>
-      ${awardCardsHtml(mvps, decksByName, '\u2b50')}
+      ${awardCardsHtml(mvps, decksByName)}
       ${scarpaCardsHtml(mvps, decksByName)}
       ${lowerSerieHtml(tournaments, decksByName, 'seriesA', 'Serie A', 'Serie A in editions where the Finals award the title')}
       ${lowerSerieHtml(tournaments, decksByName, 'seriesB', 'Serie B')}
