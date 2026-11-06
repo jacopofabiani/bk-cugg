@@ -118,7 +118,6 @@
 
     .trump.a .trump-head { background: var(--a); }
     .trump.b .trump-head { background: #c2410c; }
-    .trump-no { font-size: 0.72rem; font-weight: normal; white-space: nowrap; }
 
     .trump-art {
       display: block;
@@ -241,7 +240,6 @@
 
     /* --- the game --- */
 
-    .game-msg { min-height: 2.6em; text-align: center; font-size: 0.95rem; line-height: 1.3; margin-bottom: 12px; }
     .game-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; margin-bottom: 16px; }
     .game-actions a { color: #000; font-size: 0.85rem; }
     /* Next card floats over the top of the two cards instead of taking a row. */
@@ -1389,7 +1387,7 @@
     const meta = d.is_dead ? `Retired, ${last ? edition(last) : ''}` : `Serie ${p.serie} · #${p.rank}`;
     return `
       <article class="trump ${side}">
-        <div class="trump-head"><span>${esc(d.name)}</span><span class="trump-no">No. ${d.anzianita}</span></div>
+        <div class="trump-head"><span>${esc(d.name)}</span></div>
         ${artHtml(p)}
         <div class="trump-meta">
           <span>${meta}</span>
@@ -1597,13 +1595,13 @@
         return { key: s.key, label: s.label, text: v == null ? '—' : (s.fmt || String)(v), enabled: yours };
       });
       box.innerHTML = `
-        <p class="game-msg">${yours ? '' : '🤖 '}${esc(game.message)}</p>
         <div class="trumps">
           ${trumpCard(mine, 'a', rows)}
           ${faceDownCard('b')}
-          <div class="pop ${yours ? 'still' : ''}">
+          <div class="pop ${yours ? 'still' : ''}" role="status">
             ${score}
             ${yours ? '' : `<button class="btn next-pop" data-act="cpu" type="button">🤖 Computer's choice →</button>`}
+            <p class="pop-msg">${yours ? '' : '🤖 '}${esc(game.message)}</p>
           </div>
         </div>
       `;
@@ -1623,7 +1621,6 @@
       };
     });
     box.innerHTML = `
-      <p class="game-msg" aria-hidden="true"></p>
       <div class="trumps">
         ${trumpCard(mine, 'a', rowsFor(mine, 'a'))}
         ${trumpCard(theirs, 'b', rowsFor(theirs, 'b'))}
