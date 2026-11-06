@@ -199,9 +199,46 @@
     .trump.face-down img { width: 80%; max-width: 160px; background: #fff; border-radius: 8px; padding: 6px; }
     .trump.face-down span { font-size: 3rem; font-weight: bold; }
 
+    /* Duel: the two decks' art side by side above FIGHT! */
+    .faceoff {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .face {
+      min-width: 0;
+      border: 2px solid #000;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 3px 3px 0 #000;
+    }
+    .face-name {
+      padding: 8px 10px;
+      color: #fff;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+    .face.a .face-name { background: var(--a); }
+    .face.b .face-name { background: #c2410c; }
+    .face.b .face-name { text-align: right; }
+    .vs {
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 6px 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #fff;
+      background: #000;
+      border: 2px solid #fff;
+      border-radius: 999px;
+    }
+
     .fight { width: 100%; min-height: 56px; font-size: 1.2rem; background: #000; color: #fff; margin-bottom: 8px; }
     .fight:hover { background: #333; }
-    .table-hint { text-align: center; color: #555; font-size: 0.8rem; margin-bottom: 16px; }
 
     /* --- the game --- */
 
@@ -1384,79 +1421,36 @@
   // Who a compared stat means for one side of the table.
   const stateFor = (r, side) => (r.tied ? 'tie' : r.win === side ? 'win' : r.win ? 'lose' : '');
 
-  // ================= duel: two chosen decks, cards flipped stat by stat =================
+  // ================= duel: two chosen decks, FIGHT! opens the full comparison =================
 
-  const duel = { pair: '', flipped: new Set(), just: null, fought: false, run: 0 };
-
-  // The same stats, in the same order, as the cards in the game. A line with
-  // no value on either side (two retired decks have no prices) shows a dash.
-  function duelStats(c) {
-    return TRUMPS.map(s => ({
-      key: s.key,
-      r: compareStat(s, c.pa, c.pb) || { label: s.label, textA: '—', textB: '—', win: null, tied: false }
-    }));
-  }
+  const duel = { pair: '', fought: false };
 
   function renderTable() {
     const box = document.getElementById('table');
     if (!box || !current) return;
-    const stats = duelStats(current);
-    const open = key => duel.fought || duel.flipped.has(key);
-    const rowsFor = side => stats.map(({ key, r }) => ({
-      key,
-      label: r.label,
-      text: !open(key) ? '?' : side === 'a' ? r.textA : r.textB,
-      state: open(key) ? stateFor(r, side) : '',
-      just: duel.just === key,
-      enabled: !open(key)
-    }));
-    box.innerHTML = `
-      <div class="trumps">
-        ${trumpCard(current.pa, 'a', rowsFor('a'))}
-        ${trumpCard(current.pb, 'b', rowsFor('b'))}
+    const side = (p, k) => `
+      <div class="face ${k}">
+        ${artHtml(p)}
+        <div class="face-name">${esc(p.deck.name)}</div>
       </div>
-      ${duel.fought ? '' : `
-        <button class="btn fight" id="fight" type="button">⚔️ FIGHT!</button>
-        <p class="table-hint">Or tap a stat to flip it yourself.</p>
-      `}
+    `;
+    box.innerHTML = `
+      <div class="faceoff">
+        ${side(current.pa, 'a')}
+        <span class="vs" aria-hidden="true">VS</span>
+        ${side(current.pb, 'b')}
+      </div>
+      ${duel.fought ? '' : `<button class="btn fight" id="fight" type="button">⚔️ FIGHT!</button>`}
     `;
   }
 
-  function revealResults(scroll) {
+  function fight() {
     duel.fought = true;
-    duel.just = null;
     renderTable();
     const results = document.getElementById('results');
     results.hidden = false;
     drawRace();
-    if (scroll) results.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function flipStat(key) {
-    duel.run++; // a manual flip stops a running FIGHT sequence
-    duel.flipped.add(key);
-    duel.just = key;
-    if (duelStats(current).every(s => duel.flipped.has(s.key))) revealResults(true);
-    else renderTable();
-  }
-
-  // Flip the remaining stats one at a time, then bring in the verdict.
-  function fight() {
-    const remaining = duelStats(current).map(s => s.key).filter(k => !duel.flipped.has(k));
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { revealResults(true); return; }
-    const run = ++duel.run;
-    const button = document.getElementById('fight');
-    if (button) button.disabled = true;
-    const step = i => {
-      if (run !== duel.run) return;
-      if (i === remaining.length) { revealResults(true); return; }
-      duel.flipped.add(remaining[i]);
-      duel.just = remaining[i];
-      renderTable();
-      document.getElementById('fight')?.setAttribute('disabled', '');
-      setTimeout(() => step(i + 1), 260);
-    };
-    step(0);
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // ================= the game: the whole pack against the computer =================
@@ -1666,15 +1660,12 @@
     const { pa, pb } = c;
     document.title = `${pa.deck.name} vs ${pb.deck.name} - Bobby Kelzor`;
 
-    // Swapping corners keeps what's been flipped; a new fight starts face down.
+    // Swapping corners keeps the results open; a new pair starts with FIGHT!.
     const pairKey = [aName, bName].sort().join('|');
     if (duel.pair !== pairKey) {
       duel.pair = pairKey;
-      duel.flipped = new Set();
       duel.fought = false;
-      duel.run++;
     }
-    duel.just = null;
 
     const others = c.rounds.filter(x => x.id !== 'h2h');
     const facts = trivia(c);
@@ -1774,9 +1765,7 @@
 
     // The cards are redrawn constantly, so both tables listen from above.
     document.getElementById('content').addEventListener('click', e => {
-      if (e.target.closest('#fight')) { fight(); return; }
-      const stat = e.target.closest('.stat');
-      if (stat && !stat.disabled) flipStat(stat.dataset.stat);
+      if (e.target.closest('#fight')) fight();
     });
     document.getElementById('game').addEventListener('click', e => {
       const act = e.target.closest('[data-act]')?.dataset.act;
