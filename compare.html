@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Versus - Bobby Kelzor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Each deck keeps its corner's colour everywhere on the page. Text stays
+       black; the colour only marks whose side something is on. */
+    :root {
+      --a: #2563eb;
+      --a-tint: #dbeafe;
+      --b: #ea580c;
+      --b-tint: #ffedd5;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .wrap { max-width: 760px; }
+
+    h1 { font-size: 1.6rem; margin-bottom: 6px; }
+
+    .subtitle { color: #555; font-size: 0.9rem; margin-bottom: 20px; }
+
+    /* --- picker --- */
+    .picker {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: end;
+      margin-bottom: 10px;
+    }
+
+    .picker label {
+      display: block;
+      min-width: 0;
+      font-size: 0.72rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+    }
+
+    .picker select {
+      display: block;
+      width: 100%;
+      margin-top: 4px;
+      padding: 10px 8px;
+      font: bold 1rem Arial, sans-serif;
+      color: #000;
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      border-bottom-width: 5px;
+    }
+
+    #pick-a { border-bottom-color: var(--a); }
+    #pick-b { border-bottom-color: var(--b); }
+
+    .btn {
+      min-height: 44px;
+      padding: 0 14px;
+      font: bold 0.9rem Arial, sans-serif;
+      color: #000;
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .btn:hover { background: #f5f5f5; }
+    .btn:focus-visible, .picker select:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+
+    /* --- mode tabs --- */
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+    .tab[aria-pressed="true"] { background: #000; color: #fff; }
+    .tab[aria-pressed="true"]:hover { background: #000; }
+    [hidden] { display: none !important; }
+
+    /* --- Top Trumps cards --- */
+    .trumps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .trump {
+      min-width: 0;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .trump-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+      padding: 8px 10px;
+      color: #fff;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .trump.a .trump-head { background: var(--a); }
+    .trump.b .trump-head { background: #c2410c; }
+    .trump-no { font-size: 0.72rem; font-weight: normal; white-space: nowrap; }
+
+    .trump-art {
+      display: block;
+      width: 100%;
+      aspect-ratio: 626 / 457;
+      object-fit: cover;
+      border-bottom: 2px solid #000;
+    }
+
+    .trump-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      font-size: 0.72rem;
+      color: #555;
+      border-bottom: 1px solid #000;
+    }
+
+    .trump-meta .colors { margin: 0; flex-shrink: 0; }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      min-height: 34px;
+      padding: 5px 10px;
+      font: inherit;
+      font-size: 0.82rem;
+      color: #000;
+      text-align: left;
+      background: #fff;
+      border: 0;
+      border-top: 1px solid #ddd;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat:first-child { border-top: 0; }
+    .stat:not(:disabled) { cursor: pointer; }
+    .stat:not(:disabled):hover { background: #f5f5f5; }
+    .stat:focus-visible { outline: 2px solid #000; outline-offset: -2px; }
+    .stat b { white-space: nowrap; }
+    .stat.lose { color: #777; }
+    .stat.lose b { font-weight: normal; }
+    .trump.a .stat.win { background: var(--a-tint); font-weight: bold; }
+    .trump.b .stat.win { background: var(--b-tint); font-weight: bold; }
+    .stat.tie { background: #eee; }
+    .stat.picked { box-shadow: inset 0 0 0 2px #000; }
+    .stat.just b { animation: stat-pop 0.3s ease-out; display: inline-block; }
+
+    @keyframes stat-pop {
+      from { transform: scale(1.7); }
+      to   { transform: scale(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .stat.just b { animation: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* The face-down card: nothing on it gives the deck away. */
+    .trump.face-down {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px;
+      min-height: 320px;
+      color: #fff;
+      background: repeating-linear-gradient(45deg, #000 0 10px, #222 10px 20px);
+    }
+
+    .trump.face-down img { width: 80%; max-width: 160px; background: #fff; border-radius: 8px; padding: 6px; }
+    .trump.face-down span { font-size: 3rem; font-weight: bold; }
+
+    .fight { width: 100%; min-height: 56px; font-size: 1.2rem; background: #000; color: #fff; margin-bottom: 8px; }
+    .fight:hover { background: #333; }
+    .table-hint { text-align: center; color: #555; font-size: 0.8rem; margin-bottom: 16px; }
+
+    /* --- the game --- */
+    .scorebar {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .scorebar .count { font-size: 1.6rem; display: block; line-height: 1; font-variant-numeric: tabular-nums; }
+    .scorebar .right { text-align: right; }
+    .scorebar .mid { text-align: center; font-size: 0.72rem; font-weight: normal; color: #555; }
+
+    .game-msg { min-height: 2.6em; text-align: center; font-size: 0.95rem; line-height: 1.3; margin-bottom: 12px; }
+    .game-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; margin-bottom: 16px; }
+    .game-actions a { color: #000; font-size: 0.85rem; }
+    .game-start { text-align: center; padding: 8px 0; }
+    .game-start p { color: #333; font-size: 0.9rem; line-height: 1.45; margin-bottom: 14px; }
+    .game-over-title { font-size: 1.7rem; font-weight: bold; margin-bottom: 6px; }
+
+    /* --- cards --- */
+    .card {
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    h2 { font-size: 1.1rem; }
+
+    .card-score { font-weight: bold; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+    .note { color: #555; font-size: 0.8rem; margin-bottom: 10px; }
+
+    /* --- verdict --- */
+    .verdict { text-align: center; }
+
+    .verdict-kicker {
+      font-size: 0.72rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #555;
+    }
+
+    .verdict-winner { font-size: 1.7rem; font-weight: bold; margin: 4px 0; overflow-wrap: anywhere; }
+    .verdict-text { font-size: 0.9rem; color: #333; line-height: 1.4; }
+
+    .tape {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .tape-side { min-width: 0; text-align: left; }
+    .tape-side.b { text-align: right; }
+
+    .tape-name { font-weight: bold; overflow-wrap: anywhere; }
+    .tape-name a { color: #000; text-decoration: none; }
+    .tape-name a:hover { text-decoration: underline; }
+    .tape-meta { font-size: 0.75rem; color: #555; margin-top: 2px; }
+
+    .tape-score {
+      font-size: 2.4rem;
+      font-weight: bold;
+      line-height: 1;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .colors { display: inline-flex; gap: 3px; margin-bottom: 4px; }
+
+    .color-pip {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid #000;
+    }
+
+    .color-W { background: #f9fafb; }
+    .color-U { background: #3b82f6; }
+    .color-B { background: #1f2937; }
+    .color-R { background: #ef4444; }
+    .color-G { background: #22c55e; }
+    .color-C { background: #9ca3af; }
+
+    /* Tug of war: 2px gap between the two sides, rounded outer ends. */
+    .tug { display: flex; gap: 2px; height: 12px; margin-top: 12px; }
+    .tug div { min-width: 4px; }
+    .tug .a { background: var(--a); border-radius: 4px 0 0 4px; }
+    .tug .b { background: var(--b); border-radius: 0 4px 4px 0; }
+
+    /* --- round scoreboard --- */
+    .rounds-nav { display: grid; gap: 0; margin-top: 14px; border-top: 1px solid #ddd; }
+
+    .rounds-nav a {
+      display: grid;
+      grid-template-columns: 2.5em 1fr 2.5em;
+      align-items: center;
+      padding: 7px 0;
+      color: #000;
+      text-decoration: none;
+      font-size: 0.85rem;
+      border-bottom: 1px solid #eee;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .rounds-nav a:hover .rn-name { text-decoration: underline; }
+    .rounds-nav a:last-child { border-bottom: none; }
+    .rn-name { text-align: center; }
+    .rn-a { text-align: left; color: #777; }
+    .rn-b { text-align: right; color: #777; }
+    .rn-a.won, .rn-b.won { color: #000; font-weight: bold; }
+
+    /* --- head-to-head hero --- */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0 14px;
+    }
+
+    .hero-side { font-weight: bold; min-width: 0; overflow-wrap: anywhere; }
+    .hero-side.b { text-align: right; }
+    .hero-score { font-size: 3rem; font-weight: bold; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .hero-sub { display: block; font-size: 0.7rem; font-weight: normal; color: #555; text-align: center; margin-top: 4px; }
+
+    .never {
+      text-align: center;
+      padding: 16px 8px;
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    /* --- stat rows: left value, what is measured, right value --- */
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: 6px;
+      align-items: center;
+      border-top: 1px solid #eee;
+      padding: 4px 0;
+    }
+
+    .lab {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #333;
+      overflow-wrap: anywhere;
+    }
+
+    .lab small, .val small {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #555;
+      line-height: 1.25;
+      margin-top: 1px;
+    }
+
+    .val {
+      padding: 6px 8px;
+      border-radius: 6px;
+      color: #666;
+      font-size: 0.95rem;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .val.b { text-align: right; }
+    .val.win { color: #000; font-weight: bold; }
+    .val.a.win { background: var(--a-tint); }
+    .val.b.win { background: var(--b-tint); }
+    .val.tie { color: #000; }
+
+    /* --- match list --- */
+    h3 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      margin: 16px 0 6px;
+    }
+
+    .match {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2px 10px;
+      align-items: center;
+      padding: 8px 0;
+      border-top: 1px solid #eee;
+      font-size: 0.9rem;
+    }
+
+    .match-result { font-weight: bold; overflow-wrap: anywhere; }
+    .match-result .lost { font-weight: normal; color: #666; }
+    .match-where { font-size: 0.75rem; color: #555; grid-column: 1; }
+    .match-where a { color: #555; }
+    .match-bo {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .match-bo.a { background: var(--a); }
+    .match-bo.b { background: var(--b); }
+
+    /* --- tables in details --- */
+    details { margin-top: 12px; font-size: 0.85rem; }
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      padding: 8px 0;
+    }
+
+    summary:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+
+    .table-scroll { max-width: 100%; overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+
+    th {
+      text-align: left;
+      padding: 6px 8px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #555;
+      border-bottom: 1.5px solid #000;
+      white-space: nowrap;
+    }
+
+    td { padding: 5px 8px; border-bottom: 1px solid #eee; white-space: nowrap; }
+    tr:last-child td { border-bottom: none; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.best { font-weight: bold; }
+    td.muted { color: #888; }
+
+    /* --- race chart --- */
+    .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.78rem; margin-bottom: 6px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend i { display: inline-block; width: 16px; height: 3px; border-radius: 2px; }
+    .legend i.title-dot { width: 9px; height: 9px; border-radius: 50%; background: #000; }
+
+    #race { position: relative; touch-action: pan-y; }
+    #race svg { display: block; width: 100%; }
+    .race-tip {
+      position: absolute;
+      top: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: #000;
+      color: #fff;
+      font-size: 0.75rem;
+      line-height: 1.4;
+      padding: 6px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .race-tip[hidden] { display: none; }
+
+    /* --- trivia --- */
+    .facts { list-style: none; }
+    .facts li {
+      padding: 8px 0;
+      border-top: 1px solid #eee;
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+    .facts li:first-child { border-top: none; }
+
+    .small-print { color: #555; font-size: 0.75rem; line-height: 1.5; margin-bottom: 20px; }
+    #error { color: red; margin-top: 20px; }
+
+    @media (max-width: 600px) {
+      body { padding: 16px 12px; }
+      h1 { font-size: 1.4rem; }
+      .card { padding: 14px 10px; }
+      .picker select { font-size: 0.9rem; padding: 10px 4px; }
+      .picker .btn { padding: 0 10px; }
+      .val { padding: 5px 6px; font-size: 0.85rem; }
+      .lab { font-size: 0.72rem; }
+      .tape-score { font-size: 2rem; }
+      .hero-score { font-size: 2.5rem; }
+      .verdict-winner { font-size: 1.4rem; }
+      th, td { padding-left: 5px; padding-right: 5px; }
+    }
+  </style>
+  <script src="nav.js?v=6" defer></script>
+</head>
+<body>
+
+<site-nav></site-nav>
+
+<div class="wrap">
+  <h1>⚔️ Versus</h1>
+  <div class="subtitle">Top Trumps, Bobby Kelzor edition. Higher stat wins.</div>
+
+  <div class="tabs">
+    <button class="btn tab" id="tab-duel" type="button" aria-pressed="true">⚔️ Duel</button>
+    <button class="btn tab" id="tab-play" type="button" aria-pressed="false">🃏 Play the computer</button>
+  </div>
+
+  <div id="duel-mode">
+  <div class="picker">
+    <label>Blue corner<select id="pick-a"></select></label>
+    <button class="btn" id="swap" type="button" aria-label="Swap the two decks" title="Swap corners">⇄</button>
+    <label>Orange corner<select id="pick-b"></select></label>
+  </div>
+  <div class="actions">
+    <button class="btn" id="random" type="button">🎲 Random fight</button>
+    <button class="btn" id="rivalry" type="button">🔥 Biggest rivalry</button>
+  </div>
+
+  <div id="content"><p style="color:#888">Loading...</p></div>
+  </div>
+
+  <div id="game" hidden></div>
+  <p id="error"></p>
+</div>
+
+<script>
+  const SERIES = [['seriesA', 'a'], ['seriesB', 'b'], ['seriesC', 'c'], ['seriesD', 'd'], ['seriesE', 'e']];
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const usd = n => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fmtDate = str => str.split('-').reverse().join('/');
+  const pct = n => `${Math.round(n)}%`;
+  const rate = (n, d) => d ? 100 * n / d : null;
+  const plural = (n, word, many = word + 's') => `${n} ${n === 1 ? word : many}`;
+  const edition = t => t.name.split(' ')[0]; // "XXI° Torneo Bob Kelzor" -> "XXI°"
+
+  let decks = [], tournaments = [], points = [], mvps = [];
+  let ko = [];          // every recorded match, in the order it was played
+  let profiles = {};    // deck name -> career numbers
+  let deckByName = {}, deckById = {};
+  let rivalryPair = null;
+  let current = null;   // the comparison on screen, kept for redrawing the chart
+
+  // Same order as stats.html and standings.html: the series first, then the
+  // top-level rounds, which from XXXVI are the Finals played after them.
+  function flattenMatches() {
+    const out = [];
+    for (const t of tournaments) {
+      for (const [key, letter] of SERIES) {
+        for (const r of t[key]?.rounds || []) {
+          for (const m of r.matches) out.push({ ...m, t, round: r.name, label: t[key].label, hash: `${t.id}-${letter}` });
+        }
+      }
+      for (const r of t.rounds) {
+        for (const m of r.matches) out.push({ ...m, t, round: r.name, label: t.seriesLabel || '', hash: String(t.id) });
+      }
+    }
+    return out;
+  }
+
+  // The finalist who isn't the winner, by the same rule as stats.html: XVIII
+  // closed on a three-deck group, where second place goes on wins in the group.
+  function runnerUp(t) {
+    const last = t.rounds[t.rounds.length - 1];
+    if (!last || !last.matches.length) return null;
+    if (last.matches.length === 1) {
+      const m = last.matches[0];
+      return m.score1 > m.score2 ? m.player2 : m.player1;
+    }
+    const wins = {};
+    for (const m of last.matches) {
+      const won = m.score1 > m.score2 ? m.player1 : m.player2;
+      const lost = m.score1 > m.score2 ? m.player2 : m.player1;
+      wins[won] = (wins[won] || 0) + 1;
+      wins[lost] = wins[lost] || 0;
+    }
+    const ranked = Object.entries(wins).sort((a, b) => b[1] - a[1]);
+    return ranked.length > 1 ? ranked[1][0] : null;
+  }
+
+  function buildProfile(deck) {
+    const p = {
+      deck, games: [], w: 0, l: 0, gf: 0, ga: 0,
+      bo1w: 0, bo1l: 0, bo3w: 0, bo3l: 0, sweeps: 0, decW: 0, decL: 0,
+      bestStreak: 0, worstStreak: 0, kingslayer: 0,
+      opponents: {}
+    };
+    const reigning = {};
+    tournaments.forEach((t, i) => { if (i) reigning[t.id] = tournaments[i - 1].winner; });
+
+    let run = 0, lossRun = 0;
+    for (const m of ko) {
+      if (m.player1 !== deck.name && m.player2 !== deck.name) continue;
+      const first = m.player1 === deck.name;
+      const opp = first ? m.player2 : m.player1;
+      const gf = first ? m.score1 : m.score2;
+      const ga = first ? m.score2 : m.score1;
+      const win = gf > ga;
+      // Matches are stored by games won: first to 1 was a Bo1, first to 2 a Bo3.
+      const bo3 = Math.max(gf, ga) === 2;
+
+      p.games.push({ opp, gf, ga, win, bo3, m });
+      p.gf += gf;
+      p.ga += ga;
+      win ? p.w++ : p.l++;
+      if (bo3) { win ? p.bo3w++ : p.bo3l++; } else { win ? p.bo1w++ : p.bo1l++; }
+      if (bo3 && win && ga === 0) p.sweeps++;
+      if (bo3 && gf + ga === 3) { win ? p.decW++ : p.decL++; }
+      if (win && reigning[m.t.id] === opp) p.kingslayer++;
+
+      const o = p.opponents[opp] ||= { w: 0, l: 0 };
+      win ? o.w++ : o.l++;
+
+      run = win ? run + 1 : 0;
+      lossRun = win ? 0 : lossRun + 1;
+      p.bestStreak = Math.max(p.bestStreak, run);
+      p.worstStreak = Math.max(p.worstStreak, lossRun);
+    }
+    p.played = p.w + p.l;
+
+    // Trophies: only the edition winner holds a Bob Kelzor title (same as
+    // albo.html); series brackets are counted apart.
+    p.titles = tournaments.filter(t => t.winner === deck.name);
+    p.finals = tournaments.filter(t => t.winner === deck.name || runnerUp(t) === deck.name).length;
+    p.seriesWins = tournaments.reduce((n, t) =>
+      n + SERIES.filter(([key]) => t[key]?.winner === deck.name).length, 0);
+    // A title won without dropping a single recorded game.
+    p.flawless = p.titles.filter(t => t.rounds
+      .flatMap(r => r.matches)
+      .filter(m => m.player1 === deck.name || m.player2 === deck.name)
+      .every(m => (m.player1 === deck.name ? m.score2 : m.score1) === 0)).length;
+
+    // Awards, counted the way deck.html lists them under Individual Honours.
+    p.mvps = 0;
+    p.scarpas = 0;
+    const cards = new Set();
+    const images = {};
+    const addImage = src => { if (src) images[src] = (images[src] || 0) + 1; };
+    for (const m of mvps) {
+      if (m.deck === deck.name) { p.mvps++; cards.add(m.card); addImage(m.image); }
+      if (m.scarpa?.deck === deck.name) { p.scarpas++; cards.add(m.scarpa.card); addImage(m.scarpa.image); }
+    }
+    for (const t of tournaments) {
+      for (const [key] of SERIES) {
+        const sr = t[key];
+        if (sr?.winner !== deck.name) continue;
+        if (sr.mvp) { p.mvps++; cards.add(sr.mvp); addImage(sr.mvpImage); }
+        if (sr.scarpa) { p.scarpas++; cards.add(sr.scarpa); addImage(sr.scarpaImage); }
+      }
+    }
+    p.cards = cards.size;
+    // Card art: the image of the deck's most decorated card, if it has one.
+    p.art = Object.entries(images).sort((x, y) => y[1] - x[1])[0]?.[0] || null;
+
+    // Points, same sums as standings.html: PPT per edition entered, PPG per
+    // recorded knockout game (group games aren't kept).
+    p.byEdition = {};
+    for (const e of points) {
+      const s = e.scores.find(x => x.deck === deck.name);
+      if (s) p.byEdition[e.tournamentId] = s;
+    }
+    const scores = Object.values(p.byEdition);
+    p.editions = scores.length;
+    p.total = scores.reduce((n, s) => n + s.total, 0);
+    p.bonus = scores.reduce((n, s) => n + s.bonusGroup + s.bonusFinalist + s.bonusWinner, 0);
+    p.blanks = scores.filter(s => s.total === 0).length;
+    p.ppt = p.editions ? p.total / p.editions : 0;
+    p.ppg = p.gf + p.ga ? p.total / (p.gf + p.ga) : 0;
+    p.best = Object.entries(p.byEdition).reduce((best, [id, s]) =>
+      !best || s.total > best.total ? { total: s.total, id: Number(id) } : best, null);
+
+    p.topCard = deck.top_cards?.length
+      ? deck.top_cards.reduce((a, b) => (b.price > a.price ? b : a))
+      : null;
+    return p;
+  }
+
+  // The live table: total points, ties to the lower anzianita, blocks of 8.
+  function assignStandings() {
+    const live = decks.filter(d => !d.is_dead)
+      .sort((a, b) => profiles[b.name].total - profiles[a.name].total || a.anzianita - b.anzianita);
+    live.forEach((d, i) => {
+      profiles[d.name].rank = i + 1;
+      profiles[d.name].serie = String.fromCharCode(65 + Math.floor(i / 8));
+    });
+  }
+
+  // A scored line. A value of null is "doesn't apply": it shows a dash and gives
+  // no point. Two values that print the same are level, even if they differ in
+  // a far decimal, since the page couldn't show why one had won.
+  function row(label, a, b, opts = {}) {
+    if (a == null && b == null) return null;
+    if (opts.hideZero && !a && !b) return null;
+    const fmt = opts.fmt || (v => v);
+    const textA = a == null ? '—' : String(fmt(a));
+    const textB = b == null ? '—' : String(fmt(b));
+    let win = null;
+    if (a != null && b != null && textA !== textB) {
+      win = (opts.lower ? a < b : a > b) ? 'a' : 'b';
+    }
+    return { label, textA, textB, win, tied: a != null && b != null && !win,
+             note: opts.note, noteA: opts.noteA, noteB: opts.noteB };
+  }
+
+  // A scored line whose result isn't a comparison of two numbers.
+  const called = (label, textA, textB, win, note) => ({ label, textA, textB, win, tied: false, note });
+
+  const makeRound = (id, title, note, rows) => {
+    const kept = rows.filter(Boolean);
+    return {
+      id, title, note, rows: kept,
+      a: kept.filter(r => r.win === 'a').length,
+      b: kept.filter(r => r.win === 'b').length
+    };
+  };
+
+  const record = (w, l) => `${w}–${l}`;
+
+  function headToHead(pa, pb) {
+    const meet = pa.games.filter(g => g.opp === pb.deck.name);
+    const h = {
+      meet, n: meet.length,
+      a: meet.filter(g => g.win).length,
+      b: meet.filter(g => !g.win).length,
+      bo1a: meet.filter(g => !g.bo3 && g.win).length,
+      bo1b: meet.filter(g => !g.bo3 && !g.win).length,
+      bo3a: meet.filter(g => g.bo3 && g.win).length,
+      bo3b: meet.filter(g => g.bo3 && !g.win).length,
+      gamesA: meet.reduce((n, g) => n + g.gf, 0),
+      gamesB: meet.reduce((n, g) => n + g.ga, 0),
+      sweepsA: meet.filter(g => g.bo3 && g.win && g.ga === 0).length,
+      sweepsB: meet.filter(g => g.bo3 && !g.win && g.gf === 0).length,
+      decA: meet.filter(g => g.bo3 && g.win && g.ga === 1).length,
+      decB: meet.filter(g => g.bo3 && !g.win && g.gf === 1).length,
+      finals: meet.filter(g => /final$/i.test(g.m.round) && !/semi|quarter/i.test(g.m.round))
+    };
+    h.finalsA = h.finals.filter(g => g.win).length;
+    h.finalsB = h.finals.filter(g => !g.win).length;
+    return h;
+  }
+
+  // Career points after each edition, from each deck's debut to its retirement.
+  function race(pa, pb) {
+    const series = p => {
+      const ids = Object.keys(p.byEdition).map(Number);
+      const debut = Math.min(...ids);
+      const end = p.deck.is_dead ? p.deck.last_edition : Infinity;
+      let sum = 0;
+      return tournaments.map(t => {
+        sum += p.byEdition[t.id]?.total || 0;
+        return t.id >= debut && t.id <= end ? sum : null;
+      });
+    };
+    const a = series(pa), b = series(pb);
+    let aheadA = 0, aheadB = 0, changes = 0, leader = null;
+    a.forEach((v, i) => {
+      if (v == null || b[i] == null || v === b[i]) return;
+      const now = v > b[i] ? 'a' : 'b';
+      now === 'a' ? aheadA++ : aheadB++;
+      if (leader && leader !== now) changes++;
+      leader = now;
+    });
+    return { a, b, aheadA, aheadB, changes };
+  }
+
+  function sharedGround(pa, pb) {
+    // Editions both entered: whoever scored more that edition takes it.
+    const shared = tournaments.filter(t => pa.byEdition[t.id] && pb.byEdition[t.id]);
+    let dA = 0, dB = 0, level = 0;
+    const duels = shared.map(t => {
+      const x = pa.byEdition[t.id].total, y = pb.byEdition[t.id].total;
+      x > y ? dA++ : y > x ? dB++ : level++;
+      return { t, x, y };
+    });
+
+    // Opponents both have faced: the better win rate takes that opponent. It's
+    // the only fair measure for two decks that never met, or rarely did.
+    const common = Object.keys(pa.opponents)
+      .filter(o => pb.opponents[o])
+      .map(o => {
+        const x = pa.opponents[o], y = pb.opponents[o];
+        const rx = x.w / (x.w + x.l), ry = y.w / (y.w + y.l);
+        return { o, x, y, edge: rx > ry ? 'a' : ry > rx ? 'b' : null };
+      })
+      .sort((p, q) => (q.x.w + q.x.l + q.y.w + q.y.l) - (p.x.w + p.x.l + p.y.w + p.y.l) || p.o.localeCompare(q.o));
+
+    return { duels, dA, dB, level, common };
+  }
+
+  function buildComparison(aName, bName) {
+    const pa = profiles[aName], pb = profiles[bName];
+    const da = pa.deck, db = pb.deck;
+    const h = headToHead(pa, pb);
+    const r = race(pa, pb);
+    const sg = sharedGround(pa, pb);
+    const rounds = [];
+
+    // ---- 1. the two of them, directly ----
+    const last = h.meet[h.n - 1];
+    rounds.push(makeRound('h2h', 'Head to head', 'Only the matches these two played against each other.', h.n ? [
+      row('Matches won', h.a, h.b),
+      h.bo1a + h.bo1b ? row('Single matches won', h.bo1a, h.bo1b, { note: 'Bo1' }) : null,
+      h.bo3a + h.bo3b ? row('Bo3s won', h.bo3a, h.bo3b) : null,
+      row('Games won', h.gamesA, h.gamesB),
+      row('2–0 sweeps', h.sweepsA, h.sweepsB, { hideZero: true }),
+      row('Deciders won', h.decA, h.decB, { hideZero: true, note: 'Bo3s that went 2–1' }),
+      h.finals.length ? row('Finals won', h.finalsA, h.finalsB) : null,
+      called('Latest meeting', last.win ? 'Won' : 'Lost', last.win ? 'Lost' : 'Won', last.win ? 'a' : 'b',
+        `${last.m.round}, ${edition(last.m.t)}`)
+    ] : []));
+
+    // ---- 2. silverware ----
+    rounds.push(makeRound('trophies', 'Trophy room', 'What ended up in the cabinet.', [
+      row('Titles', pa.titles.length, pb.titles.length),
+      row('Finals reached', pa.finals, pb.finals),
+      row('Finals converted', pa.finals ? rate(pa.titles.length, pa.finals) : null, pb.finals ? rate(pb.titles.length, pb.finals) : null,
+        { fmt: pct, note: 'Share of finals that became titles' }),
+      row('Flawless titles', pa.flawless, pb.flawless, { hideZero: true, note: 'Without dropping a game' }),
+      row('Series won', pa.seriesWins, pb.seriesWins, { hideZero: true }),
+      row('MVP awards', pa.mvps, pb.mvps),
+      row('Scarpa awards', pa.scarpas, pb.scarpas, { hideZero: true }),
+      row('Decorated cards', pa.cards, pb.cards, { hideZero: true, note: 'Different cards with an award' })
+    ]));
+
+    // ---- 3. points table ----
+    rounds.push(makeRound('points', 'The numbers', 'Same formulas as the Standings page.', [
+      row('Total points', pa.total, pb.total),
+      row('PPT', pa.ppt, pb.ppt, { fmt: v => v.toFixed(2), note: 'Points per tournament' }),
+      row('PPG', pa.ppg, pb.ppg, { fmt: v => v.toFixed(2), note: 'Points per game' }),
+      row('Bonus points', pa.bonus, pb.bonus),
+      row('Best edition', pa.best.total, pb.best.total, {
+        noteA: edition(tournaments.find(t => t.id === pa.best.id)),
+        noteB: edition(tournaments.find(t => t.id === pb.best.id))
+      }),
+      row('Blank editions', rate(pa.blanks, pa.editions), rate(pb.blanks, pb.editions), {
+        fmt: pct, lower: true, note: 'Share scoring zero. Lower wins',
+        noteA: `${pa.blanks} of ${pa.editions}`, noteB: `${pb.blanks} of ${pb.editions}`
+      })
+    ]));
+
+    // ---- 4. against everybody ----
+    rounds.push(makeRound('battle', 'On the battlefield', 'Whole career, against every opponent.', [
+      row('Match win rate', rate(pa.w, pa.played), rate(pb.w, pb.played), { fmt: pct, noteA: record(pa.w, pa.l), noteB: record(pb.w, pb.l) }),
+      row('Bo1 win rate', rate(pa.bo1w, pa.bo1w + pa.bo1l), rate(pb.bo1w, pb.bo1w + pb.bo1l), { fmt: pct, noteA: record(pa.bo1w, pa.bo1l), noteB: record(pb.bo1w, pb.bo1l) }),
+      row('Bo3 win rate', rate(pa.bo3w, pa.bo3w + pa.bo3l), rate(pb.bo3w, pb.bo3w + pb.bo3l), { fmt: pct, noteA: record(pa.bo3w, pa.bo3l), noteB: record(pb.bo3w, pb.bo3l) }),
+      row('Game win rate', rate(pa.gf, pa.gf + pa.ga), rate(pb.gf, pb.gf + pb.ga), { fmt: pct, noteA: record(pa.gf, pa.ga), noteB: record(pb.gf, pb.ga) }),
+      row('Clutch', rate(pa.decW, pa.decW + pa.decL), rate(pb.decW, pb.decW + pb.decL), { fmt: pct, note: 'Win rate in deciding games', noteA: record(pa.decW, pa.decL), noteB: record(pb.decW, pb.decL) }),
+      row('Steamroller', rate(pa.sweeps, pa.bo3w), rate(pb.sweeps, pb.bo3w), { fmt: pct, note: 'Bo3 wins that were 2–0', noteA: `${pa.sweeps} of ${pa.bo3w}`, noteB: `${pb.sweeps} of ${pb.bo3w}` }),
+      row('Longest win streak', pa.bestStreak, pb.bestStreak),
+      row('Longest lose streak', pa.worstStreak, pb.worstStreak, { lower: true, note: 'Lower wins' }),
+      row('Kingslayer', pa.kingslayer, pb.kingslayer, { hideZero: true, note: 'Wins over the reigning champion' }),
+      row('Scalps', Object.values(pa.opponents).filter(o => o.w).length, Object.values(pb.opponents).filter(o => o.w).length, { note: 'Different decks beaten' })
+    ]));
+
+    // ---- 5. fair fights even if they never met ----
+    const edgeA = sg.common.filter(c => c.edge === 'a').length;
+    const edgeB = sg.common.filter(c => c.edge === 'b').length;
+    rounds.push(makeRound('shared', 'Shadow boxing', 'Fights they never had to play each other to settle.', [
+      sg.duels.length ? row('Edition duels', sg.dA, sg.dB, { note: `More points in the same edition. ${sg.duels.length} shared, ${sg.level} level` }) : null,
+      sg.common.length ? row('Common enemies', edgeA, edgeB, { note: `Better record against the same deck. ${sg.common.length} shared` }) : null,
+      r.aheadA + r.aheadB ? row('Editions in front', r.aheadA, r.aheadB, { note: `Career points race. ${plural(r.changes, 'lead change')}` }) : null
+    ]));
+
+    // ---- 6. right now. A retired deck's "recent" results are years old. ----
+    if (!da.is_dead && !db.is_dead) {
+      const lastFive = p => p.games.slice(-5);
+      const pills = p => lastFive(p).map(g => (g.win ? 'W' : 'L')).join(' ');
+      const recent = tournaments.slice(-3);
+      const recentPts = p => recent.reduce((n, t) => n + (p.byEdition[t.id]?.total || 0), 0);
+      const latestTitle = p => p.titles.length ? p.titles[p.titles.length - 1].id : null;
+      rounds.push(makeRound('form', 'Current form', 'Who you would bet on tonight.', [
+        row('Last 5 matches won', lastFive(pa).filter(g => g.win).length, lastFive(pb).filter(g => g.win).length, { noteA: pills(pa), noteB: pills(pb) }),
+        row('Points, last 3 editions', recentPts(pa), recentPts(pb)),
+        row('Standings position', pa.rank, pb.rank, { fmt: v => `#${v}`, lower: true, note: 'Lower wins', noteA: `Serie ${pa.serie}`, noteB: `Serie ${pb.serie}` }),
+        row('Latest title', latestTitle(pa), latestTitle(pb), { fmt: id => edition(tournaments.find(t => t.id === id)) })
+      ]));
+    }
+
+    // ---- 7. the money. Retired decks have no list, so no prices. ----
+    if (da.value_usd != null && db.value_usd != null) {
+      rounds.push(makeRound('wallet', 'The wallet', 'More expensive wins. Moneyball rewards the bargain.', [
+        row('Deck value', da.value_usd, db.value_usd, { fmt: usd, note: 'Cardtrader' }),
+        row('Deck value', da.value_cardmarket_usd, db.value_cardmarket_usd, { fmt: usd, note: 'Cardmarket' }),
+        row('Most expensive card', pa.topCard.price, pb.topCard.price, { fmt: usd, noteA: pa.topCard.name, noteB: pb.topCard.name }),
+        row('Moneyball', 100 * pa.total / da.value_usd, 100 * pb.total / db.value_usd, { fmt: v => v.toFixed(1), note: 'Career points per $100 of deck' })
+      ]));
+    }
+
+    const scoredRounds = rounds.filter(x => x.rows.length);
+    const scoreA = scoredRounds.reduce((n, x) => n + x.a, 0);
+    const scoreB = scoredRounds.reduce((n, x) => n + x.b, 0);
+    return { pa, pb, h, r, sg, rounds: scoredRounds, scoreA, scoreB, verdict: decide(pa, pb, h, scoreA, scoreB, scoredRounds) };
+  }
+
+  // Most points wins. Level on points goes to whoever leads the direct record,
+  // then career points; only after that is it a draw.
+  function decide(pa, pb, h, scoreA, scoreB, rounds) {
+    let side = scoreA > scoreB ? 'a' : scoreB > scoreA ? 'b' : null;
+    let tiebreak = null;
+    if (!side && h.a !== h.b) { side = h.a > h.b ? 'a' : 'b'; tiebreak = 'the head-to-head record'; }
+    if (!side && pa.total !== pb.total) { side = pa.total > pb.total ? 'a' : 'b'; tiebreak = 'career points'; }
+    if (!side) return { side: null, kicker: 'Dead heat', text: 'Nothing separates them. Play it out at the table.' };
+
+    const winner = side === 'a' ? pa : pb;
+    const loser = side === 'a' ? pb : pa;
+    const hi = Math.max(scoreA, scoreB), lo = Math.min(scoreA, scoreB);
+    const share = hi / ((hi + lo) || 1);
+    const kicker = tiebreak ? 'Tie-break'
+      : share >= 0.8 ? 'Demolition'
+      : share >= 0.65 ? 'Clear win'
+      : share >= 0.55 ? 'Win on points'
+      : 'Split decision';
+
+    const roundsWon = rounds.filter(x => x[side] > x[side === 'a' ? 'b' : 'a']).length;
+    const otherSide = side === 'a' ? 'b' : 'a';
+    const consolation = [...rounds].sort((x, y) => (y[otherSide] - y[side]) - (x[otherSide] - x[side]))[0];
+    const hasConsolation = consolation && consolation[otherSide] > consolation[side];
+
+    const parts = [];
+    parts.push(tiebreak
+      ? `Level at ${hi}–${lo}, settled on ${tiebreak}.`
+      : `Takes ${hi} points to ${lo}, and ${plural(roundsWon, 'round')} of ${rounds.length}.`);
+    if (hasConsolation) parts.push(`${loser.deck.name}'s best argument: ${consolation.title}, ${consolation[otherSide]}–${consolation[side]}.`);
+    return { side, winner: winner.deck.name, kicker, text: parts.join(' ') };
+  }
+
+  // Unscored bits of colour, only the ones that apply to this pair.
+  function trivia(c) {
+    const { pa, pb, h, sg, r } = c;
+    const a = pa.deck, b = pb.deck;
+    const facts = [];
+
+    if (h.n) {
+      const first = h.meet[0], lastM = h.meet[h.n - 1];
+      facts.push(h.n === 1
+        ? `They have met once: ${lastM.m.round}, ${edition(lastM.m.t)}.`
+        : `First met in ${edition(first.m.t)} (${first.m.round}); most recently in ${edition(lastM.m.t)} (${lastM.m.round}).`);
+      let bestRun = 0, runner = null, run = 0, prev = null;
+      for (const g of h.meet) {
+        run = g.win === prev ? run + 1 : 1;
+        prev = g.win;
+        if (run > bestRun) { bestRun = run; runner = g.win ? a.name : b.name; }
+      }
+      if (bestRun >= 2) facts.push(`Longest run in this fixture: ${runner}, ${bestRun} wins in a row.`);
+    } else {
+      facts.push(sg.duels.length
+        ? `Never drawn against each other in a recorded match, despite ${plural(sg.duels.length, 'shared edition')}.`
+        : 'They have never even entered the same edition.');
+    }
+
+    if (a.anzianita != null && b.anzianita != null) {
+      const [older, newer] = a.anzianita < b.anzianita ? [a, b] : [b, a];
+      facts.push(`${older.name} is the elder: anzianità ${older.anzianita} against ${newer.anzianita}.`);
+    }
+
+    const sharedColors = a.colors.filter(x => b.colors.includes(x));
+    const colorNames = { W: 'white', U: 'blue', B: 'black', R: 'red', G: 'green', C: 'colorless' };
+    if (sharedColors.length) {
+      const same = sharedColors.length === a.colors.length && sharedColors.length === b.colors.length;
+      facts.push(same
+        ? `Mirror match: both play exactly ${sharedColors.map(x => colorNames[x]).join(' and ')}.`
+        : `They fish in the same pond: both play ${sharedColors.map(x => colorNames[x]).join(' and ')}.`);
+    } else {
+      facts.push('No colour in common at all.');
+    }
+
+    const namesB = new Set((b.top_cards || []).map(x => x.name));
+    const sharedCards = (a.top_cards || []).filter(x => namesB.has(x.name)).map(x => x.name);
+    if (sharedCards.length) facts.push(`Same card among both top 5 most expensive: ${sharedCards.join(', ')}.`);
+
+    if (a.value_usd != null && b.value_usd != null) {
+      const [rich, poor] = a.value_usd >= b.value_usd ? [a, b] : [b, a];
+      const times = rich.value_usd / poor.value_usd;
+      if (times >= 2) facts.push(`One copy of ${rich.name} buys ${Math.floor(times)} copies of ${poor.name}.`);
+    }
+
+    const victim = p => {
+      const entries = Object.entries(p.opponents).filter(([, o]) => o.w >= 2);
+      if (!entries.length) return null;
+      return entries.sort((x, y) => y[1].w - x[1].w || x[0].localeCompare(y[0]))[0];
+    };
+    for (const p of [pa, pb]) {
+      const v = victim(p);
+      if (v) facts.push(`${p.deck.name}'s favourite victim: ${v[0]}, beaten ${v[1].w} times.`);
+    }
+
+    if (r.changes >= 3) facts.push(`The career race has changed hands ${r.changes} times.`);
+    return facts;
+  }
+
+  // ================= render =================
+
+  function rowHtml(x) {
+    const cls = side => (x.win === side ? 'win' : x.tied ? 'tie' : '');
+    const small = t => (t ? `<small>${esc(t)}</small>` : '');
+    return `
+      <div class="row">
+        <div class="val a ${cls('a')}">${esc(x.textA)}${small(x.noteA)}</div>
+        <div class="lab">${esc(x.label)}${small(x.note)}</div>
+        <div class="val b ${cls('b')}">${esc(x.textB)}${small(x.noteB)}</div>
+      </div>
+    `;
+  }
+
+  function tapeSide(p, side) {
+    const d = p.deck;
+    const last = tournaments.find(t => t.id === d.last_edition);
+    const meta = d.is_dead
+      ? `Retired after ${last ? edition(last) : 'its last edition'}`
+      : `Serie ${p.serie} · #${p.rank}`;
+    return `
+      <div class="tape-side ${side}">
+        <div class="colors">${d.colors.map(c => `<div class="color-pip color-${c}"></div>`).join('')}</div>
+        <div class="tape-name"><a href="deck.html?id=${encodeURIComponent(d.id)}">${esc(d.name)}</a></div>
+        <div class="tape-meta">${meta}</div>
+      </div>
+    `;
+  }
+
+  function verdictHtml(c) {
+    const { pa, pb, scoreA, scoreB, verdict: v, rounds } = c;
+    return `
+      <div class="card verdict">
+        <div class="verdict-kicker">${esc(v.kicker)}</div>
+        <div class="verdict-winner">${v.side ? `🏆 ${esc(v.winner)}` : '🤝 A draw'}</div>
+        <div class="verdict-text">${esc(v.text)}</div>
+        <div class="tape">
+          ${tapeSide(pa, 'a')}
+          <div class="tape-score">${scoreA}–${scoreB}</div>
+          ${tapeSide(pb, 'b')}
+        </div>
+        <div class="tug" role="img" aria-label="${esc(pa.deck.name)} ${scoreA} points, ${esc(pb.deck.name)} ${scoreB} points">
+          <div class="a" style="flex:${scoreA || 0.01}"></div>
+          <div class="b" style="flex:${scoreB || 0.01}"></div>
+        </div>
+        <div class="rounds-nav">
+          ${rounds.map(x => `
+            <a href="#${x.id}">
+              <span class="rn-a ${x.a > x.b ? 'won' : ''}">${x.a}</span>
+              <span class="rn-name">${esc(x.title)}</span>
+              <span class="rn-b ${x.b > x.a ? 'won' : ''}">${x.b}</span>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function matchesHtml(c) {
+    const { pa, pb, h } = c;
+    return [...h.meet].reverse().map(g => {
+      const m = g.m;
+      const where = [m.round, m.label].filter(Boolean).join(' · ');
+      return `
+        <div class="match">
+          <div class="match-result">
+            <span class="${g.win ? '' : 'lost'}">${esc(pa.deck.name)}</span>
+            ${g.gf}–${g.ga}
+            <span class="${g.win ? 'lost' : ''}">${esc(pb.deck.name)}</span>
+          </div>
+          <div class="match-bo ${g.win ? 'a' : 'b'}" title="${esc(g.win ? pa.deck.name : pb.deck.name)} won"></div>
+          <div class="match-where">
+            <a href="tournament.html#${m.hash}">${edition(m.t)}</a> · ${esc(where)} · ${g.bo3 ? 'Bo3' : 'Bo1'}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function h2hHtml(c) {
+    const { pa, pb, h, rounds } = c;
+    const round = rounds.find(x => x.id === 'h2h');
+    const nameA = esc(pa.deck.name), nameB = esc(pb.deck.name);
+    if (!h.n) {
+      return `
+        <div class="card" id="h2h">
+          <div class="card-head"><h2>Head to head</h2></div>
+          <div class="never">
+            ${nameA} and ${nameB} have never met in a recorded match.<br>
+            Group games aren't kept, so the other rounds have to settle this.
+          </div>
+        </div>
+      `;
+    }
+    return `
+      <div class="card" id="h2h">
+        <div class="card-head">
+          <h2>Head to head</h2>
+          <span class="card-score">${round.a}–${round.b}</span>
+        </div>
+        <p class="note">${esc(round.note)}</p>
+        <div class="hero">
+          <div class="hero-side a">${nameA}</div>
+          <div>
+            <div class="hero-score">${h.a}–${h.b}</div>
+            <span class="hero-sub">${plural(h.n, 'match', 'matches')} played</span>
+          </div>
+          <div class="hero-side b">${nameB}</div>
+        </div>
+        ${round.rows.map(rowHtml).join('')}
+        <h3>Every meeting</h3>
+        ${matchesHtml(c)}
+      </div>
+    `;
+  }
+
+  function roundHtml(x, extra = '') {
+    return `
+      <div class="card" id="${x.id}">
+        <div class="card-head">
+          <h2>${esc(x.title)}</h2>
+          <span class="card-score">${x.a}–${x.b}</span>
+        </div>
+        <p class="note">${esc(x.note)}</p>
+        ${x.rows.map(rowHtml).join('')}
+        ${extra}
+      </div>
+    `;
+  }
+
+  function sharedExtraHtml(c) {
+    const { pa, pb, sg } = c;
+    const nameA = esc(pa.deck.name), nameB = esc(pb.deck.name);
+    const rec = o => `${o.w}–${o.l}`;
+    const common = sg.common.length ? `
+      <details>
+        <summary>Common enemies (${sg.common.length})</summary>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Opponent</th><th class="num">${nameA}</th><th class="num">${nameB}</th></tr></thead>
+          <tbody>${sg.common.map(e => `
+            <tr>
+              <td>${esc(e.o)}</td>
+              <td class="num ${e.edge === 'a' ? 'best' : ''}">${rec(e.x)}</td>
+              <td class="num ${e.edge === 'b' ? 'best' : ''}">${rec(e.y)}</td>
+            </tr>
+          `).join('')}</tbody>
+        </table></div>
+      </details>
+    ` : '';
+    const duels = sg.duels.length ? `
+      <details>
+        <summary>Edition duels (${sg.duels.length})</summary>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Edition</th><th class="num">${nameA}</th><th class="num">${nameB}</th></tr></thead>
+          <tbody>${[...sg.duels].reverse().map(d => `
+            <tr>
+              <td><a href="tournament.html#${d.t.id}" style="color:#000">${edition(d.t)}</a></td>
+              <td class="num ${d.x > d.y ? 'best' : ''}">${d.x}</td>
+              <td class="num ${d.y > d.x ? 'best' : ''}">${d.y}</td>
+            </tr>
+          `).join('')}</tbody>
+        </table></div>
+      </details>
+    ` : '';
+    return common + duels;
+  }
+
+  function raceCardHtml(c) {
+    const { pa, pb } = c;
+    return `
+      <div class="card">
+        <div class="card-head"><h2>The race</h2></div>
+        <p class="note">Career points after every edition. Dots mark a title.</p>
+        <div class="legend">
+          <span><i style="background:var(--a)"></i>${esc(pa.deck.name)}</span>
+          <span><i style="background:var(--b)"></i>${esc(pb.deck.name)}</span>
+          <span><i class="title-dot"></i>Title won</span>
+        </div>
+        <div id="race"></div>
+      </div>
+    `;
+  }
+
+  // One y-axis, 2px lines, recessive grid, names labelled at the line ends.
+  function drawRace() {
+    const box = document.getElementById('race');
+    if (!box || !current) return;
+    const { pa, pb, r } = current;
+    const W = Math.max(260, box.clientWidth || 600);
+    const H = W < 420 ? 220 : 280;
+    const nameRoom = Math.min(96, 16 + 7 * Math.max(pa.deck.name.length, pb.deck.name.length));
+    const pad = { top: 12, right: nameRoom, bottom: 26, left: 32 };
+    const iw = W - pad.left - pad.right, ih = H - pad.top - pad.bottom;
+    const n = tournaments.length;
+
+    const peak = Math.max(1, ...r.a.filter(v => v != null), ...r.b.filter(v => v != null));
+    const raw = peak / 4;
+    const mag = 10 ** Math.floor(Math.log10(raw));
+    const step = [1, 2, 5, 10].map(k => k * mag).find(s => s >= raw);
+    const yMax = Math.ceil(peak / step) * step;
+
+    const x = i => pad.left + (n > 1 ? iw * i / (n - 1) : 0);
+    const y = v => pad.top + ih - ih * v / yMax;
+
+    const grid = [];
+    for (let v = 0; v <= yMax; v += step) {
+      grid.push(`<line x1="${pad.left}" x2="${pad.left + iw}" y1="${y(v)}" y2="${y(v)}" stroke="#eee"/>
+        <text x="${pad.left - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="#555">${v}</text>`);
+    }
+    const ticks = tournaments.map((t, i) => (t.id % (W < 420 ? 10 : 5) === 0
+      ? `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="#555">${t.id}</text>` : '')).join('');
+
+    const pathOf = vals => vals.reduce((d, v, i) =>
+      v == null ? d : d + `${d ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`, '');
+    const dotsOf = (vals, p, color) => p.titles.map(t => {
+      const i = tournaments.indexOf(t);
+      return vals[i] == null ? '' : `<circle cx="${x(i)}" cy="${y(vals[i])}" r="4.5" fill="${color}" stroke="#fff" stroke-width="2"/>`;
+    }).join('');
+
+    // Labels sit at each line's end, pushed apart when the lines finish close.
+    const endOf = vals => { let i = vals.length - 1; while (i > 0 && vals[i] == null) i--; return i; };
+    const endA = endOf(r.a), endB = endOf(r.b);
+    let ya = y(r.a[endA]) + 4, yb = y(r.b[endB]) + 4;
+    if (Math.abs(ya - yb) < 14) {
+      const mid = (ya + yb) / 2;
+      const aOnTop = r.a[endA] >= r.b[endB];
+      ya = mid + (aOnTop ? -7 : 7);
+      yb = mid + (aOnTop ? 7 : -7);
+    }
+    const label = (i, ty, text) => `<text x="${x(i) + 7}" y="${ty}" font-size="12" font-weight="bold" fill="#000">${esc(text)}</text>`;
+
+    box.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Career points of ${esc(pa.deck.name)} and ${esc(pb.deck.name)} after each edition">
+        ${grid.join('')}
+        ${ticks}
+        <path d="${pathOf(r.a)}" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+        <path d="${pathOf(r.b)}" fill="none" stroke="#ea580c" stroke-width="2" stroke-linejoin="round"/>
+        ${dotsOf(r.a, pa, '#2563eb')}
+        ${dotsOf(r.b, pb, '#ea580c')}
+        ${label(endA, ya, pa.deck.name)}
+        ${label(endB, yb, pb.deck.name)}
+        <line id="race-cross" y1="${pad.top}" y2="${pad.top + ih}" stroke="#000" stroke-width="1" visibility="hidden"/>
+      </svg>
+      <div class="race-tip" hidden></div>
+    `;
+
+    // Crosshair and tooltip: the nearest edition to the pointer.
+    const tip = box.querySelector('.race-tip');
+    const cross = box.querySelector('#race-cross');
+    const move = e => {
+      const rect = box.getBoundingClientRect();
+      const px = (e.clientX - rect.left) * (W / rect.width);
+      const i = Math.max(0, Math.min(n - 1, Math.round((px - pad.left) / (iw / (n - 1)))));
+      const show = (name, v) => `${esc(name)}: ${v == null ? '–' : v}`;
+      tip.innerHTML = `<strong>${edition(tournaments[i])}</strong><br>${show(pa.deck.name, r.a[i])}<br>${show(pb.deck.name, r.b[i])}`;
+      tip.hidden = false;
+      const left = x(i) * (rect.width / W);
+      tip.style.left = `${Math.min(left + 8, rect.width - tip.offsetWidth)}px`;
+      cross.setAttribute('x1', x(i));
+      cross.setAttribute('x2', x(i));
+      cross.setAttribute('visibility', 'visible');
+    };
+    const leave = () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); };
+    box.onpointermove = move;
+    box.onpointerdown = move;
+    box.onpointerleave = leave;
+  }
+
+  // ================= Top Trumps cards =================
+
+  // The stats printed on every card. Each one is also a scored row further
+  // down, compared by the same rule, so a card never contradicts the verdict.
+  const TRUMPS = [
+    { key: 'titles',  label: 'Titles',       get: p => p.titles.length },
+    { key: 'finals',  label: 'Finals',       get: p => p.finals },
+    { key: 'total',   label: 'Total points', get: p => p.total },
+    { key: 'ppt',     label: 'PPT',          get: p => p.ppt, fmt: v => v.toFixed(2) },
+    { key: 'ppg',     label: 'PPG',          get: p => p.ppg, fmt: v => v.toFixed(2) },
+    { key: 'winrate', label: 'Win rate',     get: p => rate(p.w, p.played), fmt: pct },
+    { key: 'streak',  label: 'Win streak',   get: p => p.bestStreak },
+    { key: 'mvps',    label: 'MVPs',         get: p => p.mvps },
+    { key: 'value',   label: 'Deck value',   get: p => p.deck.value_usd ?? null, fmt: usd },
+    { key: 'topcard', label: 'Top card',     get: p => p.topCard?.price ?? null, fmt: usd }
+  ];
+
+  const compareStat = (s, pa, pb) => row(s.label, s.get(pa), s.get(pb), { fmt: s.fmt });
+
+  const MANA = { W: '#f9fafb', U: '#3b82f6', B: '#1f2937', R: '#ef4444', G: '#22c55e', C: '#9ca3af' };
+
+  // Decks with no award image get their mana colours as the art instead.
+  function artHtml(p) {
+    if (p.art) return `<img class="trump-art" src="${esc(p.art)}" alt="">`;
+    const colors = p.deck.colors.map(c => MANA[c]);
+    const stops = colors.map((c, i) => `${c} ${100 * i / colors.length}% ${100 * (i + 1) / colors.length}%`).join(',');
+    return `<div class="trump-art" style="background:linear-gradient(135deg,${stops})"></div>`;
+  }
+
+  // rows: [{ key, label, text, state, picked, just, enabled }]
+  function trumpCard(p, side, rows) {
+    const d = p.deck;
+    const last = tournaments.find(t => t.id === d.last_edition);
+    const meta = d.is_dead ? `Retired, ${last ? edition(last) : ''}` : `Serie ${p.serie} · #${p.rank}`;
+    return `
+      <article class="trump ${side}">
+        <div class="trump-head"><span>${esc(d.name)}</span><span class="trump-no">No. ${d.anzianita}</span></div>
+        ${artHtml(p)}
+        <div class="trump-meta">
+          <span>${meta}</span>
+          <span class="colors">${d.colors.map(c => `<div class="color-pip color-${c}"></div>`).join('')}</span>
+        </div>
+        <div>
+          ${rows.map(x => `
+            <button class="stat ${x.state || ''} ${x.picked ? 'picked' : ''} ${x.just ? 'just' : ''}" type="button"
+                    data-stat="${x.key}" ${x.enabled ? '' : 'disabled'}>
+              <span>${esc(x.label)}</span><b>${esc(x.text)}</b>
+            </button>
+          `).join('')}
+        </div>
+      </article>
+    `;
+  }
+
+  const faceDownCard = side => `
+    <article class="trump face-down ${side}" aria-label="Face-down card">
+      <img src="images/logo.png" alt="">
+      <span>?</span>
+    </article>
+  `;
+
+  // Who a compared stat means for one side of the table.
+  const stateFor = (r, side) => (r.tied ? 'tie' : r.win === side ? 'win' : r.win ? 'lose' : '');
+
+  // ================= duel: two chosen decks, cards flipped stat by stat =================
+
+  const duel = { pair: '', flipped: new Set(), just: null, fought: false, run: 0 };
+
+  // The direct record leads the card, since it's the one that settles arguments.
+  function duelStats(c) {
+    // Two retired decks have no prices at all, so those lines leave the card.
+    const stats = TRUMPS.map(s => ({ key: s.key, r: compareStat(s, c.pa, c.pb) })).filter(s => s.r);
+    if (c.h.n) stats.unshift({ key: 'h2h', r: row('H2H wins', c.h.a, c.h.b) });
+    return stats;
+  }
+
+  function renderTable() {
+    const box = document.getElementById('table');
+    if (!box || !current) return;
+    const stats = duelStats(current);
+    const open = key => duel.fought || duel.flipped.has(key);
+    const rowsFor = side => stats.map(({ key, r }) => ({
+      key,
+      label: r.label,
+      text: !open(key) ? '?' : side === 'a' ? r.textA : r.textB,
+      state: open(key) ? stateFor(r, side) : '',
+      just: duel.just === key,
+      enabled: !open(key)
+    }));
+    box.innerHTML = `
+      <div class="trumps">
+        ${trumpCard(current.pa, 'a', rowsFor('a'))}
+        ${trumpCard(current.pb, 'b', rowsFor('b'))}
+      </div>
+      ${duel.fought ? '' : `
+        <button class="btn fight" id="fight" type="button">⚔️ FIGHT!</button>
+        <p class="table-hint">Or tap a stat to flip it yourself.</p>
+      `}
+    `;
+  }
+
+  function revealResults(scroll) {
+    duel.fought = true;
+    duel.just = null;
+    renderTable();
+    const results = document.getElementById('results');
+    results.hidden = false;
+    drawRace();
+    if (scroll) results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function flipStat(key) {
+    duel.run++; // a manual flip stops a running FIGHT sequence
+    duel.flipped.add(key);
+    duel.just = key;
+    if (duelStats(current).every(s => duel.flipped.has(s.key))) revealResults(true);
+    else renderTable();
+  }
+
+  // Flip the remaining stats one at a time, then bring in the verdict.
+  function fight() {
+    const remaining = duelStats(current).map(s => s.key).filter(k => !duel.flipped.has(k));
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { revealResults(true); return; }
+    const run = ++duel.run;
+    const button = document.getElementById('fight');
+    if (button) button.disabled = true;
+    const step = i => {
+      if (run !== duel.run) return;
+      if (i === remaining.length) { revealResults(true); return; }
+      duel.flipped.add(remaining[i]);
+      duel.just = remaining[i];
+      renderTable();
+      document.getElementById('fight')?.setAttribute('disabled', '');
+      setTimeout(() => step(i + 1), 260);
+    };
+    step(0);
+  }
+
+  // ================= the game: the whole pack against the computer =================
+
+  const QUICK_HAND = 6;
+  const ROUND_LIMIT = 60; // a long game can circle forever: then most cards wins
+  let game = null;
+
+  function shuffled(list) {
+    const out = [...list];
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+  }
+
+  // Live decks only: retired ones have no list, so two of their stats are blank.
+  const packDecks = () => decks.filter(d => !d.is_dead).map(d => profiles[d.name]);
+
+  function startGame(handSize) {
+    const pack = shuffled(packDecks());
+    const size = Math.min(handSize, Math.floor(pack.length / 2));
+    game = {
+      you: pack.slice(0, size),
+      cpu: pack.slice(size, size * 2),
+      pot: [],
+      turn: 'you',
+      phase: 'choose',
+      round: 1,
+      statKey: null,
+      faces: null,
+      message: 'Your turn. Pick your best stat.'
+    };
+    renderGame();
+  }
+
+  // The computer plays its card's rarest strength, with a little doubt between
+  // the top two so it can't be read like a book.
+  function cpuPick(p) {
+    const pack = packDecks();
+    const strength = s => {
+      const mine = s.get(p);
+      return pack.filter(o => s.get(o) < mine).length;
+    };
+    const ranked = shuffled(TRUMPS).sort((x, y) => strength(y) - strength(x));
+    return ranked[Math.random() < 0.75 ? 0 : 1].key;
+  }
+
+  function playStat(key) {
+    const stat = TRUMPS.find(s => s.key === key);
+    const mine = game.you.shift();
+    const theirs = game.cpu.shift();
+    const r = compareStat(stat, mine, theirs);
+    const who = game.turn === 'you' ? 'You pick' : 'Computer picks';
+    game.statKey = key;
+    game.faces = { mine, theirs, r };
+    game.phase = 'reveal';
+
+    if (r.win === 'a') {
+      game.you.push(mine, theirs, ...game.pot.splice(0));
+      game.turn = 'you';
+      game.message = `${who} ${stat.label}: ${r.textA} beats ${r.textB}. You take ${theirs.deck.name}!`;
+    } else if (r.win === 'b') {
+      game.cpu.push(theirs, mine, ...game.pot.splice(0));
+      game.turn = 'cpu';
+      game.message = `${who} ${stat.label}: ${r.textA} loses to ${r.textB}. Computer takes ${mine.deck.name}.`;
+    } else {
+      game.pot.push(mine, theirs);
+      game.message = `${who} ${stat.label}: both ${r.textA}. Both cards go in the pot, and it's worth winning the next one.`;
+    }
+    renderGame();
+  }
+
+  function nextRound() {
+    const out = !game.you.length || !game.cpu.length;
+    if (out || game.round >= ROUND_LIMIT) {
+      game.phase = 'over';
+      renderGame();
+      return;
+    }
+    game.round++;
+    game.statKey = null;
+    game.faces = null;
+    if (game.turn === 'cpu') {
+      playStat(cpuPick(game.cpu[0]));
+      return;
+    }
+    game.phase = 'choose';
+    game.message = 'Your turn. Pick your best stat.';
+    renderGame();
+  }
+
+  const gameResult = () => {
+    const y = game.you.length, c = game.cpu.length;
+    if (y > c) return { title: '🏆 You win!', text: c ? `Round ${ROUND_LIMIT} is up, and you hold the most cards: ${y} to ${c}.` : `You took the whole pack in ${game.round} rounds.` };
+    if (c > y) return { title: '🤖 Computer wins', text: y ? `Round ${ROUND_LIMIT} is up, and it holds the most cards: ${c} to ${y}.` : `It took the whole pack in ${game.round} rounds.` };
+    return { title: '🤝 A draw', text: `${y} cards each. Nobody goes home happy.` };
+  };
+
+  function renderGame() {
+    const box = document.getElementById('game');
+    if (!game) {
+      box.innerHTML = `
+        <div class="card game-start">
+          <p>You and the computer each get a hand of decks. Pick a stat on your top card: higher takes both cards. Win a round and you pick again. Whoever ends up with the whole pack wins.</p>
+          <div class="game-actions">
+            <button class="btn" data-act="quick" type="button">⚡ Quick game (${QUICK_HAND} cards each)</button>
+            <button class="btn" data-act="full" type="button">🃏 Full pack</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    const score = `
+      <div class="scorebar">
+        <div><span class="count">${game.you.length}</span>You</div>
+        <div class="mid">Round ${game.round}${game.pot.length ? `<br>Pot: ${game.pot.length}` : ''}</div>
+        <div class="right"><span class="count">${game.cpu.length}</span>Computer</div>
+      </div>
+    `;
+    const again = `
+      <button class="btn" data-act="quick" type="button">⚡ Quick game</button>
+      <button class="btn" data-act="full" type="button">🃏 Full pack</button>
+    `;
+
+    if (game.phase === 'over') {
+      const res = gameResult();
+      box.innerHTML = `
+        <div class="card game-start">
+          <div class="game-over-title">${res.title}</div>
+          <p>${esc(res.text)}</p>
+          <div class="game-actions">${again}</div>
+        </div>
+      `;
+      return;
+    }
+
+    if (game.phase === 'choose') {
+      const mine = game.you[0];
+      const rows = TRUMPS.map(s => {
+        const v = s.get(mine);
+        return { key: s.key, label: s.label, text: v == null ? '—' : (s.fmt || String)(v), enabled: true };
+      });
+      box.innerHTML = `
+        ${score}
+        <p class="game-msg">${esc(game.message)}</p>
+        <div class="trumps">
+          ${trumpCard(mine, 'a', rows)}
+          ${faceDownCard('b')}
+        </div>
+      `;
+      return;
+    }
+
+    const { mine, theirs, r } = game.faces;
+    const rowsFor = (p, side) => TRUMPS.map(s => {
+      const v = s.get(p);
+      const picked = s.key === game.statKey;
+      return {
+        key: s.key,
+        label: s.label,
+        text: v == null ? '—' : (s.fmt || String)(v),
+        state: picked ? stateFor(r, side) : '',
+        picked
+      };
+    });
+    const q = `a=${encodeURIComponent(mine.deck.id)}&b=${encodeURIComponent(theirs.deck.id)}`;
+    box.innerHTML = `
+      ${score}
+      <p class="game-msg">${esc(game.message)}</p>
+      <div class="trumps">
+        ${trumpCard(mine, 'a', rowsFor(mine, 'a'))}
+        ${trumpCard(theirs, 'b', rowsFor(theirs, 'b'))}
+      </div>
+      <div class="game-actions">
+        <button class="btn" data-act="next" type="button">Next card →</button>
+        <a href="?${q}">Full comparison</a>
+      </div>
+    `;
+  }
+
+  function setMode(mode) {
+    const playing = mode === 'play';
+    document.getElementById('duel-mode').hidden = playing;
+    document.getElementById('game').hidden = !playing;
+    document.getElementById('tab-duel').setAttribute('aria-pressed', String(!playing));
+    document.getElementById('tab-play').setAttribute('aria-pressed', String(playing));
+    if (playing) {
+      history.replaceState(null, '', '?mode=play');
+      renderGame();
+    } else {
+      show(pickA().value, pickB().value);
+    }
+  }
+
+  function render(aName, bName) {
+    const c = buildComparison(aName, bName);
+    current = c;
+    const { pa, pb } = c;
+    document.title = `${pa.deck.name} vs ${pb.deck.name} - Bobby Kelzor`;
+
+    // Swapping corners keeps what's been flipped; a new fight starts face down.
+    const pairKey = [aName, bName].sort().join('|');
+    if (duel.pair !== pairKey) {
+      duel.pair = pairKey;
+      duel.flipped = new Set();
+      duel.fought = false;
+      duel.run++;
+    }
+    duel.just = null;
+
+    const others = c.rounds.filter(x => x.id !== 'h2h');
+    const facts = trivia(c);
+    const priced = [pa.deck.value_priced_on, pb.deck.value_priced_on].filter(Boolean).sort()[0];
+    const missing = [
+      pa.deck.is_dead || pb.deck.is_dead ? 'Current form and the wallet only run between two live decks.' : ''
+    ].filter(Boolean).join(' ');
+
+    document.getElementById('content').innerHTML = `
+      <div id="table"></div>
+      <div id="results" ${duel.fought ? '' : 'hidden'}>
+      ${verdictHtml(c)}
+      ${h2hHtml(c)}
+      ${others.map(x => roundHtml(x, x.id === 'shared' ? sharedExtraHtml(c) : '')).join('')}
+      ${raceCardHtml(c)}
+      <div class="card">
+        <div class="card-head"><h2>By the way</h2></div>
+        <p class="note">No points for these.</p>
+        <ul class="facts">${facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+      </div>
+      <p class="small-print">
+        Each row with a clear winner is worth one point; level rows are worth none.
+        Matches cover the knockout stages only, since group games aren't recorded.
+        ${missing}
+        ${priced ? `Prices updated on ${fmtDate(priced)}.` : ''}
+      </p>
+      </div>
+    `;
+    renderTable();
+    // The chart measures its box, which has no width while the results are hidden.
+    if (duel.fought) drawRace();
+  }
+
+  // ================= controls =================
+
+  const pickA = () => document.getElementById('pick-a');
+  const pickB = () => document.getElementById('pick-b');
+
+  function show(aId, bId) {
+    pickA().value = aId;
+    pickB().value = bId;
+    for (const [sel, other] of [[pickA(), bId], [pickB(), aId]]) {
+      for (const o of sel.options) o.disabled = o.value === other;
+    }
+    history.replaceState(null, '', `?a=${encodeURIComponent(aId)}&b=${encodeURIComponent(bId)}`);
+    render(deckById[aId].name, deckById[bId].name);
+  }
+
+  // The pair that has met most often, which is where a comparison is best.
+  function biggestRivalry() {
+    const pairs = {};
+    for (const m of ko) {
+      const key = [m.player1, m.player2].sort().join('|');
+      pairs[key] = (pairs[key] || 0) + 1;
+    }
+    const [key] = Object.entries(pairs).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
+    return key.split('|').map(name => deckByName[name].id);
+  }
+
+  async function load() {
+    const [decksRes, matchesRes, pointsRes, mvpRes] = await Promise.all([
+      fetch('data/decks.json'),
+      fetch('data/matches.json'),
+      fetch('data/points.json'),
+      fetch('data/mvp.json')
+    ]);
+    decks = await decksRes.json();
+    tournaments = await matchesRes.json();
+    points = await pointsRes.json();
+    mvps = await mvpRes.json();
+
+    deckByName = Object.fromEntries(decks.map(d => [d.name, d]));
+    deckById = Object.fromEntries(decks.map(d => [d.id, d]));
+    ko = flattenMatches();
+    profiles = Object.fromEntries(decks.map(d => [d.name, buildProfile(d)]));
+    assignStandings();
+    rivalryPair = biggestRivalry();
+
+    const options = [...decks]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(d => `<option value="${esc(d.id)}">${esc(d.name)}${d.is_dead ? ' (retired)' : ''}</option>`)
+      .join('');
+    pickA().innerHTML = options;
+    pickB().innerHTML = options;
+
+    pickA().addEventListener('change', () => show(pickA().value, pickB().value));
+    pickB().addEventListener('change', () => show(pickA().value, pickB().value));
+    document.getElementById('swap').addEventListener('click', () => show(pickB().value, pickA().value));
+    document.getElementById('rivalry').addEventListener('click', () => show(...rivalryPair));
+    document.getElementById('random').addEventListener('click', () => {
+      const i = Math.floor(Math.random() * decks.length);
+      const j = (i + 1 + Math.floor(Math.random() * (decks.length - 1))) % decks.length;
+      show(decks[i].id, decks[j].id);
+    });
+
+    document.getElementById('tab-duel').addEventListener('click', () => setMode('duel'));
+    document.getElementById('tab-play').addEventListener('click', () => setMode('play'));
+
+    // The cards are redrawn constantly, so both tables listen from above.
+    document.getElementById('content').addEventListener('click', e => {
+      if (e.target.closest('#fight')) { fight(); return; }
+      const stat = e.target.closest('.stat');
+      if (stat && !stat.disabled) flipStat(stat.dataset.stat);
+    });
+    document.getElementById('game').addEventListener('click', e => {
+      const act = e.target.closest('[data-act]')?.dataset.act;
+      if (act === 'quick') startGame(QUICK_HAND);
+      else if (act === 'full') startGame(decks.length);
+      else if (act === 'next') nextRound();
+      const stat = e.target.closest('.stat');
+      if (stat && !stat.disabled && game?.phase === 'choose') playStat(stat.dataset.stat);
+    });
+
+    // Only redraw when the width changes: phones fire resize as the toolbar hides.
+    let lastWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        if (duel.fought) drawRace();
+      }
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const a = params.get('a'), b = params.get('b');
+    if (deckById[a] && deckById[b] && a !== b) show(a, b);
+    else show(...rivalryPair);
+    if (params.get('mode') === 'play') setMode('play');
+  }
+
+  load().catch(e => {
+    document.getElementById('error').textContent = 'Error loading data: ' + e.message;
+  });
+</script>
+</body>
+</html>
