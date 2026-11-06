@@ -709,9 +709,9 @@
       }
     }
     p.cards = cards.size;
-    // Card art: the image of the deck's most decorated card, else the art
-    // picked from its list (decks.json), else none.
-    p.art = Object.entries(images).sort((x, y) => y[1] - x[1])[0]?.[0] || deck.art || null;
+    // Card art: the art chosen in decks.json, else the image of the deck's
+    // most decorated card, else none.
+    p.art = deck.art || Object.entries(images).sort((x, y) => y[1] - x[1])[0]?.[0] || null;
 
     // Points, same sums as standings.html: PPT per edition entered, PPG per
     // recorded knockout game (group games aren't kept).
@@ -1326,7 +1326,7 @@
     { key: 'finals',  label: 'Finals',       get: p => p.finals },
     { key: 'total',   label: 'Total points', get: p => p.total },
     { key: 'ppt',     label: 'PPT',          get: p => p.ppt, fmt: v => v.toFixed(2) },
-    { key: 'ppg',     label: 'PPG',          get: p => p.ppg, fmt: v => v.toFixed(2) },
+    { key: 'moneyball', label: 'Moneyball',  get: p => (p.deck.value_usd ? 100 * p.total / p.deck.value_usd : null), fmt: v => v.toFixed(1) },
     { key: 'winrate', label: 'Win rate',     get: p => rate(p.w, p.played), fmt: pct },
     { key: 'streak',  label: 'Win streak',   get: p => p.bestStreak },
     { key: 'mvps',    label: 'MVPs',         get: p => p.mvps },
