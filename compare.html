@@ -105,20 +105,6 @@
       box-shadow: 3px 3px 0 #000;
     }
 
-    .trump-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 6px;
-      padding: 8px 10px;
-      color: #fff;
-      font-weight: bold;
-      overflow-wrap: anywhere;
-    }
-
-    .trump.a .trump-head { background: var(--a); }
-    .trump.b .trump-head { background: #c2410c; }
-
     .trump-art {
       display: block;
       width: 100%;
@@ -126,19 +112,6 @@
       object-fit: cover;
       border-bottom: 2px solid #000;
     }
-
-    .trump-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      font-size: 0.72rem;
-      color: #555;
-      border-bottom: 1px solid #000;
-    }
-
-    .trump-meta .colors { margin: 0; flex-shrink: 0; }
 
     .stat {
       display: flex;
@@ -189,13 +162,20 @@
       justify-content: center;
       gap: 12px;
       padding: 16px;
-      min-height: 320px;
       color: #fff;
       background: repeating-linear-gradient(45deg, #000 0 10px, #222 10px 20px);
     }
 
     .trump.face-down img { width: 80%; max-width: 160px; background: #fff; border-radius: 8px; padding: 6px; }
     .trump.face-down span { font-size: 3rem; font-weight: bold; }
+    .face-hidden {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: repeating-linear-gradient(45deg, #000 0 10px, #222 10px 20px);
+    }
+    .face-hidden img { width: 45%; max-width: 110px; background: #fff; border-radius: 8px; padding: 4px; }
+    .face.b .face-name.hidden { background: #333; }
 
     /* Duel: the two decks' art side by side above FIGHT! */
     .faceoff {
@@ -242,22 +222,17 @@
 
     .game-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; margin-bottom: 16px; }
     .game-actions a { color: #000; font-size: 0.85rem; }
-    /* Next card floats over the top of the two cards instead of taking a row. */
-    .trumps { position: relative; }
+    /* The game table: both decks' art on top, then the strip with score,
+       button and message, then the two stat cards. Nothing floats over the art. */
     .pop {
-      position: absolute;
-      top: 48px; /* over the art, clear of the deck names */
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      width: max-content;
-      max-width: min(300px, 92%);
-      animation: next-pop 0.25s ease-out 0.4s backwards;
+      gap: 8px;
+      margin: 0 auto 12px;
+      max-width: 340px;
     }
+    .pop .pop-msg, .pop .next-pop { animation: next-pop 0.25s ease-out 0.4s backwards; }
     .pop-msg {
       padding: 10px 12px;
       font-size: 0.9rem;
@@ -268,7 +243,7 @@
       border-radius: 12px;
       box-shadow: 3px 3px 0 #000;
     }
-    .pop.still { animation: none; }
+    .pop.still .pop-msg { animation: none; }
     .pop-score {
       display: flex;
       align-items: baseline;
@@ -295,12 +270,12 @@
     .next-pop:hover { background: #333; }
 
     @keyframes next-pop {
-      from { transform: translateX(-50%) scale(0.4); opacity: 0; }
-      to   { transform: translateX(-50%) scale(1); opacity: 1; }
+      from { transform: scale(0.4); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .pop { animation: none; }
+      .pop .pop-msg, .pop .next-pop { animation: none; }
     }
 
     .game-start { text-align: center; padding: 8px 0; }
@@ -1380,19 +1355,25 @@
     return `<div class="trump-art" style="background:linear-gradient(135deg,${stops})"></div>`;
   }
 
+  // A deck's art with its name under it (Duel face-off and the game table).
+  // With no deck, the face-down version: nothing on it gives the deck away.
+  const faceHtml = (p, side) => p ? `
+    <div class="face ${side}">
+      ${artHtml(p)}
+      <div class="face-name">${esc(p.deck.name)}</div>
+    </div>
+  ` : `
+    <div class="face ${side}" aria-label="Face-down card">
+      <div class="trump-art face-hidden"><img src="images/logo.png" alt=""></div>
+      <div class="face-name hidden">?</div>
+    </div>
+  `;
+
+  // The stats half of a card; the art and name sit above, in the face-off.
   // rows: [{ key, label, text, state, picked, just, enabled }]
   function trumpCard(p, side, rows) {
-    const d = p.deck;
-    const last = tournaments.find(t => t.id === d.last_edition);
-    const meta = d.is_dead ? `Retired, ${last ? edition(last) : ''}` : `Serie ${p.serie} · #${p.rank}`;
     return `
       <article class="trump ${side}">
-        <div class="trump-head"><span>${esc(d.name)}</span></div>
-        ${artHtml(p)}
-        <div class="trump-meta">
-          <span>${meta}</span>
-          <span class="colors">${d.colors.map(c => `<div class="color-pip color-${c}"></div>`).join('')}</span>
-        </div>
         <div>
           ${rows.map(x => `
             <button class="stat ${x.state || ''} ${x.picked ? 'picked' : ''} ${x.just ? 'just' : ''}" type="button"
@@ -1406,8 +1387,7 @@
   }
 
   const faceDownCard = side => `
-    <article class="trump face-down ${side}" aria-label="Face-down card">
-      <img src="images/logo.png" alt="">
+    <article class="trump face-down ${side}" aria-hidden="true">
       <span>?</span>
     </article>
   `;
@@ -1422,17 +1402,11 @@
   function renderTable() {
     const box = document.getElementById('table');
     if (!box || !current) return;
-    const side = (p, k) => `
-      <div class="face ${k}">
-        ${artHtml(p)}
-        <div class="face-name">${esc(p.deck.name)}</div>
-      </div>
-    `;
     box.innerHTML = `
       <div class="faceoff">
-        ${side(current.pa, 'a')}
+        ${faceHtml(current.pa, 'a')}
         <span class="vs" aria-hidden="true">VS</span>
-        ${side(current.pb, 'b')}
+        ${faceHtml(current.pb, 'b')}
       </div>
       ${duel.fought ? '' : `<button class="btn fight" id="fight" type="button">⚔️ FIGHT!</button>`}
     `;
@@ -1595,14 +1569,18 @@
         return { key: s.key, label: s.label, text: v == null ? '—' : (s.fmt || String)(v), enabled: yours };
       });
       box.innerHTML = `
+        <div class="faceoff">
+          ${faceHtml(mine, 'a')}
+          ${faceHtml(null, 'b')}
+        </div>
+        <div class="pop ${yours ? 'still' : ''}" role="status">
+          ${score}
+          ${yours ? '' : `<button class="btn next-pop" data-act="cpu" type="button">🤖 Computer's choice →</button>`}
+          <p class="pop-msg">${yours ? '' : '🤖 '}${esc(game.message)}</p>
+        </div>
         <div class="trumps">
           ${trumpCard(mine, 'a', rows)}
           ${faceDownCard('b')}
-          <div class="pop ${yours ? 'still' : ''}" role="status">
-            ${score}
-            ${yours ? '' : `<button class="btn next-pop" data-act="cpu" type="button">🤖 Computer's choice →</button>`}
-            <p class="pop-msg">${yours ? '' : '🤖 '}${esc(game.message)}</p>
-          </div>
         </div>
       `;
       return;
@@ -1621,14 +1599,18 @@
       };
     });
     box.innerHTML = `
+      <div class="faceoff">
+        ${faceHtml(mine, 'a')}
+        ${faceHtml(theirs, 'b')}
+      </div>
+      <div class="pop" role="status">
+        ${score}
+        <button class="btn next-pop" data-act="next" type="button">Next card →</button>
+        <p class="pop-msg">${esc(game.message)}</p>
+      </div>
       <div class="trumps">
         ${trumpCard(mine, 'a', rowsFor(mine, 'a'))}
         ${trumpCard(theirs, 'b', rowsFor(theirs, 'b'))}
-        <div class="pop" role="status">
-          ${score}
-          <button class="btn next-pop" data-act="next" type="button">Next card →</button>
-          <p class="pop-msg">${esc(game.message)}</p>
-        </div>
       </div>
     `;
   }
