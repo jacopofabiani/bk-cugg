@@ -174,7 +174,7 @@
       justify-content: center;
       background: repeating-linear-gradient(45deg, #000 0 10px, #222 10px 20px);
     }
-    .face-hidden img { width: 45%; max-width: 110px; background: #fff; border-radius: 8px; padding: 4px; }
+    .face-hidden img { width: auto; max-width: 45%; max-height: 80%; background: #fff; border-radius: 8px; padding: 4px; }
     .face.b .face-name.hidden { background: #333; }
 
     /* Duel: the two decks' art side by side above FIGHT! */
@@ -222,60 +222,73 @@
 
     .game-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; margin-bottom: 16px; }
     .game-actions a { color: #000; font-size: 0.85rem; }
-    /* The game table: both decks' art on top, then the strip with score,
-       button and message, then the two stat cards. Nothing floats over the art. */
+    /* The game table: both decks' art on top, then a fixed-height strip
+       (score; message + button), then the two stat cards. Every turn has the
+       same heights, so nothing moves, and the whole table fits a phone screen. */
+    #game .faceoff { margin-bottom: 8px; }
+    #game .face-name {
+      padding: 5px 8px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #game .trumps { margin-bottom: 8px; }
+    #game .stat { min-height: 28px; padding: 3px 8px; font-size: 0.78rem; }
+
     .pop {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      margin: 0 auto 12px;
-      max-width: 340px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 132px;
+      grid-template-areas: "score score" "msg btn";
+      gap: 6px 8px;
+      align-items: stretch;
+      margin-bottom: 8px;
     }
-    .pop .pop-msg, .pop .next-pop { animation: next-pop 0.25s ease-out 0.4s backwards; }
-    .pop-msg {
-      padding: 10px 12px;
-      font-size: 0.9rem;
-      line-height: 1.3;
-      text-align: center;
-      background: #fff;
-      border: 2px solid #000;
-      border-radius: 12px;
-      box-shadow: 3px 3px 0 #000;
-    }
-    .pop.still .pop-msg { animation: none; }
     .pop-score {
+      grid-area: score;
       display: flex;
+      justify-content: space-between;
       align-items: baseline;
       gap: 10px;
-      padding: 6px 12px;
       font-size: 0.8rem;
       white-space: nowrap;
-      background: #fff;
-      border: 2px solid #000;
-      border-radius: 999px;
-      box-shadow: 3px 3px 0 #000;
       font-variant-numeric: tabular-nums;
     }
-    .pop-score b { font-size: 1.15rem; }
+    .pop-score b { font-size: 1.1rem; }
     .pop-score .mid { color: #555; font-size: 0.72rem; }
+    .pop-msg {
+      grid-area: msg;
+      display: flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 4px 10px;
+      font-size: 0.82rem;
+      line-height: 1.25;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 10px;
+    }
+    .pop-slot { grid-area: btn; }
     .next-pop {
-      white-space: nowrap;
+      grid-area: btn;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 8px;
+      font-size: 0.82rem;
+      line-height: 1.2;
       color: #fff;
       background: #000;
-      border-color: #fff;
-      border-width: 2px;
-      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+      animation: next-pop 0.15s ease-out;
     }
     .next-pop:hover { background: #333; }
 
     @keyframes next-pop {
-      from { transform: scale(0.4); opacity: 0; }
-      to   { transform: scale(1); opacity: 1; }
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .pop .pop-msg, .pop .next-pop { animation: none; }
+      .next-pop { animation: none; }
     }
 
     .game-start { text-align: center; padding: 8px 0; }
@@ -1454,6 +1467,8 @@
       message: 'Your turn. Pick your best stat.'
     };
     renderGame();
+    // Bring the whole table into view once; after that nothing on it moves.
+    document.getElementById('game').scrollIntoView({ block: 'start', behavior: 'smooth' });
   }
 
   // The computer plays its card's rarest strength, with a little doubt between
@@ -1505,7 +1520,7 @@
     // The computer's turn waits for a tap, so it's clear who is choosing.
     if (game.turn === 'cpu') {
       game.phase = 'cpu';
-      game.message = "Computer's turn. It's choosing a stat from its card…";
+      game.message = "Computer's turn.";
       renderGame();
       return;
     }
@@ -1539,9 +1554,9 @@
     // Cards held and the round, at the top of the pop on every turn.
     const score = `
       <div class="pop-score" aria-label="You ${game.you.length} cards, computer ${game.cpu.length} cards, round ${game.round}">
-        <span>You <b>${game.you.length}</b></span>
+        <span>You <b>${game.you.length}</b> cards</span>
         <span class="mid">Round ${game.round}${game.pot.length ? ` · Pot ${game.pot.length}` : ''}</span>
-        <span><b>${game.cpu.length}</b> Computer</span>
+        <span>Computer <b>${game.cpu.length}</b> cards</span>
       </div>
     `;
     const again = `
@@ -1573,10 +1588,10 @@
           ${faceHtml(mine, 'a')}
           ${faceHtml(null, 'b')}
         </div>
-        <div class="pop ${yours ? 'still' : ''}" role="status">
+        <div class="pop" role="status">
           ${score}
-          ${yours ? '' : `<button class="btn next-pop" data-act="cpu" type="button">🤖 Computer's choice →</button>`}
-          <p class="pop-msg">${yours ? '' : '🤖 '}${esc(game.message)}</p>
+          <p class="pop-msg">${esc(game.message)}</p>
+          ${yours ? '<span class="pop-slot"></span>' : `<button class="btn next-pop" data-act="cpu" type="button">🤖 Computer's choice</button>`}
         </div>
         <div class="trumps">
           ${trumpCard(mine, 'a', rows)}
@@ -1605,8 +1620,8 @@
       </div>
       <div class="pop" role="status">
         ${score}
-        <button class="btn next-pop" data-act="next" type="button">Next card →</button>
         <p class="pop-msg">${esc(game.message)}</p>
+        <button class="btn next-pop" data-act="next" type="button">Next card →</button>
       </div>
       <div class="trumps">
         ${trumpCard(mine, 'a', rowsFor(mine, 'a'))}
