@@ -1385,12 +1385,13 @@
 
   const duel = { pair: '', flipped: new Set(), just: null, fought: false, run: 0 };
 
-  // The direct record leads the card, since it's the one that settles arguments.
+  // The same stats, in the same order, as the cards in the game. A line with
+  // no value on either side (two retired decks have no prices) shows a dash.
   function duelStats(c) {
-    // Two retired decks have no prices at all, so those lines leave the card.
-    const stats = TRUMPS.map(s => ({ key: s.key, r: compareStat(s, c.pa, c.pb) })).filter(s => s.r);
-    if (c.h.n) stats.unshift({ key: 'h2h', r: row('H2H wins', c.h.a, c.h.b) });
-    return stats;
+    return TRUMPS.map(s => ({
+      key: s.key,
+      r: compareStat(s, c.pa, c.pb) || { label: s.label, textA: '—', textB: '—', win: null, tied: false }
+    }));
   }
 
   function renderTable() {
