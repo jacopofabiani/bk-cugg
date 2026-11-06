@@ -38,7 +38,7 @@
       grid-template-columns: 1fr auto 1fr;
       gap: 8px;
       align-items: end;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
 
     .picker label {
@@ -81,7 +81,6 @@
     .btn:hover { background: #f5f5f5; }
     .btn:focus-visible, .picker select:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
 
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
 
     /* --- mode tabs --- */
     .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
@@ -609,11 +608,8 @@
   <div id="duel-mode">
   <div class="picker">
     <label>Blue corner<select id="pick-a"></select></label>
-    <button class="btn" id="swap" type="button" aria-label="Swap the two decks" title="Swap corners">⇄</button>
+    <button class="btn" id="random" type="button" aria-label="Random fight" title="Random fight">🎲</button>
     <label>Orange corner<select id="pick-b"></select></label>
-  </div>
-  <div class="actions">
-    <button class="btn" id="random" type="button">🎲 Random fight</button>
   </div>
 
   <div id="content"><p style="color:#888">Loading...</p></div>
@@ -1660,7 +1656,7 @@
     const { pa, pb } = c;
     document.title = `${pa.deck.name} vs ${pb.deck.name} - Bobby Kelzor`;
 
-    // Swapping corners keeps the results open; a new pair starts with FIGHT!.
+    // The same pair in either corner keeps the results open; a new pair starts with FIGHT!.
     const pairKey = [aName, bName].sort().join('|');
     if (duel.pair !== pairKey) {
       duel.pair = pairKey;
@@ -1753,7 +1749,6 @@
 
     pickA().addEventListener('change', () => show(pickA().value, pickB().value));
     pickB().addEventListener('change', () => show(pickA().value, pickB().value));
-    document.getElementById('swap').addEventListener('click', () => show(pickB().value, pickA().value));
     document.getElementById('random').addEventListener('click', () => {
       const i = Math.floor(Math.random() * decks.length);
       const j = (i + 1 + Math.floor(Math.random() * (decks.length - 1))) % decks.length;
