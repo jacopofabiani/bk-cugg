@@ -236,51 +236,48 @@
     #game .trumps { margin-bottom: 8px; }
     #game .stat { min-height: 28px; padding: 3px 8px; font-size: 0.78rem; }
 
-    .pop {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 132px;
-      grid-template-areas: "score score" "msg btn";
-      gap: 6px 8px;
-      align-items: stretch;
-      margin-bottom: 8px;
-    }
+    .pop { margin-bottom: 8px; }
     .pop-score {
-      grid-area: score;
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       gap: 10px;
+      margin-bottom: 6px;
       font-size: 0.8rem;
       white-space: nowrap;
       font-variant-numeric: tabular-nums;
     }
     .pop-score b { font-size: 1.1rem; }
     .pop-score .mid { color: #555; font-size: 0.72rem; }
+    /* One box, full width, same height every turn. White: just telling you
+       something. Black with an arrow: tap it to go on. */
     .pop-msg {
-      grid-area: msg;
       display: flex;
+      justify-content: space-between;
       align-items: center;
+      gap: 10px;
+      width: 100%;
       min-height: 48px;
-      padding: 4px 10px;
-      font-size: 0.82rem;
+      padding: 4px 12px;
+      font: inherit;
+      font-size: 0.85rem;
       line-height: 1.25;
+      text-align: left;
+      color: #000;
       background: #fff;
       border: 2px solid #000;
       border-radius: 10px;
     }
-    .pop-slot { grid-area: btn; }
-    .next-pop {
-      grid-area: btn;
-      width: 100%;
-      min-height: 48px;
-      padding: 0 8px;
-      font-size: 0.82rem;
-      line-height: 1.2;
+    button.pop-msg {
+      cursor: pointer;
       color: #fff;
       background: #000;
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
       animation: next-pop 0.15s ease-out;
     }
-    .next-pop:hover { background: #333; }
+    button.pop-msg:hover { background: #333; }
+    button.pop-msg:focus-visible { outline: 2px solid var(--a); outline-offset: 2px; }
+    .pop-go { flex-shrink: 0; font-weight: bold; white-space: nowrap; }
 
     @keyframes next-pop {
       from { opacity: 0; }
@@ -288,7 +285,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .next-pop { animation: none; }
+      button.pop-msg { animation: none; }
     }
 
     .game-start { text-align: center; padding: 8px 0; }
@@ -1590,8 +1587,9 @@
         </div>
         <div class="pop" role="status">
           ${score}
-          <p class="pop-msg">${esc(game.message)}</p>
-          ${yours ? '<span class="pop-slot"></span>' : `<button class="btn next-pop" data-act="cpu" type="button">🤖 Computer's choice</button>`}
+          ${yours
+            ? `<p class="pop-msg">${esc(game.message)}</p>`
+            : `<button class="pop-msg" data-act="cpu" type="button"><span>🤖 ${esc(game.message)}</span><span class="pop-go">See its choice →</span></button>`}
         </div>
         <div class="trumps">
           ${trumpCard(mine, 'a', rows)}
@@ -1620,8 +1618,7 @@
       </div>
       <div class="pop" role="status">
         ${score}
-        <p class="pop-msg">${esc(game.message)}</p>
-        <button class="btn next-pop" data-act="next" type="button">Next card →</button>
+        <button class="pop-msg" data-act="next" type="button"><span>${esc(game.message)}</span><span class="pop-go">Next card →</span></button>
       </div>
       <div class="trumps">
         ${trumpCard(mine, 'a', rowsFor(mine, 'a'))}
