@@ -234,7 +234,7 @@
       text-overflow: ellipsis;
     }
     #game .trumps { margin-bottom: 8px; }
-    #game .stat { min-height: 28px; padding: 3px 8px; font-size: 0.78rem; }
+    #game .stat { min-height: 32px; padding: 4px 10px; font-size: 0.92rem; }
 
     .pop { margin-bottom: 8px; }
     .pop-score {
@@ -277,7 +277,31 @@
     }
     button.pop-msg:hover { background: #333; }
     button.pop-msg:focus-visible { outline: 2px solid var(--a); outline-offset: 2px; }
-    .pop-go { flex-shrink: 0; font-weight: bold; white-space: nowrap; }
+    /* The "tap me" part: a white pill with a nudging arrow, and the whole
+       banner breathes gently, so it reads as a button, not a caption. */
+    .pop-go {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      font-weight: bold;
+      white-space: nowrap;
+      color: #000;
+      background: #fff;
+      border-radius: 999px;
+    }
+    .pop-go .arrow { display: inline-block; animation: nudge 0.9s ease-in-out infinite; }
+    button.pop-msg { animation: next-pop 0.15s ease-out, breathe 1.6s ease-in-out 0.6s infinite; }
+
+    @keyframes nudge {
+      0%, 100% { transform: translateX(0); }
+      50%      { transform: translateX(4px); }
+    }
+    @keyframes breathe {
+      0%, 100% { box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35), 0 0 0 0 rgba(0, 0, 0, 0.35); }
+      50%      { box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35), 0 0 0 5px rgba(0, 0, 0, 0.15); }
+    }
 
     @keyframes next-pop {
       from { opacity: 0; }
@@ -285,7 +309,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      button.pop-msg { animation: none; }
+      button.pop-msg, .pop-go .arrow { animation: none; }
     }
 
     .game-start { text-align: center; padding: 8px 0; }
@@ -1338,18 +1362,14 @@
 
   // ================= Top Trumps cards =================
 
-  // The stats printed on every card. Each one is also a scored row further
-  // down, compared by the same rule, so a card never contradicts the verdict.
+  // The stats printed on every card in Play the computer.
   const TRUMPS = [
-    { key: 'titles',  label: 'Titles',       get: p => p.titles.length },
     { key: 'finals',  label: 'Finals',       get: p => p.finals },
-    { key: 'total',   label: 'Total points', get: p => p.total },
     { key: 'ppt',     label: 'PPT',          get: p => p.ppt, fmt: v => v.toFixed(2) },
     { key: 'moneyball', label: 'Moneyball',  get: p => (p.deck.value_usd ? 100 * p.total / p.deck.value_usd : null), fmt: v => v.toFixed(1) },
     { key: 'winrate', label: 'Win rate',     get: p => rate(p.w, p.played), fmt: pct },
-    { key: 'streak',  label: 'Win streak',   get: p => p.bestStreak },
+    { key: 'losestreak', label: 'Lose streak', get: p => p.worstStreak }, // higher wins: a chance for the strugglers
     { key: 'mvps',    label: 'MVPs',         get: p => p.mvps },
-    { key: 'value',   label: 'Deck value',   get: p => p.deck.value_usd ?? null, fmt: usd },
     { key: 'topcard', label: 'Top card',     get: p => p.topCard?.price ?? null, fmt: usd }
   ];
 
@@ -1398,6 +1418,7 @@
 
   const faceDownCard = side => `
     <article class="trump face-down ${side}" aria-hidden="true">
+      <img src="images/logo.png" alt="">
       <span>?</span>
     </article>
   `;
@@ -1589,7 +1610,7 @@
           ${score}
           ${yours
             ? `<p class="pop-msg">${esc(game.message)}</p>`
-            : `<button class="pop-msg" data-act="cpu" type="button"><span>🤖 ${esc(game.message)}</span><span class="pop-go">See its choice →</span></button>`}
+            : `<button class="pop-msg" data-act="cpu" type="button"><span>🤖 ${esc(game.message)}</span><span class="pop-go">👆 See its choice <span class="arrow">→</span></span></button>`}
         </div>
         <div class="trumps">
           ${trumpCard(mine, 'a', rows)}
@@ -1618,7 +1639,7 @@
       </div>
       <div class="pop" role="status">
         ${score}
-        <button class="pop-msg" data-act="next" type="button"><span>${esc(game.message)}</span><span class="pop-go">Next card →</span></button>
+        <button class="pop-msg" data-act="next" type="button"><span>${esc(game.message)}</span><span class="pop-go">👆 Next card <span class="arrow">→</span></span></button>
       </div>
       <div class="trumps">
         ${trumpCard(mine, 'a', rowsFor(mine, 'a'))}
